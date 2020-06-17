@@ -6,6 +6,7 @@
 !.nedfolders
 !.oppbuildspec
 !.project
+!.settings/language.settings.xml
 !Makefile
 
 !src/
