@@ -22,7 +22,7 @@
 
 !src/delaybasedforwarding/linklayer/
 !src/delaybasedforwarding/linklayer/contract/
-!src/delaybasedforwarding/linklayer/contract/randomdropheader/
-!src/delaybasedforwarding/linklayer/contract/randomdropheader/*.msg
-!src/delaybasedforwarding/linklayer/contract/randomdropheader/*.cc
-!src/delaybasedforwarding/linklayer/contract/randomdropheader/*.h
+!src/delaybasedforwarding/linklayer/contract/randomDropHeader/
+!src/delaybasedforwarding/linklayer/contract/randomDropHeader/*.msg
+!src/delaybasedforwarding/linklayer/contract/randomDropHeader/*.cc
+!src/delaybasedforwarding/linklayer/contract/randomDropHeader/*.h
