@@ -19,3 +19,10 @@
 !simulations/udpclientserver/
 !simulations/udpclientserver/*.ini
 !simulations/udpclientserver/*.ned
+
+!src/linklayer/
+!src/linklayer/contract/
+!src/linklayer/contract/randomdropheader/
+!src/linklayer/contract/randomdropheader/*.msg
+!src/linklayer/contract/randomdropheader/*.cc
+!src/linklayer/contract/randomdropheader/*.h
