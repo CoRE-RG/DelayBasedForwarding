@@ -10,8 +10,8 @@
 !Makefile
 
 !src/
-!src/DelayBasedForwarding/
-!src/DelayBasedForwarding/*
+!src/delaybasedforwarding/
+!src/delaybasedforwarding/*
 
 !simulations/
 !simulations/*.ini
@@ -20,9 +20,9 @@
 !simulations/udpclientserver/*.ini
 !simulations/udpclientserver/*.ned
 
-!src/linklayer/
-!src/linklayer/contract/
-!src/linklayer/contract/randomdropheader/
-!src/linklayer/contract/randomdropheader/*.msg
-!src/linklayer/contract/randomdropheader/*.cc
-!src/linklayer/contract/randomdropheader/*.h
+!src/delaybasedforwarding/linklayer/
+!src/delaybasedforwarding/linklayer/contract/
+!src/delaybasedforwarding/linklayer/contract/randomdropheader/
+!src/delaybasedforwarding/linklayer/contract/randomdropheader/*.msg
+!src/delaybasedforwarding/linklayer/contract/randomdropheader/*.cc
+!src/delaybasedforwarding/linklayer/contract/randomdropheader/*.h
