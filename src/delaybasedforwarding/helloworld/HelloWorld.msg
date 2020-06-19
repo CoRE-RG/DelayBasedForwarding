@@ -11,13 +11,15 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-//
+// 
 
+import inet.common.INETDefs;
 import inet.common.packet.chunk.Chunk;
 
 namespace delaybasedforwarding;
 
-class RandomDropHeader extends inet::FieldsChunk {
+class HelloWorldMessage extends inet::FieldsChunk
+{
     chunkLength = inet::B(4);
-    uint32_t drop;
+    uint32_t value;
 }
