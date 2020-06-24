@@ -18,4 +18,7 @@ package tcpclientserver;
 import inet.node.ethernet.EtherSwitch;
 
 module DBFSwitch extends EtherSwitch {
+    parameters:
+        relayUnit.typename = "DBFRelay";
+        eth[*].typename = "EthernetDBFInterface";
 }

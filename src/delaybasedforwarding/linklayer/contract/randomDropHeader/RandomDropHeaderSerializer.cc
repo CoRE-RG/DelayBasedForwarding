@@ -15,7 +15,7 @@ namespace delaybasedforwarding {
 
 Register_Serializer(RandomDropHeader, RandomDropHeaderSerializer);
 
-RandomDropHeaderSerializer::RandomDropHeaderSerializer() {
+RandomDropHeaderSerializer::RandomDropHeaderSerializer() : FieldsChunkSerializer() {
 }
 
 RandomDropHeaderSerializer::~RandomDropHeaderSerializer() {
