@@ -51,7 +51,7 @@ network ClientServer
         }
         server: StandardHost {
             parameters:
-                @display("p=400,150;i=device/pc2");
+                @display("p=509,150;i=device/pc2");
         }
         configurator: Ipv4NetworkConfigurator {
             parameters:
@@ -61,13 +61,17 @@ network ClientServer
             @display("p=100,200;is=s");
         }
 
-        switch: DBFSwitch {
+        switchLeft: DBFSwitch {
             @display("p=290,149");
         }
 
+        switchRight: DBFSwitch {
+            @display("p=402,149");
+        }
 
     connections:
-        client1.ethg++ <--> ETH_100MBIT <--> switch.ethg++;
-        switch.ethg++ <--> ETH_100MBIT <--> server.ethg++;
+        client1.ethg++ <--> ETH_100MBIT <--> switchLeft.ethg++;
+        switchLeft.ethg++ <--> ETH_100MBIT <--> switchRight.ethg++;
+        switchRight.ethg++ <--> ETH_100MBIT <--> server.ethg++;
 }
 
