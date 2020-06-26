@@ -17,10 +17,27 @@ package delaybasedforwarding.linklayer;
 
 import inet.linklayer.contract.ITrafficConditioner;
 
-module DBFEgressTrafficConditioner like ITrafficConditioner {
+import delaybasedforwarding.linklayer.DBFEgress.EgressForwarder;
+import delaybasedforwarding.linklayer.DBFEgress.Scheduler;
+import delaybasedforwarding.linklayer.DBFEgress.Queue;
+
+module DBFEgressTrafficConditioner like ITrafficConditioner
+{
     gates:
         input in;
         output out;
-    connections:
-        in --> out;
+    submodules:
+        efwd: EgressForwarder {
+            @display("p=170,65;i=block/classifier");
+        }
+        scheduler: Scheduler {
+            @display("p=53,213;i=block/timer");
+        }
+        queue: Queue {
+            @display("p=282,213;i=block/queue");
+        }
+    connections allowunconnected:
+        in --> efwd.in;
+        out <-- efwd.out;
+        //in --> out;
 }

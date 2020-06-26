@@ -13,24 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.linklayer;
+package delaybasedforwarding.linklayer.DBFEgress;
 
-import inet.linklayer.contract.ITrafficConditioner;
-import delaybasedforwarding.linklayer.DBFIngress.ForwardingInformationBase;
-import delaybasedforwarding.linklayer.DBFIngress.IngressForwarder;
-import delaybasedforwarding.linklayer.DBFIngress.ParameterComputer;
-
-module DBFIngressTrafficConditioner like ITrafficConditioner
+//
+// The forwarder at egress for delay based forwarded packets
+//
+// @author Mehmet Cakir
+//
+simple EgressForwarder
 {
     gates:
         input in;
         output out;
-    submodules:
-        ifwd: IngressForwarder {
-            @display("p=160,75;i=block/classifier");
-        }
-    connections allowunconnected:
-        //in --> ifwd.in;
-        //out <-- ifwd.out;
-        in --> out;
 }

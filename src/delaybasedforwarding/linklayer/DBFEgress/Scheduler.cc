@@ -13,24 +13,20 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.linklayer;
+#include "Scheduler.h"
 
-import inet.linklayer.contract.ITrafficConditioner;
-import delaybasedforwarding.linklayer.DBFIngress.ForwardingInformationBase;
-import delaybasedforwarding.linklayer.DBFIngress.IngressForwarder;
-import delaybasedforwarding.linklayer.DBFIngress.ParameterComputer;
+namespace delaybasedforwarding {
 
-module DBFIngressTrafficConditioner like ITrafficConditioner
+Define_Module(Scheduler);
+
+void Scheduler::initialize()
 {
-    gates:
-        input in;
-        output out;
-    submodules:
-        ifwd: IngressForwarder {
-            @display("p=160,75;i=block/classifier");
-        }
-    connections allowunconnected:
-        //in --> ifwd.in;
-        //out <-- ifwd.out;
-        in --> out;
+    // TODO - Generated method body
 }
+
+void Scheduler::handleMessage(cMessage *msg)
+{
+    // TODO - Generated method body
+}
+
+} //namespace

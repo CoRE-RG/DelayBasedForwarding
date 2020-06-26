@@ -13,24 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.linklayer;
+package delaybasedforwarding.linklayer.DBFIngress;
 
-import inet.linklayer.contract.ITrafficConditioner;
-import delaybasedforwarding.linklayer.DBFIngress.ForwardingInformationBase;
-import delaybasedforwarding.linklayer.DBFIngress.IngressForwarder;
-import delaybasedforwarding.linklayer.DBFIngress.ParameterComputer;
-
-module DBFIngressTrafficConditioner like ITrafficConditioner
+//
+// The parameter computer for delay based forwarded packets
+//
+// @author Mehmet Cakir
+//
+simple ParameterComputer
 {
-    gates:
-        input in;
-        output out;
-    submodules:
-        ifwd: IngressForwarder {
-            @display("p=160,75;i=block/classifier");
-        }
-    connections allowunconnected:
-        //in --> ifwd.in;
-        //out <-- ifwd.out;
-        in --> out;
 }

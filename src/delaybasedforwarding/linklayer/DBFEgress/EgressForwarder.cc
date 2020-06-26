@@ -13,24 +13,20 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.linklayer;
+#include <delaybasedforwarding/linklayer/DBFEgress/EgressForwarder.h>
 
-import inet.linklayer.contract.ITrafficConditioner;
-import delaybasedforwarding.linklayer.DBFIngress.ForwardingInformationBase;
-import delaybasedforwarding.linklayer.DBFIngress.IngressForwarder;
-import delaybasedforwarding.linklayer.DBFIngress.ParameterComputer;
+namespace delaybasedforwarding {
 
-module DBFIngressTrafficConditioner like ITrafficConditioner
+Define_Module(EgressForwarder);
+
+void EgressForwarder::initialize()
 {
-    gates:
-        input in;
-        output out;
-    submodules:
-        ifwd: IngressForwarder {
-            @display("p=160,75;i=block/classifier");
-        }
-    connections allowunconnected:
-        //in --> ifwd.in;
-        //out <-- ifwd.out;
-        in --> out;
+    // TODO - Generated method body
 }
+
+void EgressForwarder::handleMessage(cMessage *msg)
+{
+    send(msg,"out");
+}
+
+} //namespace

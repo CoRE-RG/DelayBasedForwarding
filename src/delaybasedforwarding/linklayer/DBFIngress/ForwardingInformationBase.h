@@ -13,24 +13,29 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.linklayer;
+#ifndef __DELAYBASEDFORWARDING_FORWARDINGINFORMATIONBASE_H_
+#define __DELAYBASEDFORWARDING_FORWARDINGINFORMATIONBASE_H_
 
-import inet.linklayer.contract.ITrafficConditioner;
-import delaybasedforwarding.linklayer.DBFIngress.ForwardingInformationBase;
-import delaybasedforwarding.linklayer.DBFIngress.IngressForwarder;
-import delaybasedforwarding.linklayer.DBFIngress.ParameterComputer;
+#include <omnetpp.h>
 
-module DBFIngressTrafficConditioner like ITrafficConditioner
+using namespace omnetpp;
+
+namespace delaybasedforwarding {
+
+/**
+ * @brief The forwarding information base for delay based forwarded packets
+ *
+ * @ingroup delaybasedforwarding/linklayer/DBFIngress
+ *
+ * @author Mehmet Cakir
+ */
+class ForwardingInformationBase : public cSimpleModule
 {
-    gates:
-        input in;
-        output out;
-    submodules:
-        ifwd: IngressForwarder {
-            @display("p=160,75;i=block/classifier");
-        }
-    connections allowunconnected:
-        //in --> ifwd.in;
-        //out <-- ifwd.out;
-        in --> out;
-}
+  protected:
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
+};
+
+} //namespace
+
+#endif
