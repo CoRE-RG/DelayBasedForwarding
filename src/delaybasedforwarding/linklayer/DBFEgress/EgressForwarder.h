@@ -17,6 +17,7 @@
 #define __DELAYBASEDFORWARDING_FORWARDER_H_
 
 #include <omnetpp.h>
+#include "inet/common/IProtocolRegistrationListener.h"
 
 using namespace omnetpp;
 
@@ -29,11 +30,13 @@ namespace delaybasedforwarding {
  *
  * @author Mehmet Cakir
  */
-class EgressForwarder : public cSimpleModule
+class EgressForwarder : public cSimpleModule, public inet::IProtocolRegistrationListener
 {
   protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize() override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual void handleRegisterService(const inet::Protocol& protocol, cGate *out, inet::ServicePrimitive servicePrimitive) override;
+    virtual void handleRegisterProtocol(const inet::Protocol& protocol, cGate *in, inet::ServicePrimitive servicePrimitive) override;
 };
 
 } //namespace

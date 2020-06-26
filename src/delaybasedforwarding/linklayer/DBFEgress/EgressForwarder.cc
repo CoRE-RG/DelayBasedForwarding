@@ -29,4 +29,14 @@ void EgressForwarder::handleMessage(cMessage *msg)
     send(msg,"out");
 }
 
+void EgressForwarder::handleRegisterProtocol(const inet::Protocol& protocol, cGate *in, inet::ServicePrimitive servicePrimitive) {
+    Enter_Method("handleRegisterProtocol");
+    registerProtocol(protocol, getParentModule()->gate("out"), servicePrimitive);
+}
+
+void EgressForwarder::handleRegisterService(const inet::Protocol& protocol, cGate *out, inet::ServicePrimitive servicePrimitive) {
+    Enter_Method("handleRegisterService");
+    registerService(protocol, getParentModule()->gate("out"), servicePrimitive);
+}
+
 } //namespace

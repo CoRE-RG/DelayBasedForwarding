@@ -30,7 +30,7 @@ module DBFIngressTrafficConditioner like ITrafficConditioner
             @display("p=160,75;i=block/classifier");
         }
     connections allowunconnected:
-        //in --> ifwd.in;
-        //out <-- ifwd.out;
-        in --> out;
+        in --> ifwd.in;
+        out <-- ifwd.out;
+        //in --> out;
 }
