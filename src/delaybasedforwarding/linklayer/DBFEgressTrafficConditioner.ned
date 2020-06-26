@@ -13,21 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __DELAYBASEDFORWARDING_HELLOWORLD_H_
-#define __DELAYBASEDFORWARDING_HELLOWORLD_H_
+package delaybasedforwarding.linklayer;
 
-#include <omnetpp.h>
+import inet.linklayer.contract.ITrafficConditioner;
 
-using namespace omnetpp;
-
-/**
- * TODO - Generated class
- */
-class HelloWorld : public cSimpleModule
-{
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-};
-
-#endif
+module DBFEgressTrafficConditioner like ITrafficConditioner {
+    gates:
+        input in;
+        output out;
+    connections:
+        in --> out;
+}

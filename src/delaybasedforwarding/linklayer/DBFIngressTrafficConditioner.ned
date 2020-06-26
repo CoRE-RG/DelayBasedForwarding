@@ -13,17 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "HelloWorld.h"
+package delaybasedforwarding.linklayer;
 
-Define_Module(HelloWorld);
+import inet.linklayer.contract.ITrafficConditioner;
 
-void HelloWorld::initialize()
-{
-    scheduleAt(SimTime(1,SimTimeUnit::SIMTIME_MS), new cMessage("HelloWorld"));
-}
-
-void HelloWorld::handleMessage(cMessage *msg)
-{
-    EV << msg->getName() << std::endl;
-    delete msg;
+module DBFIngressTrafficConditioner like ITrafficConditioner {
+    gates:
+        input in;
+        output out;
+    connections:
+        in --> out;
 }

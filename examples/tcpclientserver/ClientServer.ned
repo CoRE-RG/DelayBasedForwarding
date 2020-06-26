@@ -16,14 +16,17 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-package udpclientserver;
+package delaybasedforwarding.examples.tcpclientserver;
 
 import inet.common.misc.NetAnimTrace;
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.node.inet.StandardHost;
 import ned.DatarateChannel;
+import inet.node.ethernet.EtherSwitch;
+import inet.node.ethernet.EtherLink;
+import delaybasedforwarding.node.inet.DBFRouter;
 
-network UdpClientServer
+network ClientServer
 {
     parameters:
         double per = default(0);
@@ -34,36 +37,33 @@ network UdpClientServer
             delay = 0.1us;
             per = per;
         }
+
+        channel ETH_100MBIT extends EtherLink
+        {
+            datarate = 100Mbps;
+            length = 5.0m;
+        }
+
+
     submodules:
         client1: StandardHost {
             parameters:
-                @display("p=250,100;i=device/pc3");
+                @display("p=180,150;i=device/pc3");
         }
         server: StandardHost {
             parameters:
-                @display("p=400,100;i=device/pc2");
-        }
-        unavserver: StandardHost {
-            parameters:
-                @display("p=250,200;i=device/pc2");
-        }
-        unavserver2: StandardHost {
-            parameters:
-                @display("p=400,200;i=device/pc2");
+                @display("p=509,150;i=device/pc2");
         }
         configurator: Ipv4NetworkConfigurator {
             parameters:
                 @display("p=100,100;is=s");
         }
-//        configurator: NextHopNetworkConfigurator {
-//            parameters:
-//                @display("p=53,134");
-//        }
-        netAnimTrace: NetAnimTrace {
-            @display("p=100,200;is=s");
+        
+        router: DBFRouter {
         }
-    connections allowunconnected:
-        client1.pppg++ <--> C <--> server.pppg++;
-        unavserver.pppg++ <--> C <--> unavserver2.pppg++;
+
+    connections:
+        client1.ethg++ <--> ETH_100MBIT <--> router.ethg++;
+        server.ethg++ <--> ETH_100MBIT <--> router.ethg++;
 }
 

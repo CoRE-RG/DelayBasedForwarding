@@ -11,24 +11,6 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
-#ifndef __DELAYBASEDFORWARDING_DBFRELAY_H_
-#define __DELAYBASEDFORWARDING_DBFRELAY_H_
-
-#include <inet/linklayer/ieee8021d/relay/Ieee8021dRelay.h>
-
-using namespace inet;
-
-namespace delaybasedforwarding {
-
-class DBFRelay : public Ieee8021dRelay
-{
-  protected:
-    void handleLowerPacket(Packet *packet) override;
-    void dispatch(Packet *packet, InterfaceEntry *ie);
-};
-
-} //namespace
-
-#endif
+package delaybasedforwarding.examples;
