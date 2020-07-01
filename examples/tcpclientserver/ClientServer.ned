@@ -49,10 +49,12 @@ network ClientServer
         client1: StandardHost {
             parameters:
                 @display("p=180,150;i=device/pc3");
+                ipv4.typename = "DBFIpv4NetworkLayer";
         }
         server: StandardHost {
             parameters:
                 @display("p=509,150;i=device/pc2");
+                ipv4.typename = "DBFIpv4NetworkLayer";
         }
         configurator: Ipv4NetworkConfigurator {
             parameters:

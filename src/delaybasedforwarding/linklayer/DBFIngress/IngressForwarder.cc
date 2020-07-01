@@ -16,8 +16,11 @@
 #include "IngressForwarder.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "inet/common/packet/Packet_m.h"
+#include "inet/networklayer/ipv4/Ipv4Header_m.h"
 
 namespace delaybasedforwarding {
+
+#define DBFCHUNKIDXATINGRESS 3
 
 Define_Module(IngressForwarder);
 
@@ -29,12 +32,16 @@ void IngressForwarder::initialize()
 void IngressForwarder::handleMessage(cMessage *msg)
 {
     if (inet::Packet *packet = dynamic_cast<inet::Packet*>(msg)) {
-        DBFHeader *dbfHeader = nullptr;
-        if ((dbfHeader = packet->popAtBack(inet::B(16), 1)) != nullptr) {
-
+        if (packet->hasAtFront<inet::Ipv4Header>()) {
+            auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
+            if (packet->hasAtFront<DBFHeader>()) {
+                auto dbfHeader = packet->peekAtFront<DBFHeader>();
+                // Do something with DBFHeader
+            }
+            packet->insertAtFront(ipv4Header);
         }
     }
-    send(packet,"out");
+    send(msg,"out");
 }
 
 } //namespace

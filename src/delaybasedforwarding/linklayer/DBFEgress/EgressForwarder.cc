@@ -16,6 +16,7 @@
 #include "EgressForwarder.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "inet/common/packet/Packet_m.h"
+#include "inet/networklayer/ipv4/Ipv4Header_m.h"
 
 namespace delaybasedforwarding {
 
@@ -28,10 +29,16 @@ void EgressForwarder::initialize()
 
 void EgressForwarder::handleMessage(cMessage *msg)
 {
-    auto dbfHeader = inet::makeShared<DBFHeader>();
-    dbfHeader->setDMin(0);
-    dbfHeader->setDMax(0);
-    dbfHeader->setEDelay(0);
+    if (inet::Packet *packet = dynamic_cast<inet::Packet*>(msg)) {
+        if (packet->hasAtFront<inet::Ipv4Header>()) {
+            auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
+            if (packet->hasAtFront<DBFHeader>()) {
+                auto dbfHeader = packet->peekAtFront<DBFHeader>();
+                // Do something with DBFHeader
+            }
+            packet->insertAtFront(ipv4Header);
+        }
+    }
     send(msg,"out");
 }
 

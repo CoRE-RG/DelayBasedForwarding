@@ -13,20 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.node.inet;
+package delaybasedforwarding.networklayer.computer;
 
-import inet.node.inet.Router;
-import delaybasedforwarding.networklayer.computer.DBFComputer;
-
-module DBFRouter extends Router
+//
+// TODO auto-generated module
+//
+simple DBFComputer
 {
-    parameters:
-        eth[*].egressTC.typename = "DBFEgressTrafficConditioner";
-        eth[*].ingressTC.typename = "DBFIngressTrafficConditioner";
-        ipv4.typename = "DBFIpv4NetworkLayer";
-
-    submodules:
-        dbfComputer: DBFComputer {
-            @display("p=125,629;is=s;i=abstract/penguin");
-        }
 }

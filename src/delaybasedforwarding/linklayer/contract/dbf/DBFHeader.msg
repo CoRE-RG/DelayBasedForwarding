@@ -14,6 +14,7 @@
 // 
 
 import inet.common.packet.chunk.Chunk;
+import inet.common.INETDefs;
 
 namespace delaybasedforwarding;
 

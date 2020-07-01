@@ -13,20 +13,25 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.node.inet;
+#ifndef __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
+#define __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
 
-import inet.node.inet.Router;
-import delaybasedforwarding.networklayer.computer.DBFComputer;
+#include <omnetpp.h>
 
-module DBFRouter extends Router
+using namespace omnetpp;
+
+namespace delaybasedforwarding {
+
+/**
+ * TODO - Generated class
+ */
+class DBFComputer : public cSimpleModule
 {
-    parameters:
-        eth[*].egressTC.typename = "DBFEgressTrafficConditioner";
-        eth[*].ingressTC.typename = "DBFIngressTrafficConditioner";
-        ipv4.typename = "DBFIpv4NetworkLayer";
+  protected:
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
+};
 
-    submodules:
-        dbfComputer: DBFComputer {
-            @display("p=125,629;is=s;i=abstract/penguin");
-        }
-}
+} //namespace
+
+#endif

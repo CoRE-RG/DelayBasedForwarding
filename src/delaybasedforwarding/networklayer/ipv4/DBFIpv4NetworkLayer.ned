@@ -13,20 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.node.inet;
+package delaybasedforwarding.networklayer.ipv4;
 
-import inet.node.inet.Router;
-import delaybasedforwarding.networklayer.computer.DBFComputer;
+import inet.networklayer.ipv4.Ipv4NetworkLayer;
 
-module DBFRouter extends Router
+//
+// The Ipv4 network layer module for delay based forwarded packets
+//
+// @author Mehmet Cakir
+//
+module DBFIpv4NetworkLayer extends Ipv4NetworkLayer
 {
-    parameters:
-        eth[*].egressTC.typename = "DBFEgressTrafficConditioner";
-        eth[*].ingressTC.typename = "DBFIngressTrafficConditioner";
-        ipv4.typename = "DBFIpv4NetworkLayer";
-
-    submodules:
-        dbfComputer: DBFComputer {
-            @display("p=125,629;is=s;i=abstract/penguin");
-        }
+    ip.typename = "DBFIpv4";
 }

@@ -13,20 +13,24 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.node.inet;
+#include "DBFIpv4.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 
-import inet.node.inet.Router;
-import delaybasedforwarding.networklayer.computer.DBFComputer;
+namespace delaybasedforwarding {
 
-module DBFRouter extends Router
-{
-    parameters:
-        eth[*].egressTC.typename = "DBFEgressTrafficConditioner";
-        eth[*].ingressTC.typename = "DBFIngressTrafficConditioner";
-        ipv4.typename = "DBFIpv4NetworkLayer";
+Define_Module(DBFIpv4);
 
-    submodules:
-        dbfComputer: DBFComputer {
-            @display("p=125,629;is=s;i=abstract/penguin");
-        }
+void DBFIpv4::encapsulate(inet::Packet *packet) {
+    // Insert DBF Header at front
+    auto dbfHeader = inet::makeShared<DBFHeader>();
+    packet->insertAtFront(dbfHeader);
+    inet::Ipv4::encapsulate(packet);
 }
+
+void DBFIpv4::decapsulate(inet::Packet *packet) {
+    inet::Ipv4::decapsulate(packet);
+    // Pop at front DBF Header
+    packet->popAtFront<DBFHeader>();
+}
+
+} //namespace
