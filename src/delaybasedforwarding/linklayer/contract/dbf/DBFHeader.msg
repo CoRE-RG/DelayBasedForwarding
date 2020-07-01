@@ -19,8 +19,8 @@ namespace delaybasedforwarding;
 
 class DBFHeader extends inet::FieldsChunk {
     chunkLength = inet::B(16);
-    uint32_t dMin;
-    uint32_t dMax;
-    uint32_t eDelay;
-    uint32_t admit;
+    uint32_t dMin = 0;
+    uint32_t dMax = 0;
+    uint32_t eDelay = 0;
+    uint32_t admit = 0;
 }

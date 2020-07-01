@@ -13,7 +13,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include <delaybasedforwarding/linklayer/DBFEgress/EgressForwarder.h>
+#include "EgressForwarder.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
+#include "inet/common/packet/Packet_m.h"
 
 namespace delaybasedforwarding {
 
@@ -26,6 +28,10 @@ void EgressForwarder::initialize()
 
 void EgressForwarder::handleMessage(cMessage *msg)
 {
+    auto dbfHeader = inet::makeShared<DBFHeader>();
+    dbfHeader->setDMin(0);
+    dbfHeader->setDMax(0);
+    dbfHeader->setEDelay(0);
     send(msg,"out");
 }
 

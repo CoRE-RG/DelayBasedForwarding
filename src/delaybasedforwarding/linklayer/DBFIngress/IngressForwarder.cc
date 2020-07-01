@@ -13,7 +13,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include <delaybasedforwarding/linklayer/DBFIngress/IngressForwarder.h>
+#include "IngressForwarder.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
+#include "inet/common/packet/Packet_m.h"
 
 namespace delaybasedforwarding {
 
@@ -21,12 +23,18 @@ Define_Module(IngressForwarder);
 
 void IngressForwarder::initialize()
 {
-    // TODO - Generated method body
+
 }
 
 void IngressForwarder::handleMessage(cMessage *msg)
 {
-    send(msg,"out");
+    if (inet::Packet *packet = dynamic_cast<inet::Packet*>(msg)) {
+        DBFHeader *dbfHeader = nullptr;
+        if ((dbfHeader = packet->popAtBack(inet::B(16), 1)) != nullptr) {
+
+        }
+    }
+    send(packet,"out");
 }
 
 } //namespace
