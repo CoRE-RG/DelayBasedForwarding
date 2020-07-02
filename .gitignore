@@ -8,4 +8,5 @@
 libDelayBasedForwarding_dbg.dll
 libDelayBasedForwarding.dll
 libDelayBasedForwarding_dbg.so
+libDelayBasedForwarding.so
 /out
