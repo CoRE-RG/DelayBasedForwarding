@@ -20,7 +20,7 @@ package delaybasedforwarding.examples.tcpclientserver;
 
 import inet.common.misc.NetAnimTrace;
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
-import inet.node.inet.StandardHost;
+import delaybasedforwarding.node.inet.DBFHost;
 import ned.DatarateChannel;
 import inet.node.ethernet.EtherSwitch;
 import inet.node.ethernet.EtherLink;
@@ -46,15 +46,13 @@ network ClientServer
 
 
     submodules:
-        client1: StandardHost {
+        client1: DBFHost {
             parameters:
                 @display("p=180,150;i=device/pc3");
-                ipv4.typename = "DBFIpv4NetworkLayer";
         }
-        server: StandardHost {
+        server: DBFHost {
             parameters:
                 @display("p=509,150;i=device/pc2");
-                ipv4.typename = "DBFIpv4NetworkLayer";
         }
         configurator: Ipv4NetworkConfigurator {
             parameters:
