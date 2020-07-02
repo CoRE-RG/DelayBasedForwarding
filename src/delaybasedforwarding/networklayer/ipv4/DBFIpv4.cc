@@ -21,7 +21,6 @@ namespace delaybasedforwarding {
 Define_Module(DBFIpv4);
 
 void DBFIpv4::encapsulate(inet::Packet *packet) {
-    // Insert DBF Header at front
     auto dbfHeader = inet::makeShared<DBFHeader>();
     packet->insertAtFront(dbfHeader);
     inet::Ipv4::encapsulate(packet);
@@ -29,7 +28,6 @@ void DBFIpv4::encapsulate(inet::Packet *packet) {
 
 void DBFIpv4::decapsulate(inet::Packet *packet) {
     inet::Ipv4::decapsulate(packet);
-    // Pop at front DBF Header
     packet->popAtFront<DBFHeader>();
 }
 
