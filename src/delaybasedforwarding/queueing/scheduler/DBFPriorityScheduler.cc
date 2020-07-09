@@ -26,9 +26,11 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
 
 void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
 {
+    // TODO schedule on lowest tmin
     Enter_Method("DBFPriorityScheduler::handleCanPopPacket");
-    auto packet = collections[0]->getPacket(0);
-    collections[0]->removePacket(packet);
+    int collectionIdx = schedulePacket();
+    auto packet = collections[collectionIdx]->getPacket(0);
+    collections[collectionIdx]->removePacket(packet);
     take(packet);
     send(packet,"out");
 }
