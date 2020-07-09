@@ -26,7 +26,6 @@ Define_Module(IngressForwarder);
 
 void IngressForwarder::initialize()
 {
-
 }
 
 void IngressForwarder::handleMessage(cMessage *msg)

@@ -32,5 +32,4 @@ module DBFIngressTrafficConditioner like ITrafficConditioner
     connections allowunconnected:
         in --> ifwd.in;
         out <-- ifwd.out;
-        //in --> out;
 }

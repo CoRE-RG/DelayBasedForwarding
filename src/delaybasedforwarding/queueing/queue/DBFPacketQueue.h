@@ -13,20 +13,26 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "Queue.h"
+#ifndef __DELAYBASEDFORWARDING_DBFPACKETQUEUE_H_
+#define __DELAYBASEDFORWARDING_DBFPACKETQUEUE_H_
+
+#include <inet/queueing/queue/PacketQueue.h>
+
+using namespace omnetpp;
 
 namespace delaybasedforwarding {
 
-Define_Module(Queue);
-
-void Queue::initialize()
+/**
+ * @brief The queue for delay based forwarded packets
+ *
+ * @ingroup delaybasedforwarding/queueing/queue
+ *
+ * @author Mehmet Cakir
+ */
+class DBFPacketQueue : public inet::queueing::PacketQueue
 {
-    // TODO - Generated method body
-}
-
-void Queue::handleMessage(cMessage *msg)
-{
-    // TODO - Generated method body
-}
+};
 
 } //namespace
+
+#endif

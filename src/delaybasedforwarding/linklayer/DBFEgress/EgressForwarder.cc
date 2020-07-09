@@ -24,21 +24,36 @@ Define_Module(EgressForwarder);
 
 void EgressForwarder::initialize()
 {
-    // TODO - Generated method body
 }
 
 void EgressForwarder::handleMessage(cMessage *msg)
 {
+    if (msg->arrivedOn("in") && containsDBFHeader(msg)) {
+        processDBFPacket(msg);
+    }
+    else {
+        send(msg,"out");
+    }
+}
+
+bool EgressForwarder::containsDBFHeader(cMessage *msg) {
+    bool containsDBFHeader = false;
     if (inet::Packet *packet = dynamic_cast<inet::Packet*>(msg)) {
         if (containsProtocol(packet, &inet::Protocol::ipv4)) {
-            auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
-            auto dbfHeader = packet->peekAtFront<DBFHeader>();
-            // Do something with DBFHeader
-            packet->trimFront();
-            packet->insertAtFront(ipv4Header);
+            containsDBFHeader = true;
         }
     }
-    send(msg,"out");
+    return containsDBFHeader;
+}
+
+void EgressForwarder::processDBFPacket(cMessage *msg) {
+    inet::Packet *packet = dynamic_cast<inet::Packet*>(msg);
+    auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
+    auto dbfHeader = packet->peekAtFront<DBFHeader>();
+    // Do something with DBFHeader
+    packet->trimFront();
+    packet->insertAtFront(ipv4Header);
+    send(packet,"schedule");
 }
 
 void EgressForwarder::handleRegisterProtocol(const inet::Protocol& protocol, cGate *in, inet::ServicePrimitive servicePrimitive) {

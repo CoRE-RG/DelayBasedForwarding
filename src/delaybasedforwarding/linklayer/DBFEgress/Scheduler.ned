@@ -22,4 +22,9 @@ package delaybasedforwarding.linklayer.DBFEgress;
 //
 simple Scheduler
 {
+    gates:
+        input in @labels(schedule);
+        output out @lables(forward);
+        input dequeue @labels(pop);
+        output enqueue @labels(push);
 }

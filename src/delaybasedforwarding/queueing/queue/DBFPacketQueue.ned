@@ -13,13 +13,15 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.linklayer.DBFEgress;
+package delaybasedforwarding.queueing.queue;
+
+import inet.queueing.queue.PacketQueue;
 
 //
-// The queue for en- and dequeuing delay base forwarded packets
+// This module implements a queue for delay based forwarding packets.
 //
-// @author Mehmet Cakir
-//
-simple Queue
+simple DBFPacketQueue extends PacketQueue
 {
+    parameters:
+        @class(DBFPacketQueue);
 }

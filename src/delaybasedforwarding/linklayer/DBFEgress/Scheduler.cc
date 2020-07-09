@@ -14,19 +14,50 @@
 // 
 
 #include "Scheduler.h"
+#include "inet/common/ModuleAccess.h"
 
 namespace delaybasedforwarding {
 
 Define_Module(Scheduler);
 
-void Scheduler::initialize()
+void Scheduler::initialize(int stage)
 {
-    // TODO - Generated method body
+    if (stage == inet::INITSTAGE_LOCAL) {
+        enqueueGate = gate("enqueue");
+        consumer = inet::findConnectedModule<inet::queueing::IPassivePacketSink>(enqueueGate);
+        dequeueGate = gate("dequeue");
+        provider = inet::findConnectedModule<inet::queueing::IPassivePacketSource>(dequeueGate);
+    }
 }
 
 void Scheduler::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    inet::Packet *packet = dynamic_cast<inet::Packet*>(msg);
+    consumer->pushPacket(packet, enqueueGate);
+}
+
+inet::queueing::IPassivePacketSink* Scheduler::getConsumer(cGate *gate)
+{
+    return consumer;
+}
+
+void Scheduler::handleCanPushPacket(cGate *gate)
+{
+    Enter_Method("Scheduler::handleCanPushPacket");
+    EV_DEBUG << "Scheduler::handleCanPushPacket" << endl;
+}
+
+inet::queueing::IPassivePacketSource* Scheduler::getProvider(cGate *gate)
+{
+    return provider;
+}
+
+void Scheduler::handleCanPopPacket(cGate *gate)
+{
+    Enter_Method("Scheduler::handleCanPopPacket");
+    auto packet = provider->popPacket(dequeueGate);
+    take(packet);
+    send(packet, "out");
 }
 
 } //namespace

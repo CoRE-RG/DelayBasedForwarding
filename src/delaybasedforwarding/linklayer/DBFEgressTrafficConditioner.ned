@@ -19,7 +19,7 @@ import inet.linklayer.contract.ITrafficConditioner;
 
 import delaybasedforwarding.linklayer.DBFEgress.EgressForwarder;
 import delaybasedforwarding.linklayer.DBFEgress.Scheduler;
-import delaybasedforwarding.linklayer.DBFEgress.Queue;
+import delaybasedforwarding.queueing.queue.DBFPacketQueue;
 
 module DBFEgressTrafficConditioner like ITrafficConditioner
 {
@@ -31,13 +31,20 @@ module DBFEgressTrafficConditioner like ITrafficConditioner
             @display("p=170,65;i=block/classifier");
         }
         scheduler: Scheduler {
-            @display("p=53,213;i=block/timer");
+            @display("p=170,185;i=block/timer");
         }
-        queue: Queue {
-            @display("p=282,213;i=block/queue");
+        queue: DBFPacketQueue {
+            @display("p=170,302;i=block/queue");
         }
+
     connections allowunconnected:
         in --> efwd.in;
         out <-- efwd.out;
-        //in --> out;
+        
+        efwd.forward <-- scheduler.out;
+        efwd.schedule --> scheduler.in;
+
+        scheduler.enqueue --> queue.in;
+        scheduler.dequeue <-- queue.out;
+        
 }

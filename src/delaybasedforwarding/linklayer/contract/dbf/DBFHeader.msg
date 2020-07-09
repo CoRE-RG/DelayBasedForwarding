@@ -14,9 +14,16 @@
 // 
 
 import inet.common.packet.chunk.Chunk;
-import inet.common.INETDefs;
 
 namespace delaybasedforwarding;
+
+//
+// @brief Message class for delay based forwarding header.
+//
+// @ingroup delaybasedforwarding/linklayer/contract/dbf
+// 
+// @author Mehmet Cakir
+//
 
 class DBFHeader extends inet::FieldsChunk {
     chunkLength = inet::B(16);

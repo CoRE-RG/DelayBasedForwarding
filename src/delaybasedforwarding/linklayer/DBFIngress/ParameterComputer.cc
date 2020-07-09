@@ -21,12 +21,10 @@ Define_Module(ParameterComputer);
 
 void ParameterComputer::initialize()
 {
-    // TODO - Generated method body
 }
 
 void ParameterComputer::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
 }
 
 } //namespace

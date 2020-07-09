@@ -13,29 +13,10 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __DELAYBASEDFORWARDING_QUEUE_H_
-#define __DELAYBASEDFORWARDING_QUEUE_H_
-
-#include <omnetpp.h>
-
-using namespace omnetpp;
+#include "DBFPacketQueue.h"
 
 namespace delaybasedforwarding {
 
-/**
- * @brief The queue for en- and dequeuing delay base forwarded packets
- *
- * @ingroup delaybasedforwarding/linklayer/DBFEgress
- *
- * @author Mehmet Cakir
- */
-class Queue : public cSimpleModule
-{
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-};
+Define_Module(DBFPacketQueue);
 
 } //namespace
-
-#endif

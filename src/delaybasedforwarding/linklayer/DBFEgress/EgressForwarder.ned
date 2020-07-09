@@ -25,4 +25,6 @@ simple EgressForwarder
     gates:
         input in;
         output out;
+        input forward @labels(forward);
+        output schedule @lables(schedule);
 }

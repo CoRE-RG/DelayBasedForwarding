@@ -21,12 +21,10 @@ Define_Module(ForwardingInformationBase);
 
 void ForwardingInformationBase::initialize()
 {
-    // TODO - Generated method body
 }
 
 void ForwardingInformationBase::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
 }
 
 } //namespace

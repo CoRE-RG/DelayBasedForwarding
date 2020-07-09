@@ -17,6 +17,8 @@
 #define __DELAYBASEDFORWARDING_SCHEDULER_H_
 
 #include <omnetpp.h>
+#include <inet/queueing/contract/IActivePacketSource.h>
+#include <inet/queueing/contract/IActivePacketSink.h>
 
 using namespace omnetpp;
 
@@ -29,11 +31,45 @@ namespace delaybasedforwarding {
  *
  * @author Mehmet Cakir
  */
-class Scheduler : public cSimpleModule
+class Scheduler : public cSimpleModule, public inet::queueing::IActivePacketSource, public inet::queueing::IActivePacketSink
 {
   protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+    cGate *enqueueGate = nullptr;
+    inet::queueing::IPassivePacketSink *consumer = nullptr;
+
+  public:
+    cGate *dequeueGate = nullptr;
+    inet::queueing::IPassivePacketSource *provider = nullptr;
+
+  protected:
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
+
+    /**
+     * Returns the passive packet sink where packets are pushed. The gate must
+     * not be nullptr.
+     */
+    virtual inet::queueing::IPassivePacketSink *getConsumer(cGate *gate) override;
+
+    /**
+     * Notifies about a state change that allows to push some packet into the
+     * passive packet sink at the given gate. The gate is never nullptr.
+     */
+    virtual void handleCanPushPacket(cGate *gate) override;
+
+  public:
+    /**
+     * Returns the passive packet source from where packets are collected. The
+     * gate must not be nullptr.
+     */
+    virtual inet::queueing::IPassivePacketSource *getProvider(cGate *gate) override;
+
+    /**
+     * Notifies about a state change that allows to pop some packet from the
+     * passive packet source at the given gate. The gate is never nullptr.
+     */
+    virtual void handleCanPopPacket(cGate *gate) override;
+
 };
 
 } //namespace
