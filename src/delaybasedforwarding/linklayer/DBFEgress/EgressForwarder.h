@@ -37,10 +37,6 @@ class EgressForwarder : public cSimpleModule, public inet::IProtocolRegistration
     virtual void handleMessage(cMessage *msg) override;
     virtual void handleRegisterService(const inet::Protocol& protocol, cGate *out, inet::ServicePrimitive servicePrimitive) override;
     virtual void handleRegisterProtocol(const inet::Protocol& protocol, cGate *in, inet::ServicePrimitive servicePrimitive) override;
-
-  private:
-    bool containsDBFHeader(cMessage *msg);
-    void processDBFPacket(cMessage *msg);
 };
 
 } //namespace

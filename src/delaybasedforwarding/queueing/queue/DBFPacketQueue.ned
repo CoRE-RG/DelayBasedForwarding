@@ -18,8 +18,13 @@ package delaybasedforwarding.queueing.queue;
 import inet.queueing.queue.PacketQueue;
 
 //
-// This module implements a queue for delay based forwarding packets.
+// @brief Thís module implements a packet queue for delay based forwarded packets
 //
+// @ingroup delaybasedforwarding/queueing/queue
+//
+// @author Mehmet Cakir
+//
+
 simple DBFPacketQueue extends PacketQueue
 {
     parameters:

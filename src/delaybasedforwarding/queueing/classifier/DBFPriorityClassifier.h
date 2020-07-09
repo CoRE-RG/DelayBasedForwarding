@@ -13,20 +13,34 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.linklayer.DBFEgress;
+#ifndef __DELAYBASEDFORWARDING_DBFPRIORITYCLASSIFIER_H_
+#define __DELAYBASEDFORWARDING_DBFPRIORITYCLASSIFIER_H_
 
-//
-// @brief This module implements the forwarder at egress for delay based forwarded packets
-//
-// @ingroup delaybasedforwarding/linklayer/DBFEgress
-//
-// @author Mehmet Cakir
-//
-simple EgressForwarder
+#include <omnetpp.h>
+#include <inet/queueing/classifier/PriorityClassifier.h>
+
+using namespace omnetpp;
+
+namespace delaybasedforwarding {
+
+/**
+ * @brief The priority classifier for delay based forwarded packets
+ *
+ * @ingroup delaybasedforwarding/queueing/classifier
+ *
+ * @author Mehmet Cakir
+ */
+
+class DBFPriorityClassifier : public inet::queueing::PriorityClassifier
 {
-    gates:
-        input in;
-        output out;
-        input forward @labels(pop);
-        output schedule @lables(push);
-}
+  protected:
+    virtual void handleMessage(cMessage *msg);
+
+  private:
+    bool containsDBFHeader(cMessage *msg);
+    void processDBFPacket(cMessage *msg);
+};
+
+} //namespace
+
+#endif

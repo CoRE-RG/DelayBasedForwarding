@@ -13,20 +13,24 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.linklayer.DBFEgress;
+#include "DBFPriorityScheduler.h"
 
-//
-// @brief This module implements the forwarder at egress for delay based forwarded packets
-//
-// @ingroup delaybasedforwarding/linklayer/DBFEgress
-//
-// @author Mehmet Cakir
-//
-simple EgressForwarder
+namespace delaybasedforwarding {
+
+Define_Module(DBFPriorityScheduler);
+
+void DBFPriorityScheduler::handleMessage(cMessage *msg)
 {
-    gates:
-        input in;
-        output out;
-        input forward @labels(pop);
-        output schedule @lables(push);
+    // Do nothing
 }
+
+void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
+{
+    Enter_Method("DBFPriorityScheduler::handleCanPopPacket");
+    auto packet = collections[0]->getPacket(0);
+    collections[0]->removePacket(packet);
+    take(packet);
+    send(packet,"out");
+}
+
+} //namespace

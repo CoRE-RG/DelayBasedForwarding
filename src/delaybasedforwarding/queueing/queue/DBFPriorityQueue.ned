@@ -13,20 +13,23 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.linklayer.DBFEgress;
+package delaybasedforwarding.queueing.queue;
+
+import inet.queueing.queue.PriorityQueue;
 
 //
-// @brief This module implements the forwarder at egress for delay based forwarded packets
+// @brief This module implements a priority queue for delay based forwarding packets.
 //
-// @ingroup delaybasedforwarding/linklayer/DBFEgress
+// @ingroup delaybasedforwarding/queueing/queue
 //
-// @author Mehmet Cakir
+// @author Mehmet
 //
-simple EgressForwarder
+
+module DBFPriorityQueue extends PriorityQueue
 {
-    gates:
-        input in;
-        output out;
-        input forward @labels(pop);
-        output schedule @lables(push);
+    parameters:
+        buffer.typename = "";
+        classifier.typename = "DBFPriorityClassifier";
+        queue.typename = "DBFPacketQueue";
+        scheduler.typename = "DBFPriorityScheduler";
 }
