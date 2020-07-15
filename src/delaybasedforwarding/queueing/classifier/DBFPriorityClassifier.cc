@@ -18,6 +18,7 @@
 #include "DBFPriorityClassifier.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 
 namespace delaybasedforwarding {
 
@@ -49,6 +50,11 @@ void DBFPriorityClassifier::processDBFPacket(cMessage *msg) {
     auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
     auto dbfHeader = packet->peekAtFront<DBFHeader>();
     // Do something with DBFHeader
+    auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
+    dbfHeaderTag->setDMin(dbfHeader->getDMin());
+    dbfHeaderTag->setDMax(dbfHeader->getDMax());
+    dbfHeaderTag->setEDelay(dbfHeader->getEDelay());
+    dbfHeaderTag->setAdmit(dbfHeader->getAdmit());
     packet->trimFront();
     packet->insertAtFront(ipv4Header);
 }
