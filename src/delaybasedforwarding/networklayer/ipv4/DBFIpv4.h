@@ -18,6 +18,7 @@
 
 #include <omnetpp.h>
 #include "inet/networklayer/ipv4/Ipv4.h"
+#include "delaybasedforwarding/networklayer/computer/DBFComputer.h"
 
 using namespace omnetpp;
 
@@ -33,6 +34,8 @@ namespace delaybasedforwarding {
 class DBFIpv4 : public inet::Ipv4
 {
   protected:
+    virtual void initialize(int stage) override;
+
     /**
      * Encapsulate packet coming from higher layers into Ipv4Header, using
      * the given control info. Override if you subclassed controlInfo and/or
@@ -44,6 +47,9 @@ class DBFIpv4 : public inet::Ipv4
      * Decapsulate packet.
      */
     virtual void decapsulate(inet::Packet *packet) override;
+
+  private:
+    DBFComputer *dbfComputer = nullptr;
 };
 
 } //namespace

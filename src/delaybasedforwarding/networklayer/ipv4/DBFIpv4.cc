@@ -13,6 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+#include <inet/common/ModuleAccess.h>
 #include "DBFIpv4.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 
@@ -20,8 +21,18 @@ namespace delaybasedforwarding {
 
 Define_Module(DBFIpv4);
 
+void DBFIpv4::initialize(int stage) {
+    inet::Ipv4::initialize(stage);
+    if (stage == inet::INITSTAGE_LOCAL) {
+        if (!(dbfComputer = dynamic_cast<DBFComputer*>(getParentModule()->getParentModule()->getSubmodule("dbfComputer")))) {
+            throw cRuntimeError("Could not get DBFComputer in module %s", this->getFullName());
+        }
+    }
+}
+
 void DBFIpv4::encapsulate(inet::Packet *packet) {
     auto dbfHeader = inet::makeShared<DBFHeader>();
+    dbfComputer->addSLOPrameters(dbfHeader);
     packet->insertAtFront(dbfHeader);
     inet::Ipv4::encapsulate(packet);
 }

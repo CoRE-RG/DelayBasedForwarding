@@ -17,19 +17,33 @@
 #define __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
 
 #include <omnetpp.h>
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 
 using namespace omnetpp;
 
 namespace delaybasedforwarding {
 
 /**
- * TODO - Generated class
+ * @brief The parameter computer for delay based forwarded packets
+ *
+ * @ingroup delaybasedforwarding/networklayer/computer/
+ *
+ * @author Mehmet Cakir
  */
 class DBFComputer : public cSimpleModule
 {
+
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+
+  public:
+    void addSLOPrameters(inet::Ptr<DBFHeader> dbfHeader);
+
+  private:
+    simtime_t dMin;
+    simtime_t dMax;
+    uint32_t admit;
 };
 
 } //namespace

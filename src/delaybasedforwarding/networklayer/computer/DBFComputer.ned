@@ -16,8 +16,17 @@
 package delaybasedforwarding.networklayer.computer;
 
 //
-// TODO auto-generated module
+// @brief The parameter computer for delay based forwarded packets
+//
+// @ingroup delaybasedforwarding/networklayer/computer/
+//
+// @author Mehmet Cakir
 //
 simple DBFComputer
 {
+    parameters:
+        @class(DBFComputer);
+        double dMin @unit(ms) = default(-1ms);
+        double dMax @unit(ms) = default(-1ms);
+        int admit = default(0);
 }

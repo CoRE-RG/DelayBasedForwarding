@@ -17,16 +17,29 @@
 
 namespace delaybasedforwarding {
 
+#define STARTEDELAY 0
+
+
 Define_Module(DBFComputer);
 
 void DBFComputer::initialize()
 {
-    // TODO - Generated method body
+    dMin = par("dMin");
+    dMax = par("dMax");
+    admit = par("admit");
 }
 
 void DBFComputer::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    // Do nothing
+}
+
+void DBFComputer::addSLOPrameters(inet::Ptr<DBFHeader> dbfHeader)
+{
+    dbfHeader->setDMin(dMin);
+    dbfHeader->setDMax(dMax);
+    dbfHeader->setAdmit(admit);
+    dbfHeader->setEDelay(STARTEDELAY);
 }
 
 } //namespace

@@ -16,9 +16,7 @@
 package delaybasedforwarding.linklayer;
 
 import inet.linklayer.contract.ITrafficConditioner;
-import delaybasedforwarding.linklayer.DBFIngress.ForwardingInformationBase;
 import delaybasedforwarding.linklayer.DBFIngress.IngressForwarder;
-import delaybasedforwarding.linklayer.DBFIngress.ParameterComputer;
 
 module DBFIngressTrafficConditioner like ITrafficConditioner
 {

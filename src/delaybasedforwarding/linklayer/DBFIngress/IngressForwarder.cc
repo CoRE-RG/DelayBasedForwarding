@@ -20,8 +20,6 @@
 
 namespace delaybasedforwarding {
 
-#define DBFCHUNKIDXATINGRESS 3
-
 Define_Module(IngressForwarder);
 
 void IngressForwarder::initialize()
