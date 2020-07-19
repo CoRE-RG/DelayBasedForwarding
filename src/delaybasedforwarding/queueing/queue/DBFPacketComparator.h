@@ -1,0 +1,28 @@
+/*
+ * DBFPacketComparator.h
+ *
+ *  Created on: Jul 19, 2020
+ *      Author: mehkir
+ */
+
+#ifndef DELAYBASEDFORWARDING_QUEUEING_QUEUE_DBFPACKETCOMPARATOR_H_
+#define DELAYBASEDFORWARDING_QUEUEING_QUEUE_DBFPACKETCOMPARATOR_H_
+
+#include <inet/queueing/contract/IPacketComparatorFunction.h>
+
+namespace delaybasedforwarding {
+
+class DBFPacketComparator: public inet::queueing::IPacketComparatorFunction {
+public:
+    DBFPacketComparator();
+    ~DBFPacketComparator();
+
+    /**
+     * Returns the order of the given packets.
+     */
+     virtual int comparePackets(inet::Packet *packet1, inet::Packet *packet2) const override;
+};
+
+} /* namespace delaybasedforwarding */
+
+#endif /* DELAYBASEDFORWARDING_QUEUEING_QUEUE_DBFPACKETCOMPARATOR_H_ */
