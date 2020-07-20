@@ -14,6 +14,7 @@
 // 
 
 #include "DBFPriorityScheduler.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 
 namespace delaybasedforwarding {
 
@@ -21,7 +22,7 @@ Define_Module(DBFPriorityScheduler);
 
 void DBFPriorityScheduler::handleMessage(cMessage *msg)
 {
-    // Do nothing
+    send(msg,"out");
 }
 
 void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
@@ -30,10 +31,16 @@ void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
     // next packets tmin
     Enter_Method("DBFPriorityScheduler::handleCanPopPacket");
     int collectionIdx = schedulePacket();
-    auto packet = collections[collectionIdx]->getPacket(0);
-    collections[collectionIdx]->removePacket(packet);
-    take(packet);
-    send(packet,"out");
+    if (collectionIdx >= 0) {
+        auto packet = collections[collectionIdx]->getPacket(0);
+        collections[collectionIdx]->removePacket(packet);
+        take(packet);
+        if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
+            scheduleAt(simTime() + dbfHeaderTag->getDMin(), packet);
+        } else {
+            send(packet,"out");
+        }
+    }
 }
 
 } //namespace

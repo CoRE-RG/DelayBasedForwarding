@@ -25,16 +25,20 @@ int DBFPacketComparator::comparePackets(inet::Packet *packet1, inet::Packet *pac
     auto tag2 = packet2->findTag<DBFHeaderTag>();
     if (tag1 && tag2) {
         if ((tag1->getAdmit() && tag2->getAdmit()) || (!tag1->getAdmit() && !tag2->getAdmit())) {
-            result = -1*(int)(tag1->getDMin() - tag2->getDMin()).dbl();
+            if (tag1->getDMin() < tag2->getDMin()) {
+                result = 1;
+            } else if (tag1->getDMin() > tag2->getDMin()) {
+                result = -1;
+            }
         } else if (tag1->getAdmit()) {
-            result = tag1->getAdmit();
+            result = 1;
         } else {
-            result = -1*tag2->getAdmit();
+            result = -1;
         }
     } else if (tag1) {
-        result += 1;
+        result = 1;
     } else if (tag2) {
-        result -= 1;
+        result = -1;
     }
     return result;
 }
