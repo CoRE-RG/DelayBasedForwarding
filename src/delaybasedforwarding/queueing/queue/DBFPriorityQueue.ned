@@ -30,6 +30,6 @@ module DBFPriorityQueue extends PriorityQueue
     parameters:
         buffer.typename = "";
         classifier.typename = "DBFPriorityClassifier";
-        queue.typename = "DBFPacketQueue";
+        queue[*].typename = "DBFPacketQueue";
         scheduler.typename = "DBFPriorityScheduler";
 }

@@ -12,7 +12,7 @@
 
 namespace delaybasedforwarding {
 
-class DBFPacketComparator: public inet::queueing::IPacketComparatorFunction {
+class DBFPacketComparator: public omnetpp::cObject, public inet::queueing::IPacketComparatorFunction {
 public:
     DBFPacketComparator();
     ~DBFPacketComparator();
@@ -21,6 +21,7 @@ public:
      * Returns the order of the given packets.
      */
      virtual int comparePackets(inet::Packet *packet1, inet::Packet *packet2) const override;
+     virtual DBFPacketComparator *dup() const override;
 };
 
 } /* namespace delaybasedforwarding */
