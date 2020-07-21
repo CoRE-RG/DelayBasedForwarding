@@ -11,6 +11,9 @@
 
 namespace delaybasedforwarding {
 
+#define PACKET1HIGHERPRIORITY -1
+#define PACKET2HIGHERPRIORITY 1
+
 Register_Class(DBFPacketComparator);
 
 DBFPacketComparator::DBFPacketComparator() {
@@ -26,19 +29,19 @@ int DBFPacketComparator::comparePackets(inet::Packet *packet1, inet::Packet *pac
     if (tag1 && tag2) {
         if ((tag1->getAdmit() && tag2->getAdmit()) || (!tag1->getAdmit() && !tag2->getAdmit())) {
             if (tag1->getDMin() < tag2->getDMin()) {
-                result = 1;
+                result = PACKET1HIGHERPRIORITY;
             } else if (tag1->getDMin() > tag2->getDMin()) {
-                result = -1;
+                result = PACKET2HIGHERPRIORITY;
             }
         } else if (tag1->getAdmit()) {
-            result = 1;
+            result = PACKET1HIGHERPRIORITY;
         } else {
-            result = -1;
+            result = PACKET2HIGHERPRIORITY;
         }
     } else if (tag1) {
-        result = 1;
+        result = PACKET1HIGHERPRIORITY;
     } else if (tag2) {
-        result = -1;
+        result = PACKET2HIGHERPRIORITY;
     }
     return result;
 }

@@ -18,11 +18,56 @@
 
 namespace delaybasedforwarding {
 
+#define FRONTIDX 0
+
 Define_Module(DBFPriorityScheduler);
+
+DBFPriorityScheduler::~DBFPriorityScheduler() {
+    cancelAndDelete(dbfSelfMsg);
+    cancelAndDelete(nonDBFSelfMsg);
+}
+
+void DBFPriorityScheduler::initialize(int stage) {
+    PriorityScheduler::initialize(stage);
+    if (stage == inet::INITSTAGE_LOCAL) {
+        dbfSelfMsg = nullptr;
+        nonDBFSelfMsg = nullptr;
+        enqueuedMsgs = 0;
+        currentDBFCollectionsIdx = -1;
+        currentNONDBFCollectionsIdx = -1;
+        currentScheduleTime = SimTime().getMaxTime();
+    }
+}
 
 void DBFPriorityScheduler::handleMessage(cMessage *msg)
 {
-    send(msg,"out");
+    switch (msg->getKind()) {
+        case ScheduleKind::DBFPacket: {
+            auto packet = collections[currentDBFCollectionsIdx]->getPacket(FRONTIDX);
+            if (auto dbfPacket = dynamic_cast<inet::Packet*>(packet)) {
+                collections[currentDBFCollectionsIdx]->removePacket(dbfPacket);
+                currentScheduleTime = SimTime().getMaxTime();
+                enqueuedMsgs--;
+                take(dbfPacket);
+                send(dbfPacket,"out");
+                break;
+            }
+        }
+        case ScheduleKind::NONDBFPacket: {
+            auto packet = collections[currentNONDBFCollectionsIdx]->getPacket(FRONTIDX);
+            collections[currentNONDBFCollectionsIdx]->removePacket(packet);
+            enqueuedMsgs--;
+            take(packet);
+            send(packet,"out");
+            break;
+        }
+        default:
+            throw cRuntimeError("Not known message kind: %d", msg->getKind());
+            break;
+    }
+    if (enqueuedMsgs) {
+        checkQueues();
+    }
 }
 
 void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
@@ -30,15 +75,33 @@ void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
     // TODO schedule on lowest tmin and after that look for
     // next packets tmin
     Enter_Method("DBFPriorityScheduler::handleCanPopPacket");
+    enqueuedMsgs++;
+    checkQueues();
+}
+
+void DBFPriorityScheduler::checkQueues() {
     int collectionIdx = schedulePacket();
     if (collectionIdx >= 0) {
-        auto packet = collections[collectionIdx]->getPacket(0);
-        collections[collectionIdx]->removePacket(packet);
-        take(packet);
+        auto packet = collections[collectionIdx]->getPacket(FRONTIDX);
         if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
-            scheduleAt(simTime() + dbfHeaderTag->getDMin(), packet);
+            if (dbfHeaderTag->getDMin() < currentScheduleTime) {
+                currentDBFCollectionsIdx = collectionIdx;
+                if (dbfSelfMsg) {
+                    cancelAndDelete(dbfSelfMsg);
+                }
+                dbfSelfMsg = new cMessage("selfMsg");
+                dbfSelfMsg->setKind(ScheduleKind::DBFPacket);
+                currentScheduleTime = dbfHeaderTag->getDMin();
+                scheduleAt(simTime() + currentScheduleTime, dbfSelfMsg);
+            }
         } else {
-            send(packet,"out");
+            currentNONDBFCollectionsIdx = collectionIdx;
+            if (nonDBFSelfMsg) {
+                cancelAndDelete(nonDBFSelfMsg);
+            }
+            nonDBFSelfMsg = new cMessage("nonDBFselfMsg");
+            nonDBFSelfMsg->setKind(ScheduleKind::NONDBFPacket);
+            scheduleAt(simTime(), nonDBFSelfMsg);
         }
     }
 }

@@ -33,9 +33,51 @@ namespace delaybasedforwarding {
 
 class DBFPriorityScheduler : public inet::queueing::PriorityScheduler
 {
+  public:
+    virtual ~DBFPriorityScheduler();
+
   protected:
+    virtual void initialize(int stage) override;
     virtual void handleMessage(cMessage *msg) override;
     virtual void handleCanPopPacket(cGate *gate) override;
+
+  private:
+    void checkQueues();
+
+  private:
+    enum ScheduleKind {DBFPacket,NONDBFPacket};
+
+    /**
+     * The self message which will be scheduled
+     * for delay based forwarding packets
+     */
+    cMessage *dbfSelfMsg;
+
+    /**
+     * The self message which will be scheduled
+     * for non delay based forwarding packets
+     */
+    cMessage *nonDBFSelfMsg;
+
+    /**
+     * Counter for enqueued messages
+     */
+    int enqueuedMsgs;
+
+    /**
+     * The collections index for a scheduled delay based forwarding packet
+     */
+    int currentDBFCollectionsIdx;
+
+    /**
+     * The collections index for a non scheduled delay based forwarding packet
+     */
+    int currentNONDBFCollectionsIdx;
+
+    /**
+     * The current schedule time
+     */
+    simtime_t currentScheduleTime;
 };
 
 } //namespace
