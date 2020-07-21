@@ -34,6 +34,10 @@ class IngressForwarder : public cSimpleModule
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+
+  private:
+    bool containsDBFHeader(cMessage *msg);
+    void processDBFPacket(cMessage *msg);
 };
 
 } //namespace

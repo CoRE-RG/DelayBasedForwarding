@@ -14,8 +14,9 @@
 // 
 
 #include "IngressForwarder.h"
-#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
 
 namespace delaybasedforwarding {
@@ -28,16 +29,34 @@ void IngressForwarder::initialize()
 
 void IngressForwarder::handleMessage(cMessage *msg)
 {
-    if (inet::Packet *packet = dynamic_cast<inet::Packet*>(msg)) {
-        if (containsProtocol(packet, &inet::Protocol::ipv4)) {
-            auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
-            auto dbfHeader = packet->peekAtFront<DBFHeader>();
-            // Do something with DBFHeader
-            packet->trimFront();
-            packet->insertAtFront(ipv4Header);
-        }
+    if (containsDBFHeader(msg)) {
+        processDBFPacket(msg);
     }
     send(msg,"out");
+}
+
+bool IngressForwarder::containsDBFHeader(cMessage *msg) {
+    bool containsDBFHeader = false;
+    if (inet::Packet *packet = dynamic_cast<inet::Packet*>(msg)) {
+        if (containsProtocol(packet, &inet::Protocol::ipv4)) {
+            containsDBFHeader = true;
+        }
+    }
+    return containsDBFHeader;
+}
+
+void IngressForwarder::processDBFPacket(cMessage *msg) {
+    inet::Packet *packet = dynamic_cast<inet::Packet*>(msg);
+    auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
+    auto dbfHeader = packet->peekAtFront<DBFHeader>();
+    // Do something with DBFHeader
+    auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
+    dbfHeaderTag->setDMin(dbfHeader->getDMin());
+    dbfHeaderTag->setDMax(dbfHeader->getDMax());
+    dbfHeaderTag->setEDelay(dbfHeader->getEDelay());
+    dbfHeaderTag->setAdmit(dbfHeader->getAdmit());
+    packet->trimFront();
+    packet->insertAtFront(ipv4Header);
 }
 
 } //namespace

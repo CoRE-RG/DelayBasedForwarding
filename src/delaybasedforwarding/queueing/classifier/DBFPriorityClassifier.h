@@ -35,10 +35,6 @@ class DBFPriorityClassifier : public inet::queueing::PriorityClassifier
 {
   protected:
     virtual void handleMessage(cMessage *msg);
-
-  private:
-    bool containsDBFHeader(cMessage *msg);
-    void processDBFPacket(cMessage *msg);
 };
 
 } //namespace
