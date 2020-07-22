@@ -29,13 +29,15 @@ import delaybasedforwarding.node.inet.DBFRouter;
 network ClientServer
 {
     parameters:
-        double per = default(0);
+        double _datarate @unit(bps) = 100Mbps;
+        double _length @unit(m) = 5.0m;
+        double _delay @unit(s) = replaceUnit(_length / 2e8, "s");
     
     types:
         channel ETH_100MBIT extends EtherLink
         {
-            datarate = 100Mbps;
-            length = 5.0m;
+            datarate = _datarate;
+            length = _length;
         }
 
 
