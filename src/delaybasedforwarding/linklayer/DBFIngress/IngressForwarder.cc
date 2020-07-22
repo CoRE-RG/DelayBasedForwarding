@@ -15,7 +15,6 @@
 
 #include "IngressForwarder.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
-#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
 
@@ -25,6 +24,11 @@ Define_Module(IngressForwarder);
 
 void IngressForwarder::initialize()
 {
+    fromHops = par("fromHops");
+    toHops = par("toHops");
+    cableDelay = par("cableDelay");
+    cableLength = par("cableLength");
+    cableDatarate = par("cableDatarate");
 }
 
 void IngressForwarder::handleMessage(cMessage *msg)
@@ -49,14 +53,37 @@ void IngressForwarder::processDBFPacket(cMessage *msg) {
     inet::Packet *packet = dynamic_cast<inet::Packet*>(msg);
     auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
     auto dbfHeader = packet->peekAtFront<DBFHeader>();
-    // Do something with DBFHeader
+    calculate(packet, dbfHeader);
+    packet->trimFront();
+    packet->insertAtFront(ipv4Header);
+}
+
+void IngressForwarder::calculate(inet::Packet *packet, inet::Ptr<const DBFHeader> dbfHeader) {
     auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
+    dbfHeaderTag->setTRcv(simTime());
     dbfHeaderTag->setDMin(dbfHeader->getDMin());
     dbfHeaderTag->setDMax(dbfHeader->getDMax());
     dbfHeaderTag->setEDelay(dbfHeader->getEDelay());
     dbfHeaderTag->setAdmit(dbfHeader->getAdmit());
-    packet->trimFront();
-    packet->insertAtFront(ipv4Header);
+    dbfHeaderTag->setToHops(toHops);
+
+    simtime_t ldelay = cableDelay.dbl() + (double)packet->getBitLength()/cableDatarate;
+    simtime_t hdelay = ldelay;
+    simtime_t fromdelay = SimTime((double)fromHops*ldelay.dbl());
+    simtime_t todelay = SimTime((double)toHops*ldelay.dbl());
+    dbfHeaderTag->setLDelay(ldelay);
+    dbfHeaderTag->setHDelay(hdelay);
+    dbfHeaderTag->setFromDelay(fromdelay);
+    dbfHeaderTag->setToDelay(todelay);
+
+    dbfHeaderTag->setEDelay(dbfHeaderTag->getEDelay() + dbfHeaderTag->getLDelay());
+
+    simtime_t fqdelayMin = dbfHeaderTag->getDMin() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
+    simtime_t fqdelayMax = dbfHeaderTag->getDMax() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
+    dbfHeaderTag->setLqBudgetMin(SimTime(fqdelayMin.dbl()/(double)toHops));
+    dbfHeaderTag->setLqBudgetMax(SimTime(fqdelayMax.dbl()/(double)toHops));
+    dbfHeaderTag->setTMin(dbfHeaderTag->getLqBudgetMin() + dbfHeaderTag->getTRcv());
+    dbfHeaderTag->setTMax(dbfHeaderTag->getLqBudgetMax() + dbfHeaderTag->getTRcv());
 }
 
 } //namespace

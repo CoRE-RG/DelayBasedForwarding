@@ -35,7 +35,8 @@ class DBFHeaderTag extends inet::TagBase
     simtime_t dMax; // maximum end-to-end delay required
     
     // Parameters to calculate
-    simtime_t lqBudget; // local latency queueing budget
+    simtime_t lqBudgetMin; // minimum local latency queueing budget
+    simtime_t lqBudgetMax; // maximum local latency queueing budget
     simtime_t tMin; // time when the packet should be sent at earliest
     simtime_t tMax; // time when the packet should be sent at latest
 }

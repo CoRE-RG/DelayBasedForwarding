@@ -17,6 +17,8 @@
 #define __DELAYBASEDFORWARDING_FORWARDER_H_
 
 #include <omnetpp.h>
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
+#include "inet/common/packet/Packet.h"
 
 using namespace omnetpp;
 
@@ -38,6 +40,14 @@ class IngressForwarder : public cSimpleModule
   private:
     bool containsDBFHeader(cMessage *msg);
     void processDBFPacket(cMessage *msg);
+    void calculate(inet::Packet *packet, inet::Ptr<const DBFHeader> dbfHeader);
+
+  private:
+    int fromHops;
+    int toHops;
+    double cableLength;
+    double cableDatarate;
+    simtime_t cableDelay;
 };
 
 } //namespace
