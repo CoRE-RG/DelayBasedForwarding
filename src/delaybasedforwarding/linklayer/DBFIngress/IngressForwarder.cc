@@ -35,8 +35,14 @@ void IngressForwarder::handleMessage(cMessage *msg)
 {
     if (containsDBFHeader(msg)) {
         processDBFPacket(msg);
+        if (!earlyDiscard(msg)) {
+            send(msg,"out");
+        } else {
+            delete msg;
+        }
+    } else {
+        send(msg,"out");
     }
-    send(msg,"out");
 }
 
 bool IngressForwarder::containsDBFHeader(cMessage *msg) {
@@ -67,7 +73,8 @@ void IngressForwarder::calculate(inet::Packet *packet, inet::Ptr<const DBFHeader
     dbfHeaderTag->setAdmit(dbfHeader->getAdmit());
     dbfHeaderTag->setToHops(toHops);
 
-    simtime_t ldelay = cableDelay.dbl() + (double)packet->getBitLength()/cableDatarate;
+    // Calculate link dependent delays
+    simtime_t ldelay = SimTime(cableDelay.dbl() + (double)packet->getBitLength()/cableDatarate);
     simtime_t hdelay = ldelay;
     simtime_t fromdelay = SimTime((double)fromHops*ldelay.dbl());
     simtime_t todelay = SimTime((double)toHops*ldelay.dbl());
@@ -76,14 +83,22 @@ void IngressForwarder::calculate(inet::Packet *packet, inet::Ptr<const DBFHeader
     dbfHeaderTag->setFromDelay(fromdelay);
     dbfHeaderTag->setToDelay(todelay);
 
+    // Update experienced delay (eDelay)
     dbfHeaderTag->setEDelay(dbfHeaderTag->getEDelay() + dbfHeaderTag->getLDelay());
 
+    // Calculate queueing budget and send time
     simtime_t fqdelayMin = dbfHeaderTag->getDMin() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
     simtime_t fqdelayMax = dbfHeaderTag->getDMax() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
     dbfHeaderTag->setLqBudgetMin(SimTime(fqdelayMin.dbl()/(double)toHops));
     dbfHeaderTag->setLqBudgetMax(SimTime(fqdelayMax.dbl()/(double)toHops));
     dbfHeaderTag->setTMin(dbfHeaderTag->getLqBudgetMin() + dbfHeaderTag->getTRcv());
     dbfHeaderTag->setTMax(dbfHeaderTag->getLqBudgetMax() + dbfHeaderTag->getTRcv());
+}
+
+bool IngressForwarder::earlyDiscard(cMessage *msg) {
+    auto packet = dynamic_cast<inet::Packet*>(msg);
+    auto dbfHeaderTag = packet->findTag<DBFHeaderTag>();
+    return dbfHeaderTag->getTMax() < dbfHeaderTag->getTRcv();
 }
 
 } //namespace
