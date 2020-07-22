@@ -20,6 +20,8 @@
 
 namespace delaybasedforwarding {
 
+#define THISNODE 1
+
 Define_Module(IngressForwarder);
 
 void IngressForwarder::initialize()
@@ -76,8 +78,8 @@ void IngressForwarder::calculate(inet::Packet *packet, inet::Ptr<const DBFHeader
     // Calculate link dependent delays
     simtime_t ldelay = SimTime(cableDelay.dbl() + (double)packet->getBitLength()/cableDatarate);
     simtime_t hdelay = ldelay;
-    simtime_t fromdelay = SimTime((double)fromHops*ldelay.dbl());
-    simtime_t todelay = SimTime((double)toHops*ldelay.dbl());
+    simtime_t fromdelay = SimTime((double)fromHops * ldelay.dbl());
+    simtime_t todelay = SimTime((double)toHops * ldelay.dbl());
     dbfHeaderTag->setLDelay(ldelay);
     dbfHeaderTag->setHDelay(hdelay);
     dbfHeaderTag->setFromDelay(fromdelay);
@@ -89,8 +91,8 @@ void IngressForwarder::calculate(inet::Packet *packet, inet::Ptr<const DBFHeader
     // Calculate queueing budget and send time
     simtime_t fqdelayMin = dbfHeaderTag->getDMin() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
     simtime_t fqdelayMax = dbfHeaderTag->getDMax() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
-    dbfHeaderTag->setLqBudgetMin(SimTime(fqdelayMin.dbl()/(double)toHops));
-    dbfHeaderTag->setLqBudgetMax(SimTime(fqdelayMax.dbl()/(double)toHops));
+    dbfHeaderTag->setLqBudgetMin(SimTime(fqdelayMin.dbl() / (double)(toHops + THISNODE)));
+    dbfHeaderTag->setLqBudgetMax(SimTime(fqdelayMax.dbl() / (double)(toHops + THISNODE)));
     dbfHeaderTag->setTMin(dbfHeaderTag->getLqBudgetMin() + dbfHeaderTag->getTRcv());
     dbfHeaderTag->setTMax(dbfHeaderTag->getLqBudgetMax() + dbfHeaderTag->getTRcv());
 }

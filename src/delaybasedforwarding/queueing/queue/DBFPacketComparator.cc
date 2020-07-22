@@ -28,9 +28,9 @@ int DBFPacketComparator::comparePackets(inet::Packet *packet1, inet::Packet *pac
     auto tag2 = packet2->findTag<DBFHeaderTag>();
     if (tag1 && tag2) {
         if (tag1->getAdmit() == tag2->getAdmit()) {
-            if (tag1->getDMin() < tag2->getDMin()) {
+            if (tag1->getTMin() < tag2->getTMin()) {
                 result = PACKET1HIGHERPRIORITY;
-            } else if (tag1->getDMin() > tag2->getDMin()) {
+            } else if (tag1->getTMin() > tag2->getTMin()) {
                 result = PACKET2HIGHERPRIORITY;
             }
         } else if (tag1->getAdmit()) {

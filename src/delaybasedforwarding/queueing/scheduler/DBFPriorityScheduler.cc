@@ -72,8 +72,6 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
 
 void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
 {
-    // TODO schedule on lowest tmin and after that look for
-    // next packets tmin
     Enter_Method("DBFPriorityScheduler::handleCanPopPacket");
     enqueuedMsgs++;
     checkQueues();
