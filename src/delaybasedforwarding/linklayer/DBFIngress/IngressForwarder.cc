@@ -37,7 +37,7 @@ void IngressForwarder::handleMessage(cMessage *msg)
 {
     if (containsDBFHeader(msg)) {
         processDBFPacket(msg);
-        if (!earlyDiscard(msg)) {
+        if (!isAlreadyExpired(msg)) {
             send(msg,"out");
         } else {
             delete msg;
@@ -97,7 +97,7 @@ void IngressForwarder::calculate(inet::Packet *packet, inet::Ptr<const DBFHeader
     dbfHeaderTag->setTMax(dbfHeaderTag->getLqBudgetMax() + dbfHeaderTag->getTRcv());
 }
 
-bool IngressForwarder::earlyDiscard(cMessage *msg) {
+bool IngressForwarder::isAlreadyExpired(cMessage *msg) {
     auto packet = dynamic_cast<inet::Packet*>(msg);
     auto dbfHeaderTag = packet->findTag<DBFHeaderTag>();
     return dbfHeaderTag->getTMax() < dbfHeaderTag->getTRcv();

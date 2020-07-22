@@ -17,7 +17,8 @@
 #define __DELAYBASEDFORWARDING_DBFPRIORITYSCHEDULER_H_
 
 #include <omnetpp.h>
-#include <inet/queueing/scheduler/PriorityScheduler.h>
+#include "inet/queueing/scheduler/PriorityScheduler.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 
 using namespace omnetpp;
 
@@ -43,21 +44,16 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler
 
   private:
     void checkQueues();
+    bool isExpired(DBFHeaderTag *dbfHeaderTag);
 
   private:
-    enum ScheduleKind {DBFPacket,NONDBFPacket};
 
     /**
-     * The self message which will be scheduled
-     * for delay based forwarding packets
+     * The self message which
+     * will be used for scheduling
+     *
      */
-    cMessage *dbfSelfMsg;
-
-    /**
-     * The self message which will be scheduled
-     * for non delay based forwarding packets
-     */
-    cMessage *nonDBFSelfMsg;
+    cMessage *selfMsg;
 
     /**
      * Counter for enqueued messages
@@ -65,19 +61,15 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler
     int enqueuedMsgs;
 
     /**
-     * The collections index for a scheduled delay based forwarding packet
+     * The current scheduled packet
      */
-    int currentDBFCollectionsIdx;
+    inet::Packet *currentScheduledPacket;
 
     /**
-     * The collections index for a non scheduled delay based forwarding packet
+     * The index of the collection where
+     * the current scheduled packet is queued
      */
-    int currentNONDBFCollectionsIdx;
-
-    /**
-     * The current schedule time
-     */
-    simtime_t currentScheduleTime;
+    int currentCollectionsIdx;
 };
 
 } //namespace

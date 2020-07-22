@@ -41,7 +41,7 @@ class IngressForwarder : public cSimpleModule
     bool containsDBFHeader(cMessage *msg);
     void processDBFPacket(cMessage *msg);
     void calculate(inet::Packet *packet, inet::Ptr<const DBFHeader> dbfHeader);
-    bool earlyDiscard(cMessage *msg);
+    bool isAlreadyExpired(cMessage *msg);
 
   private:
     int fromHops;
