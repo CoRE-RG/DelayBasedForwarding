@@ -30,14 +30,8 @@ network ClientServer
 {
     parameters:
         double per = default(0);
+    
     types:
-        channel C extends DatarateChannel
-        {
-            datarate = 10Mbps;
-            delay = 0.1us;
-            per = per;
-        }
-
         channel ETH_100MBIT extends EtherLink
         {
             datarate = 100Mbps;
