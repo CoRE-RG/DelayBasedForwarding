@@ -22,6 +22,12 @@ package delaybasedforwarding.linklayer.DBFIngress;
 //
 simple IngressForwarder
 {
+    parameters:
+        double fromdelay @unit(s) = default(-1s);
+        double ldelay @unit(s) = default(-1s);
+        double todelay @unit(s) = default(-1s);
+        double hdelay @unit(s) =  default(-1s);
+        
     gates:
         input in;
         output out;
