@@ -41,6 +41,7 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
         collections[currentCollectionsIdx]->removePacket(currentScheduledPacket);
         currentCollectionsIdx = -1;
         take(currentScheduledPacket);
+        currentScheduledPacket->removeTag<DBFHeaderTag>();
         send(currentScheduledPacket, "out");
         currentScheduledPacket = nullptr;
         enqueuedMsgs--;

@@ -30,6 +30,11 @@ void DBFIpv4::initialize(int stage) {
     }
 }
 
+void DBFIpv4::sendPacketToNIC(inet::Packet *packet) {
+
+    Ipv4::sendPacketToNIC(packet);
+}
+
 void DBFIpv4::encapsulate(inet::Packet *packet) {
     auto dbfHeader = inet::makeShared<DBFHeader>();
     dbfComputer->addSLOPrameters(dbfHeader);
