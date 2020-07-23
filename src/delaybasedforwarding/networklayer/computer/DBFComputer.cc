@@ -40,8 +40,6 @@ void DBFComputer::addSLOPrameters(inet::Ptr<DBFHeader> dbfHeader)
     dbfHeader->setDMax(dMax);
     dbfHeader->setAdmit(admit);
     dbfHeader->setEDelay(STARTEDELAY);
-    dMin /= 2.0;
-    dMax /= 2.0;
 }
 
 } //namespace

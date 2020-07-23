@@ -44,12 +44,13 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
         send(currentScheduledPacket, "out");
         currentScheduledPacket = nullptr;
         enqueuedMsgs--;
-
         if (enqueuedMsgs) {
             checkQueues();
         }
     }
-    delete msg;
+    if (msg != selfMsg) {
+        delete msg;
+    }
 }
 
 void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
@@ -77,6 +78,7 @@ void DBFPriorityScheduler::checkQueues() {
                     take(currentScheduledPacket);
                     currentScheduledPacket = nullptr;
                     enqueuedMsgs--;
+                    delete selfMsg;
                 } else {
                     simtime_t scheduleTime = SimTime(0.0);
                     if (dbfHeaderTag->getTMin() >= simTime()) {

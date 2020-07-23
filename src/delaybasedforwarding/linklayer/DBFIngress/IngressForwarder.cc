@@ -20,22 +20,24 @@
 
 namespace delaybasedforwarding {
 
-#define THISNODE 1
+// TODO do we need to include node ?
+#define THISNODE 0
 
 Define_Module(IngressForwarder);
 
 void IngressForwarder::initialize()
 {
+    cModule *network = getModuleByPath("<root>");
     fromHops = par("fromHops");
     toHops = par("toHops");
-    cableDelay = par("cableDelay");
-    cableLength = par("cableLength");
-    cableDatarate = par("cableDatarate");
+    cableDelay = SimTime(network->par("_delay"));
+    cableLength = network->par("_length");
+    cableDatarate = network->par("_datarate");
 }
 
 void IngressForwarder::handleMessage(cMessage *msg)
 {
-    if (containsDBFHeader(msg)) {
+    if (toHops && containsDBFHeader(msg)) {
         processDBFPacket(msg);
         if (!isAlreadyExpired(msg)) {
             send(msg,"out");

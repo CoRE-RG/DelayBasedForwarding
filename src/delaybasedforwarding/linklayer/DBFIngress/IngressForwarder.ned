@@ -25,9 +25,6 @@ simple IngressForwarder
     parameters:
         int fromHops = default(1);
         int toHops = default(1);
-        double cableDelay @unit(s);
-        double cableLength @unit(m);
-        double cableDatarate @unit(bps);
         
     gates:
         input in;
