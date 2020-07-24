@@ -14,6 +14,8 @@
 // 
 
 #include "DBFPriorityScheduler.h"
+#include "inet/networklayer/ipv4/Ipv4Header_m.h"
+#include "delaybasedforwarding/utilities/HelperFunctions.h"
 
 namespace delaybasedforwarding {
 
@@ -41,7 +43,13 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
         collections[currentCollectionsIdx]->removePacket(currentScheduledPacket);
         currentCollectionsIdx = -1;
         take(currentScheduledPacket);
-        currentScheduledPacket->removeTag<DBFHeaderTag>();
+        if (auto dbfHeaderTag = currentScheduledPacket->findTag<DBFHeaderTag>()) {
+            auto ipv4Header = currentScheduledPacket->popAtFront<inet::Ipv4Header>();
+            updateEDelay(currentScheduledPacket, dbfHeaderTag->getEDelay() + simTime() - dbfHeaderTag->getTRcv());
+            currentScheduledPacket->trimFront();
+            currentScheduledPacket->insertAtFront(ipv4Header);
+            currentScheduledPacket->removeTag<DBFHeaderTag>();
+        }
         send(currentScheduledPacket, "out");
         currentScheduledPacket = nullptr;
         enqueuedMsgs--;
@@ -77,7 +85,7 @@ void DBFPriorityScheduler::checkQueues() {
                     collections[currentCollectionsIdx]->removePacket(currentScheduledPacket);
                     currentCollectionsIdx = -1;
                     take(currentScheduledPacket);
-                    currentScheduledPacket = nullptr;
+                    delete currentScheduledPacket;
                     enqueuedMsgs--;
                     delete selfMsg;
                 } else {

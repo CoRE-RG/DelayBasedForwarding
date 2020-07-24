@@ -18,6 +18,7 @@
 
 #include <omnetpp.h>
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
+#include "inet/common/packet/Packet.h"
 
 using namespace omnetpp;
 
@@ -39,11 +40,21 @@ class DBFComputer : public cSimpleModule
 
   public:
     void addSLOPrameters(inet::Ptr<DBFHeader> dbfHeader);
+    void processDBFPacket(inet::Packet *packet);
 
   private:
     simtime_t dMin;
     simtime_t dMax;
     uint32_t admit;
+    int fromHops;
+    int toHops;
+    double cableLength;
+    double cableDatarate;
+    simtime_t cableDelay;
+
+  private:
+    void calculate(inet::Packet *packet);
+    bool isAlreadyExpired(inet::Packet *packet);
 };
 
 } //namespace

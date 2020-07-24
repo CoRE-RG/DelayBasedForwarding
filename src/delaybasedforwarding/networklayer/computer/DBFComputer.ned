@@ -29,4 +29,6 @@ simple DBFComputer
         double dMin @unit(s) = default(-1s);
         double dMax @unit(s) = default(-1s);
         int admit = default(0);
+        int fromHops = default(1);
+        int toHops = default(1);
 }

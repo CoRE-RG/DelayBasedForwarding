@@ -39,4 +39,7 @@ class DBFHeaderTag extends inet::TagBase
     simtime_t lqBudgetMax; // maximum local latency queueing budget
     simtime_t tMin; // time when the packet should be sent at earliest
     simtime_t tMax; // time when the packet should be sent at latest
+    
+    // Utility parameters
+    bool fromNetwork; // indicates if packet comes from network
 }

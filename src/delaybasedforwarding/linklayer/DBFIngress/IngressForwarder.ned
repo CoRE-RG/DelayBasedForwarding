@@ -22,10 +22,7 @@ package delaybasedforwarding.linklayer.DBFIngress;
 //
 simple IngressForwarder
 {
-    parameters:
-        int fromHops = default(1);
-        int toHops = default(1);
-        
+       
     gates:
         input in;
         output out;

@@ -17,6 +17,8 @@ namespace delaybasedforwarding {
  * Returns true if packet contains requested protocol
  */
 bool containsProtocol(inet::Packet *packet, const inet::Protocol *requestedProtocol);
+bool containsDBFHeader(omnetpp::cMessage *msg);
+void updateEDelay(inet::Packet *packet, omnetpp::simtime_t eDelay);
 
 } // namespace
 #endif /* DELAYBASEDFORWARDING_UTILITIES_HELPERFUNCTIONS_H_ */

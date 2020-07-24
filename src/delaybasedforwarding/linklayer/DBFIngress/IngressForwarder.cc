@@ -14,95 +14,30 @@
 // 
 
 #include "IngressForwarder.h"
-#include "inet/networklayer/ipv4/Ipv4Header_m.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
 
 namespace delaybasedforwarding {
 
-// TODO do we need to include node ?
-#define THISNODE 0
-
 Define_Module(IngressForwarder);
 
 void IngressForwarder::initialize()
 {
-    cModule *network = getModuleByPath("<root>");
-    fromHops = par("fromHops");
-    toHops = par("toHops");
-    cableDelay = SimTime(network->par("_delay"));
-    cableLength = network->par("_length");
-    cableDatarate = network->par("_datarate");
 }
 
 void IngressForwarder::handleMessage(cMessage *msg)
 {
-    if (toHops && containsDBFHeader(msg)) {
-        processDBFPacket(msg);
-        if (!isAlreadyExpired(msg)) {
-            send(msg,"out");
-        } else {
-            delete msg;
-        }
-    } else {
-        send(msg,"out");
+    if (containsDBFHeader(msg)) {
+        attachTrcv(msg);
     }
+    send(msg,"out");
 }
 
-bool IngressForwarder::containsDBFHeader(cMessage *msg) {
-    bool containsDBFHeader = false;
-    if (inet::Packet *packet = dynamic_cast<inet::Packet*>(msg)) {
-        if (containsProtocol(packet, &inet::Protocol::ipv4)) {
-            containsDBFHeader = true;
-        }
-    }
-    return containsDBFHeader;
-}
-
-void IngressForwarder::processDBFPacket(cMessage *msg) {
+void IngressForwarder::attachTrcv(cMessage *msg) {
     inet::Packet *packet = dynamic_cast<inet::Packet*>(msg);
-    auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
-    auto dbfHeader = packet->peekAtFront<DBFHeader>();
-    calculate(packet, dbfHeader);
-    packet->trimFront();
-    packet->insertAtFront(ipv4Header);
-}
-
-void IngressForwarder::calculate(inet::Packet *packet, inet::Ptr<const DBFHeader> dbfHeader) {
     auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
     dbfHeaderTag->setTRcv(simTime());
-    dbfHeaderTag->setDMin(dbfHeader->getDMin());
-    dbfHeaderTag->setDMax(dbfHeader->getDMax());
-    dbfHeaderTag->setEDelay(dbfHeader->getEDelay());
-    dbfHeaderTag->setAdmit(dbfHeader->getAdmit());
-    dbfHeaderTag->setToHops(toHops);
-
-    // Calculate link dependent delays
-    simtime_t ldelay = SimTime(cableDelay.dbl() + (double)packet->getBitLength()/cableDatarate);
-    simtime_t hdelay = ldelay;
-    simtime_t fromdelay = SimTime((double)fromHops * ldelay.dbl());
-    simtime_t todelay = SimTime((double)toHops * ldelay.dbl());
-    dbfHeaderTag->setLDelay(ldelay);
-    dbfHeaderTag->setHDelay(hdelay);
-    dbfHeaderTag->setFromDelay(fromdelay);
-    dbfHeaderTag->setToDelay(todelay);
-
-    // Update experienced delay (eDelay)
-    dbfHeaderTag->setEDelay(dbfHeaderTag->getEDelay() + dbfHeaderTag->getLDelay());
-
-    // Calculate queueing budget and send time
-    simtime_t fqdelayMin = dbfHeaderTag->getDMin() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
-    simtime_t fqdelayMax = dbfHeaderTag->getDMax() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
-    dbfHeaderTag->setLqBudgetMin(SimTime(fqdelayMin.dbl() / (double)(toHops + THISNODE)));
-    dbfHeaderTag->setLqBudgetMax(SimTime(fqdelayMax.dbl() / (double)(toHops + THISNODE)));
-    dbfHeaderTag->setTMin(dbfHeaderTag->getLqBudgetMin() + dbfHeaderTag->getTRcv());
-    dbfHeaderTag->setTMax(dbfHeaderTag->getLqBudgetMax() + dbfHeaderTag->getTRcv());
-}
-
-bool IngressForwarder::isAlreadyExpired(cMessage *msg) {
-    auto packet = dynamic_cast<inet::Packet*>(msg);
-    auto dbfHeaderTag = packet->findTag<DBFHeaderTag>();
-    return dbfHeaderTag->getTMax() < dbfHeaderTag->getTRcv();
+    dbfHeaderTag->setFromNetwork(true);
 }
 
 } //namespace

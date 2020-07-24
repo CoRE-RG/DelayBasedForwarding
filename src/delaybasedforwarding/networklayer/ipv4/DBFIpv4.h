@@ -49,7 +49,7 @@ class DBFIpv4 : public inet::Ipv4
     virtual void decapsulate(inet::Packet *packet) override;
 
     /**
-     * Sends packet to network interface controller
+     * Sends packet to the network interface controller
      */
     virtual void sendPacketToNIC(inet::Packet *packet) override;
 

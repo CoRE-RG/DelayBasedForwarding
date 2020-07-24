@@ -16,6 +16,7 @@
 #include <inet/common/ModuleAccess.h>
 #include "DBFIpv4.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 
 namespace delaybasedforwarding {
 
@@ -31,14 +32,19 @@ void DBFIpv4::initialize(int stage) {
 }
 
 void DBFIpv4::sendPacketToNIC(inet::Packet *packet) {
-
-    Ipv4::sendPacketToNIC(packet);
+    dbfComputer->processDBFPacket(packet);
+    if (packet) {
+        Ipv4::sendPacketToNIC(packet);
+    }
 }
 
 void DBFIpv4::encapsulate(inet::Packet *packet) {
     auto dbfHeader = inet::makeShared<DBFHeader>();
     dbfComputer->addSLOPrameters(dbfHeader);
     packet->insertAtFront(dbfHeader);
+    auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
+    dbfHeaderTag->setTRcv(simTime());
+    dbfHeaderTag->setFromNetwork(false);
     inet::Ipv4::encapsulate(packet);
 }
 
