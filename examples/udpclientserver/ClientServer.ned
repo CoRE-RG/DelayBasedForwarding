@@ -16,14 +16,17 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-package delaybasedforwarding.examples.tcpclientserver;
+package delaybasedforwarding.examples.udpclientserver;
 
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import delaybasedforwarding.node.inet.DBFHost;
 import inet.node.ethernet.EtherLink;
 import delaybasedforwarding.node.inet.DBFRouter;
 
-network ClientServer
+import inet.node.inet.Router;
+import inet.node.inet.StandardHost;
+
+network UdpClientServer
 {
     parameters:
         double _datarate @unit(bps) = 100Mbps;
@@ -36,24 +39,27 @@ network ClientServer
             datarate = _datarate;
             length = _length;
         }
-
     submodules:
         client1: DBFHost {
             parameters:
                 @display("p=180,150;i=device/pc3");
         }
+
+        router: DBFRouter {
+            @display("p=345,150");
+        }
+
         server: DBFHost {
             parameters:
                 @display("p=509,150;i=device/pc2");
         }
+
         configurator: Ipv4NetworkConfigurator {
             parameters:
                 @display("p=100,100;is=s");
         }
 
-        router: DBFRouter;
-        
-    connections:
+    connections allowunconnected:
         client1.ethg++ <--> ETH_100MBIT <--> router.ethg++;
         server.ethg++ <--> ETH_100MBIT <--> router.ethg++;
 }

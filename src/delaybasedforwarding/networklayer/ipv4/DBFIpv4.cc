@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include <inet/common/ModuleAccess.h>
+#include "inet/common/ProtocolTools.h"
 #include "DBFIpv4.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
@@ -41,11 +41,20 @@ void DBFIpv4::sendPacketToNIC(inet::Packet *packet) {
 void DBFIpv4::encapsulate(inet::Packet *packet) {
     auto dbfHeader = inet::makeShared<DBFHeader>();
     dbfComputer->addSLOPrameters(dbfHeader);
-    packet->insertAtFront(dbfHeader);
     auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
     dbfHeaderTag->setTRcv(simTime());
     dbfHeaderTag->setFromNetwork(false);
-    inet::Ipv4::encapsulate(packet);
+
+    if (findPacketProtocol(packet) == &inet::Protocol::udp) {
+        inet::Ipv4::encapsulate(packet);
+        auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
+        packet->trimFront();
+        packet->insertAtFront(dbfHeader);
+        packet->insertAtFront(ipv4Header);
+    } else {
+        packet->insertAtFront(dbfHeader);
+        inet::Ipv4::encapsulate(packet);
+    }
 }
 
 void DBFIpv4::decapsulate(inet::Packet *packet) {
