@@ -17,6 +17,7 @@
 #include "DBFIpv4.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
+#include "inet/common/packet/serializer/ChunkSerializerRegistry.h"
 
 namespace delaybasedforwarding {
 
