@@ -39,7 +39,7 @@ class DBFComputer : public cSimpleModule
     virtual void handleMessage(cMessage *msg);
 
   public:
-    void addSLOPrameters(inet::Ptr<DBFHeader> dbfHeader);
+    void addSLOParameters(inet::Ptr<DBFHeader> dbfHeader);
     void processDBFPacket(inet::Packet *packet);
 
   private:

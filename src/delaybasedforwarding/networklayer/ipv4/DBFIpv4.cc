@@ -41,7 +41,7 @@ void DBFIpv4::sendPacketToNIC(inet::Packet *packet) {
 
 void DBFIpv4::encapsulate(inet::Packet *packet) {
     auto dbfHeader = inet::makeShared<DBFHeader>();
-    dbfComputer->addSLOPrameters(dbfHeader);
+    dbfComputer->addSLOParameters(dbfHeader);
     auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
     dbfHeaderTag->setTRcv(simTime());
     dbfHeaderTag->setFromNetwork(false);

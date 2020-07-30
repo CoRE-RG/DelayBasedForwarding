@@ -45,7 +45,7 @@ void DBFComputer::handleMessage(cMessage *msg)
     // Do nothing
 }
 
-void DBFComputer::addSLOPrameters(inet::Ptr<DBFHeader> dbfHeader)
+void DBFComputer::addSLOParameters(inet::Ptr<DBFHeader> dbfHeader)
 {
     dbfHeader->setDMin(dMin);
     dbfHeader->setDMax(dMax);
