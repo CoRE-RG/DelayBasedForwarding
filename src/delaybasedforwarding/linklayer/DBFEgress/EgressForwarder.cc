@@ -14,7 +14,6 @@
 // 
 
 #include "EgressForwarder.h"
-#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
 

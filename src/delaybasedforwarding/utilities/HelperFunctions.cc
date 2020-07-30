@@ -7,7 +7,6 @@
 
 #include "HelperFunctions.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
-#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 
 namespace delaybasedforwarding {
 
@@ -32,17 +31,6 @@ bool containsDBFHeader(omnetpp::cMessage *msg) {
         }
     }
     return containsDBFHeader;
-}
-
-void updateEDelay(inet::Packet *packet, omnetpp::simtime_t eDelay) {
-    auto oldDBFHeader = packet->popAtFront<DBFHeader>();
-    auto updatedDBFHeader = inet::makeShared<DBFHeader>();
-    updatedDBFHeader->setAdmit(oldDBFHeader->getAdmit());
-    updatedDBFHeader->setDMax(oldDBFHeader->getDMax());
-    updatedDBFHeader->setDMin(oldDBFHeader->getDMin());
-    updatedDBFHeader->setEDelay(eDelay);
-    packet->trimFront();
-    packet->insertAtFront(updatedDBFHeader);
 }
 
 } // namespace
