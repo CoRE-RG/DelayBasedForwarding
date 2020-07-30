@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include <delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h>
+#include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
 #include "DBFPriorityScheduler.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
@@ -41,6 +41,9 @@ void DBFPriorityScheduler::initialize(int stage) {
 void DBFPriorityScheduler::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage()) {
+        delete msg;
+        msg = nullptr;
+        selfMsg = nullptr;
         collections[currentCollectionsIdx]->removePacket(currentScheduledPacket);
         currentCollectionsIdx = -1;
         take(currentScheduledPacket);
@@ -67,9 +70,7 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
             checkQueues();
         }
     }
-    if (msg != selfMsg) {
-        delete msg;
-    }
+    delete msg;
 }
 
 void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
@@ -98,6 +99,7 @@ void DBFPriorityScheduler::checkQueues() {
                     delete currentScheduledPacket;
                     enqueuedMsgs--;
                     delete selfMsg;
+                    selfMsg = nullptr;
                 } else {
                     simtime_t scheduleTime = SimTime(0.0);
                     if (dbfHeaderTag->getTMin() >= simTime()) {
