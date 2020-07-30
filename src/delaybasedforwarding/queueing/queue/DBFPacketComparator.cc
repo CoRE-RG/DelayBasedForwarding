@@ -6,7 +6,6 @@
  */
 
 #include <delaybasedforwarding/queueing/queue/DBFPacketComparator.h>
-#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 
 namespace delaybasedforwarding {

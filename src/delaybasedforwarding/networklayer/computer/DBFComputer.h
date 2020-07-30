@@ -17,7 +17,6 @@
 #define __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
 
 #include <omnetpp.h>
-#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "inet/common/packet/Packet.h"
 
 using namespace omnetpp;
@@ -39,8 +38,9 @@ class DBFComputer : public cSimpleModule
     virtual void handleMessage(cMessage *msg);
 
   public:
-    void addSLOParameters(inet::Ptr<DBFHeader> dbfHeader);
+    void addSLOParameters(inet::Packet *packet);
     void processDBFPacket(inet::Packet *packet);
+    bool isAlreadyExpired(inet::Packet *packet);
 
   private:
     simtime_t dMin;
@@ -54,7 +54,6 @@ class DBFComputer : public cSimpleModule
 
   private:
     void calculate(inet::Packet *packet);
-    bool isAlreadyExpired(inet::Packet *packet);
 };
 
 } //namespace

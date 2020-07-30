@@ -13,11 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "inet/common/ProtocolTools.h"
 #include "DBFIpv4.h"
-#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
-#include "delaybasedforwarding/networklayer/dbf/DBFIpv4HeaderOptions_m.h"
 
 namespace delaybasedforwarding {
 
@@ -34,43 +31,23 @@ void DBFIpv4::initialize(int stage) {
 
 void DBFIpv4::sendPacketToNIC(inet::Packet *packet) {
     dbfComputer->processDBFPacket(packet);
-    if (packet) {
+    if (!dbfComputer->isAlreadyExpired(packet)) {
         Ipv4::sendPacketToNIC(packet);
+    } else {
+        delete packet;
     }
 }
 
 void DBFIpv4::encapsulate(inet::Packet *packet) {
-    auto dbfHeader = inet::makeShared<DBFHeader>();
-    dbfComputer->addSLOParameters(dbfHeader);
+    inet::Ipv4::encapsulate(packet);
     auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
     dbfHeaderTag->setTRcv(simTime());
     dbfHeaderTag->setFromNetwork(false);
-
-    if (findPacketProtocol(packet) == &inet::Protocol::udp) {
-        inet::Ipv4::encapsulate(packet);
-        auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
-        packet->trimFront();
-        packet->insertAtFront(dbfHeader);
-        packet->insertAtFront(ipv4Header);
-    } else {
-        packet->insertAtFront(dbfHeader);
-        inet::Ipv4::encapsulate(packet);
-        DBFIpv4Option *dbfOption = new DBFIpv4Option();
-        dbfOption->setAdmit(42);
-        dbfOption->setDMin(SimTime(1000.0));
-        dbfOption->setDMax(SimTime(2000.0));
-        dbfOption->setEDelay(SimTime(3000.0));
-        auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
-        packet->trimFront();
-        auto dbfIpv4Header = inet::IntrusivePtr<inet::Ipv4Header>(ipv4Header->dup());
-        dbfIpv4Header->addOption(dbfOption);
-        packet->insertAtFront(dbfIpv4Header);
-    }
+    dbfComputer->addSLOParameters(packet);
 }
 
 void DBFIpv4::decapsulate(inet::Packet *packet) {
     inet::Ipv4::decapsulate(packet);
-    packet->popAtFront<DBFHeader>();
 }
 
 } //namespace
