@@ -17,7 +17,7 @@
 #include "DBFIpv4.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeader_m.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
-#include "inet/common/packet/serializer/ChunkSerializerRegistry.h"
+#include "delaybasedforwarding/networklayer/dbf/DBFIpv4HeaderOptions_m.h"
 
 namespace delaybasedforwarding {
 
@@ -55,6 +55,16 @@ void DBFIpv4::encapsulate(inet::Packet *packet) {
     } else {
         packet->insertAtFront(dbfHeader);
         inet::Ipv4::encapsulate(packet);
+        DBFIpv4Option *dbfOption = new DBFIpv4Option();
+        dbfOption->setAdmit(42);
+        dbfOption->setDMin(SimTime(1000.0));
+        dbfOption->setDMax(SimTime(2000.0));
+        dbfOption->setEDelay(SimTime(3000.0));
+        auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
+        packet->trimFront();
+        auto dbfIpv4Header = inet::IntrusivePtr<inet::Ipv4Header>(ipv4Header->dup());
+        dbfIpv4Header->addOption(dbfOption);
+        packet->insertAtFront(dbfIpv4Header);
     }
 }
 
