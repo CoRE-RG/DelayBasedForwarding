@@ -15,6 +15,7 @@
 
 #include "DBFPriorityScheduler.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
+#include "delaybasedforwarding/networklayer/dbf/DBFIpv4HeaderOptions_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
 
 namespace delaybasedforwarding {
@@ -45,9 +46,18 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
         take(currentScheduledPacket);
         if (auto dbfHeaderTag = currentScheduledPacket->findTag<DBFHeaderTag>()) {
             auto ipv4Header = currentScheduledPacket->popAtFront<inet::Ipv4Header>();
-            updateEDelay(currentScheduledPacket, dbfHeaderTag->getEDelay() + simTime() - dbfHeaderTag->getTRcv());
             currentScheduledPacket->trimFront();
-            currentScheduledPacket->insertAtFront(ipv4Header);
+
+            auto dbfIpv4Header = inet::IntrusivePtr<inet::Ipv4Header>(ipv4Header->dup());
+            const inet::TlvOptionBase *tlvOptionBase = dbfIpv4Header->findOptionByType(DBFIpv4OptionType::DBFPARAMETERS);
+            DBFIpv4Option *dbfIpv4Option = dynamic_cast<DBFIpv4Option*>(tlvOptionBase->dup());
+
+            inet::TlvOptions &tlvOptions = dbfIpv4Header->getOptionsForUpdate();
+            tlvOptions.deleteOptionByType(DBFIpv4OptionType::DBFPARAMETERS, false);
+            dbfIpv4Option->setEDelay(dbfHeaderTag->getEDelay() + simTime() - dbfHeaderTag->getTRcv());
+            dbfIpv4Header->addOption(dbfIpv4Option);
+
+            currentScheduledPacket->insertAtFront(dbfIpv4Header);
             currentScheduledPacket->removeTag<DBFHeaderTag>();
         }
         send(currentScheduledPacket, "out");
