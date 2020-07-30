@@ -40,7 +40,15 @@ network ClientServer
     submodules:
         client1: DBFHost {
             parameters:
+                @display("p=180,77;i=device/pc3");
+        }
+        client2: DBFHost {
+            parameters:
                 @display("p=180,150;i=device/pc3");
+        }
+        client3: DBFHost {
+            parameters:
+                @display("p=180,228;i=device/pc3");
         }
         server: DBFHost {
             parameters:
@@ -52,9 +60,10 @@ network ClientServer
         }
 
         router: DBFRouter;
-        
     connections:
         client1.ethg++ <--> ETH_100MBIT <--> router.ethg++;
+        client2.ethg++ <--> ETH_100MBIT <--> router.ethg++;
+        client3.ethg++ <--> ETH_100MBIT <--> router.ethg++;
         server.ethg++ <--> ETH_100MBIT <--> router.ethg++;
 }
 

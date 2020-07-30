@@ -103,7 +103,7 @@ void DBFPriorityScheduler::checkQueues() {
                     if (dbfHeaderTag->getTMin() >= simTime()) {
                         scheduleTime = dbfHeaderTag->getTMin();
                     } else {
-                        scheduleTime = dbfHeaderTag->getTMax();
+                        scheduleTime = simTime();
                     }
                     scheduleAt(scheduleTime, selfMsg);
                 }
