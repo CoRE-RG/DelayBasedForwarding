@@ -23,14 +23,14 @@ bool containsProtocol(inet::Packet *packet, const inet::Protocol *requestedProto
     return containsProtocol;
 }
 
-bool containsDBFHeader(omnetpp::cMessage *msg) {
-    bool containsDBFHeader = false;
+bool containsIpv4Header(omnetpp::cMessage *msg) {
+    bool containsIpv4Header = false;
     if (inet::Packet *packet = dynamic_cast<inet::Packet*>(msg)) {
         if (containsProtocol(packet, &inet::Protocol::ipv4)) {
-            containsDBFHeader = true;
+            containsIpv4Header = true;
         }
     }
-    return containsDBFHeader;
+    return containsIpv4Header;
 }
 
 } // namespace

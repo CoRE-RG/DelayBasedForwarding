@@ -27,7 +27,7 @@ void IngressForwarder::initialize()
 
 void IngressForwarder::handleMessage(cMessage *msg)
 {
-    if (containsDBFHeader(msg)) {
+    if (containsIpv4Header(msg)) {
         attachTrcv(msg);
     }
     send(msg,"out");
