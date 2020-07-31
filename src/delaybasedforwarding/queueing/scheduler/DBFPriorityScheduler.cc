@@ -13,6 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+//#include <list>
 #include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
 #include "DBFPriorityScheduler.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
@@ -94,12 +95,15 @@ void DBFPriorityScheduler::checkQueues() {
             if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
                 if (isExpired(dbfHeaderTag)) {
                     collections[currentCollectionsIdx]->removePacket(currentScheduledPacket);
-                    currentCollectionsIdx = -1;
                     take(currentScheduledPacket);
                     delete currentScheduledPacket;
+                    currentScheduledPacket = nullptr;
                     enqueuedMsgs--;
                     delete selfMsg;
                     selfMsg = nullptr;
+                    //lookForMoreExpiredPackets();
+                    currentCollectionsIdx = -1;
+                    checkQueues();
                 } else {
                     simtime_t scheduleTime = SimTime(0.0);
                     if (dbfHeaderTag->getTMin() >= simTime()) {
@@ -119,5 +123,25 @@ void DBFPriorityScheduler::checkQueues() {
 bool DBFPriorityScheduler::isExpired(DBFHeaderTag *dbfHeaderTag) {
     return dbfHeaderTag->getTMax() < simTime();
 }
+
+//void DBFPriorityScheduler::lookForMoreExpiredPackets() {
+//   int sumOfPackets = collections[currentCollectionsIdx]->getNumPackets();
+//   std::list<inet::Packet*> expiredPackets;
+//   for (int i = 0; i < sumOfPackets; i++) {
+//       inet::Packet *packet = collections[currentCollectionsIdx]->getPacket(i);
+//       if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
+//           if (isExpired(dbfHeaderTag)) {
+//               expiredPackets.push_back(packet);
+//           }
+//       }
+//   }
+//
+//   for (inet::Packet *packet : expiredPackets) {
+//       collections[currentCollectionsIdx]->removePacket(packet);
+//       take(packet);
+//       delete packet;
+//       enqueuedMsgs--;
+//   }
+//}
 
 } //namespace

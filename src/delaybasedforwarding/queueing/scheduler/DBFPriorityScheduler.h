@@ -46,6 +46,7 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler
   private:
     void checkQueues();
     bool isExpired(DBFHeaderTag *dbfHeaderTag);
+    //void lookForMoreExpiredPackets();
 
   private:
 
