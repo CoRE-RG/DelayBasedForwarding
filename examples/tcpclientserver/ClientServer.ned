@@ -27,7 +27,7 @@ network ClientServer
 {
     parameters:
         double _datarate @unit(bps) = 100Mbps;
-        double _length @unit(m) = 100000000.0m;
+        double _length @unit(m) = 5.0m;
         double _delay @unit(s) = replaceUnit(_length / 2e8, "s");
 
     types:
