@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-//#include <list>
+#include <list>
 #include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
 #include "DBFPriorityScheduler.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
@@ -33,24 +33,23 @@ void DBFPriorityScheduler::initialize(int stage) {
     PriorityScheduler::initialize(stage);
     if (stage == inet::INITSTAGE_LOCAL) {
         selfMsg = nullptr;
-        enqueuedMsgs = 0;
-        currentCollectionsIdx = -1;
-        currentScheduledPacket = nullptr;
     }
 }
 
 void DBFPriorityScheduler::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage()) {
+        int collectionsIdx = selfMsg->getCollectionIdx();
+        inet::Packet *scheduledPacket = selfMsg->getScheduledPacket();
+        selfMsg->setScheduledPacket(nullptr);
         delete msg;
         msg = nullptr;
         selfMsg = nullptr;
-        collections[currentCollectionsIdx]->removePacket(currentScheduledPacket);
-        currentCollectionsIdx = -1;
-        take(currentScheduledPacket);
-        if (auto dbfHeaderTag = currentScheduledPacket->findTag<DBFHeaderTag>()) {
-            auto ipv4Header = currentScheduledPacket->popAtFront<inet::Ipv4Header>();
-            currentScheduledPacket->trimFront();
+        collections[collectionsIdx]->removePacket(scheduledPacket);
+        take(scheduledPacket);
+        if (auto dbfHeaderTag = scheduledPacket->findTag<DBFHeaderTag>()) {
+            auto ipv4Header = scheduledPacket->popAtFront<inet::Ipv4Header>();
+            scheduledPacket->trimFront();
 
             auto dbfIpv4Header = inet::IntrusivePtr<inet::Ipv4Header>(ipv4Header->dup());
             const inet::TlvOptionBase *tlvOptionBase = dbfIpv4Header->findOptionByType(DBFIpv4OptionType::DBFPARAMETERS);
@@ -61,15 +60,11 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
             dbfIpv4Option->setEDelay(dbfHeaderTag->getEDelay() + simTime() - dbfHeaderTag->getTRcv());
             dbfIpv4Header->addOption(dbfIpv4Option);
 
-            currentScheduledPacket->insertAtFront(dbfIpv4Header);
-            currentScheduledPacket->removeTag<DBFHeaderTag>();
+            scheduledPacket->insertAtFront(dbfIpv4Header);
+            scheduledPacket->removeTag<DBFHeaderTag>();
         }
-        send(currentScheduledPacket, "out");
-        currentScheduledPacket = nullptr;
-        enqueuedMsgs--;
-        if (enqueuedMsgs) {
-            checkQueues();
-        }
+        send(scheduledPacket, "out");
+        checkQueues();
     }
     delete msg;
 }
@@ -77,7 +72,7 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
 void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
 {
     Enter_Method("DBFPriorityScheduler::handleCanPopPacket");
-    enqueuedMsgs++;
+    lookForExpiredPackets();
     checkQueues();
 }
 
@@ -85,34 +80,21 @@ void DBFPriorityScheduler::checkQueues() {
     int collectionIdx = schedulePacket();
     if (collectionIdx >= 0) {
         inet::Packet *packet = collections[collectionIdx]->getPacket(FRONTIDX);
-        if (packet != currentScheduledPacket) {
-            currentScheduledPacket = packet;
-            currentCollectionsIdx = collectionIdx;
+        if (!selfMsg || packet != selfMsg->getScheduledPacket()) {
             if (selfMsg) {
                 cancelAndDelete(selfMsg);
             }
-            selfMsg = new cMessage();
+            selfMsg = new DBFScheduleMsg();
+            selfMsg->setCollectionIdx(collectionIdx);
+            selfMsg->setScheduledPacket(packet);
             if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
-                if (isExpired(dbfHeaderTag)) {
-                    collections[currentCollectionsIdx]->removePacket(currentScheduledPacket);
-                    take(currentScheduledPacket);
-                    delete currentScheduledPacket;
-                    currentScheduledPacket = nullptr;
-                    enqueuedMsgs--;
-                    delete selfMsg;
-                    selfMsg = nullptr;
-                    //lookForMoreExpiredPackets();
-                    currentCollectionsIdx = -1;
-                    checkQueues();
+                simtime_t scheduleTime = SimTime(0.0);
+                if (dbfHeaderTag->getTMin() >= simTime()) {
+                    scheduleTime = dbfHeaderTag->getTMin();
                 } else {
-                    simtime_t scheduleTime = SimTime(0.0);
-                    if (dbfHeaderTag->getTMin() >= simTime()) {
-                        scheduleTime = dbfHeaderTag->getTMin();
-                    } else {
-                        scheduleTime = simTime();
-                    }
-                    scheduleAt(scheduleTime, selfMsg);
+                    scheduleTime = simTime();
                 }
+                scheduleAt(scheduleTime, selfMsg);
             } else {
                 scheduleAt(simTime(), selfMsg);
             }
@@ -124,24 +106,25 @@ bool DBFPriorityScheduler::isExpired(DBFHeaderTag *dbfHeaderTag) {
     return dbfHeaderTag->getTMax() < simTime();
 }
 
-//void DBFPriorityScheduler::lookForMoreExpiredPackets() {
-//   int sumOfPackets = collections[currentCollectionsIdx]->getNumPackets();
-//   std::list<inet::Packet*> expiredPackets;
-//   for (int i = 0; i < sumOfPackets; i++) {
-//       inet::Packet *packet = collections[currentCollectionsIdx]->getPacket(i);
-//       if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
-//           if (isExpired(dbfHeaderTag)) {
-//               expiredPackets.push_back(packet);
-//           }
-//       }
-//   }
-//
-//   for (inet::Packet *packet : expiredPackets) {
-//       collections[currentCollectionsIdx]->removePacket(packet);
-//       take(packet);
-//       delete packet;
-//       enqueuedMsgs--;
-//   }
-//}
+void DBFPriorityScheduler::lookForExpiredPackets() {
+   int collectionIdx = schedulePacket();
+   auto collection = collectionIdx >= 0 ? collections[collectionIdx] : nullptr;
+   int sumOfPackets = collection ? collection->getNumPackets() : 0;
+   std::list<inet::Packet*> expiredPackets;
+   for (int i = 0; i < sumOfPackets; i++) {
+       inet::Packet *packet = collection->getPacket(i);
+       if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
+           if (isExpired(dbfHeaderTag)) {
+               expiredPackets.push_back(packet);
+           }
+       }
+   }
+
+   for (inet::Packet *packet : expiredPackets) {
+       collection->removePacket(packet);
+       take(packet);
+       delete packet;
+   }
+}
 
 } //namespace

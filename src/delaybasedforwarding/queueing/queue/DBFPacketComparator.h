@@ -20,7 +20,7 @@ public:
     /**
      * Returns the priority among the packets:
      * result < 0: packet1 has higher priority
-     * result > 0: packet2 has higher priority
+     * result >= 0: packet2 has higher priority
      */
      virtual int comparePackets(inet::Packet *packet1, inet::Packet *packet2) const override;
      virtual DBFPacketComparator *dup() const override;

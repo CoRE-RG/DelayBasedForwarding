@@ -42,25 +42,32 @@ network UdpClientServer
     submodules:
         client1: DBFHost {
             parameters:
+                @display("p=180,77;i=device/pc3");
+        }
+        client2: DBFHost {
+            parameters:
                 @display("p=180,150;i=device/pc3");
         }
-
-        router: DBFRouter {
-            @display("p=345,150");
+        client3: DBFHost {
+            parameters:
+                @display("p=180,228;i=device/pc3");
         }
-
         server: DBFHost {
             parameters:
                 @display("p=509,150;i=device/pc2");
         }
-
         configurator: Ipv4NetworkConfigurator {
             parameters:
                 @display("p=100,100;is=s");
         }
 
+        router: DBFRouter {
+            @display("p=342,150");
+        }
     connections allowunconnected:
         client1.ethg++ <--> ETH_100MBIT <--> router.ethg++;
+        client2.ethg++ <--> ETH_100MBIT <--> router.ethg++;
+        client3.ethg++ <--> ETH_100MBIT <--> router.ethg++;
         server.ethg++ <--> ETH_100MBIT <--> router.ethg++;
 }
 

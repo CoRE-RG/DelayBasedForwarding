@@ -20,6 +20,7 @@
 #include <mutex>
 #include "inet/queueing/scheduler/PriorityScheduler.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
+#include "delaybasedforwarding/queueing/scheduler/DBFScheduleMsg.h"
 
 using namespace omnetpp;
 
@@ -46,7 +47,7 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler
   private:
     void checkQueues();
     bool isExpired(DBFHeaderTag *dbfHeaderTag);
-    //void lookForMoreExpiredPackets();
+    void lookForExpiredPackets();
 
   private:
 
@@ -55,23 +56,7 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler
      * will be used for scheduling
      *
      */
-    cMessage *selfMsg;
-
-    /**
-     * Counter for enqueued messages
-     */
-    int enqueuedMsgs;
-
-    /**
-     * The current scheduled packet
-     */
-    inet::Packet *currentScheduledPacket;
-
-    /**
-     * The index of the collection where
-     * the current scheduled packet is queued
-     */
-    int currentCollectionsIdx;
+    DBFScheduleMsg *selfMsg;
 };
 
 } //namespace
