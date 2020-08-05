@@ -64,6 +64,7 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
             scheduledPacket->removeTag<DBFHeaderTag>();
         }
         send(scheduledPacket, "out");
+        lookForExpiredPackets();
         checkQueues();
     }
     delete msg;
