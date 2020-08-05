@@ -26,7 +26,8 @@ namespace delaybasedforwarding {
 // TODO do we need to include node ?
 #define THISNODE 0
 
-#define ETHERNET_HEADER_BITS 28*8 // includes ETHER_MAC_FRAME_BYTES(18B) + ETHER_PADDING(2B) + ETHER_PHY_HEADER(8B)
+#define ETHERNET_HEADER_BITS 26.0*8.0 // includes ETHER_MAC_FRAME_BYTES(18B) + ETHER_PHY_HEADER(8B)
+#define ETHERNET_MIN_PAYLOAD_BITS 46.0*8.0
 
 Define_Module(DBFComputer);
 
@@ -83,7 +84,8 @@ void DBFComputer::calculate(inet::Packet *packet) {
 
 
     // Calculate link dependent delays
-    simtime_t ldelay = SimTime(cableDelay.dbl() + (double)(packet->getBitLength() + ETHERNET_HEADER_BITS) / cableDatarate);
+    double ethPadding = (double)packet->getBitLength() >= ETHERNET_MIN_PAYLOAD_BITS ? 0.0 : ETHERNET_MIN_PAYLOAD_BITS - (double)packet->getBitLength();
+    simtime_t ldelay = SimTime(cableDelay.dbl() + (double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);
     simtime_t hdelay = ldelay;
     simtime_t fromdelay = SimTime((double)fromHops * ldelay.dbl());
     simtime_t todelay = SimTime((double)toHops * ldelay.dbl());
