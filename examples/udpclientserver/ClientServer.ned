@@ -54,20 +54,25 @@ network UdpClientServer
         }
         server: DBFHost {
             parameters:
-                @display("p=509,150;i=device/pc2");
+                @display("p=717,150;i=device/pc2");
         }
         configurator: Ipv4NetworkConfigurator {
             parameters:
                 @display("p=100,100;is=s");
         }
 
-        router: DBFRouter {
+        router1: DBFRouter {
             @display("p=342,150");
         }
+
+        router2: DBFRouter {
+            @display("p=543,150");
+        }
     connections allowunconnected:
-        client1.ethg++ <--> ETH_100MBIT <--> router.ethg++;
-        client2.ethg++ <--> ETH_100MBIT <--> router.ethg++;
-        client3.ethg++ <--> ETH_100MBIT <--> router.ethg++;
-        server.ethg++ <--> ETH_100MBIT <--> router.ethg++;
+        client1.ethg++ <--> ETH_100MBIT <--> router1.ethg++;
+        client2.ethg++ <--> ETH_100MBIT <--> router1.ethg++;
+        client3.ethg++ <--> ETH_100MBIT <--> router1.ethg++;
+        router1.ethg++ <--> ETH_100MBIT <--> router2.ethg++;
+        server.ethg++ <--> ETH_100MBIT <--> router2.ethg++;
 }
 

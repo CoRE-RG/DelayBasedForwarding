@@ -97,16 +97,15 @@ void DBFComputer::calculate(inet::Packet *packet) {
     // Update experienced delay (eDelay)
     if (dbfHeaderTag->getFromNetwork()) {
         dbfHeaderTag->setEDelay(dbfHeaderTag->getEDelay() + dbfHeaderTag->getLDelay());
-
-        inet::TlvOptions &tlvOptions = dbfIpv4Header->getOptionsForUpdate();
-        tlvOptions.deleteOptionByType(DBFIpv4OptionType::DBFPARAMETERS, false);
-        dbfIpv4Option->setEDelay(dbfHeaderTag->getEDelay());
-        dbfIpv4Header->addOption(dbfIpv4Option);
-
-        packet->popAtFront<inet::Ipv4Header>();
-        packet->trimFront();
-        packet->insertAtFront(dbfIpv4Header);
     }
+    inet::TlvOptions &tlvOptions = dbfIpv4Header->getOptionsForUpdate();
+    tlvOptions.deleteOptionByType(DBFIpv4OptionType::DBFPARAMETERS, false);
+    dbfIpv4Option->setEDelay(dbfHeaderTag->getEDelay());
+    dbfIpv4Header->addOption(dbfIpv4Option);
+
+    packet->popAtFront<inet::Ipv4Header>();
+    packet->trimFront();
+    packet->insertAtFront(dbfIpv4Header);
 
     // Calculate queueing budget and send time
     simtime_t fqdelayMin = dbfHeaderTag->getDMin() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();

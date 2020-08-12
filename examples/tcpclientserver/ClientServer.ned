@@ -27,7 +27,7 @@ network ClientServer
 {
     parameters:
         double _datarate @unit(bps) = 100Mbps;
-        double _length @unit(m) = 5.0m;
+        double _length @unit(m) = 100000000.0m;
         double _delay @unit(s) = replaceUnit(_length / 2e8, "s");
 
     types:
@@ -52,18 +52,24 @@ network ClientServer
         }
         server: DBFHost {
             parameters:
-                @display("p=509,150;i=device/pc2");
+                @display("p=631,150;i=device/pc2");
         }
         configurator: Ipv4NetworkConfigurator {
             parameters:
                 @display("p=100,100;is=s");
         }
 
-        router: DBFRouter;
+        router1: DBFRouter {
+            @display("p=345,150");
+        }
+        router2: DBFRouter {
+            @display("p=502,151");
+        }
     connections:
-        client1.ethg++ <--> ETH_100MBIT <--> router.ethg++;
-        client2.ethg++ <--> ETH_100MBIT <--> router.ethg++;
-        client3.ethg++ <--> ETH_100MBIT <--> router.ethg++;
-        server.ethg++ <--> ETH_100MBIT <--> router.ethg++;
+        client1.ethg++ <--> ETH_100MBIT <--> router1.ethg++;
+        client2.ethg++ <--> ETH_100MBIT <--> router1.ethg++;
+        client3.ethg++ <--> ETH_100MBIT <--> router1.ethg++;
+        router1.ethg++ <--> ETH_100MBIT <--> router2.ethg++;
+        server.ethg++ <--> ETH_100MBIT <--> router2.ethg++;
 }
 
