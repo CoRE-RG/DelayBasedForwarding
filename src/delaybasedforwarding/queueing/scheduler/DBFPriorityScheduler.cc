@@ -18,6 +18,9 @@
 #include "DBFPriorityScheduler.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
+#include "inet/linklayer/ethernet/EtherMacBase.h"
+//TODO remove timetag include and creation time tag dependent uses
+#include "inet/common/TimeTag_m.h"
 
 namespace delaybasedforwarding {
 
@@ -33,6 +36,13 @@ void DBFPriorityScheduler::initialize(int stage) {
     PriorityScheduler::initialize(stage);
     if (stage == inet::INITSTAGE_LOCAL) {
         selfMsg = nullptr;
+        cModule *macModule = getParentModule()->getParentModule()->getParentModule()->getSubmodule("mac");
+        if ((etherMacFullDuplex = dynamic_cast<inet::EtherMacFullDuplex*>(macModule))) {
+            etherMacFullDuplex->subscribe("transmissionStateChanged", this);
+        } else {
+            throw cRuntimeError("Not the expected EtherMacFullDuplex module: %s",macModule);
+        }
+        txIdleCounter = 0;
     }
 }
 
@@ -57,15 +67,30 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
 
             inet::TlvOptions &tlvOptions = dbfIpv4Header->getOptionsForUpdate();
             tlvOptions.deleteOptionByType(DBFIpv4OptionType::DBFPARAMETERS, false);
+
+            //########################Remove from here ... ###################################
+            auto data = scheduledPacket->peekData();
+            auto regions = data->getAllTags<inet::CreationTimeTag>();
+            const SimTime simtime = inet::SimTime::parse("246.857090645169s");
+            for (auto &region : regions) {
+                if (region.getTag()->getCreationTime() == simtime) {
+                    EV_DEBUG << "Problematic packet leaving from " << this->getFullName() << endl;
+                }
+            }
+            //########################Remove till here ... ###################################
+
             dbfIpv4Option->setEDelay(dbfHeaderTag->getEDelay() + simTime() - dbfHeaderTag->getTRcv());
             dbfIpv4Header->addOption(dbfIpv4Option);
 
             scheduledPacket->insertAtFront(dbfIpv4Header);
             scheduledPacket->removeTag<DBFHeaderTag>();
         }
-        send(scheduledPacket, "out");
-        lookForExpiredPackets();
-        checkQueues();
+        if (txIdleCounter == 1 ) {
+            txIdleCounter--;
+            send(scheduledPacket, "out");
+        } else {
+            throw cRuntimeError("Value of txIdleCounter is higher than zero: %d", txIdleCounter);
+        }
     }
     delete msg;
 }
@@ -74,10 +99,13 @@ void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
 {
     Enter_Method("DBFPriorityScheduler::handleCanPopPacket");
     lookForExpiredPackets();
-    checkQueues();
+    if (txIdleCounter == 1) {
+        checkQueues();
+    }
 }
 
 void DBFPriorityScheduler::checkQueues() {
+    Enter_Method("DBFPriorityScheduler::checkQueues");
     int collectionIdx = schedulePacket();
     if (collectionIdx >= 0) {
         inet::Packet *packet = collections[collectionIdx]->getPacket(FRONTIDX);
@@ -118,6 +146,11 @@ void DBFPriorityScheduler::lookForExpiredPackets() {
            if (isExpired(dbfHeaderTag)) {
                expiredPackets.push_back(packet);
            }
+           if (selfMsg && selfMsg->getScheduledPacket() == packet) {
+               selfMsg->setScheduledPacket(nullptr);
+               cancelAndDelete(selfMsg);
+               selfMsg = nullptr;
+           }
        }
    }
 
@@ -126,6 +159,18 @@ void DBFPriorityScheduler::lookForExpiredPackets() {
        take(packet);
        delete packet;
    }
+}
+
+void DBFPriorityScheduler::receiveSignal(cComponent *source, simsignal_t signalID, long l, cObject *details) {
+    if (l == inet::EtherMacBase::MacTransmitState::TX_IDLE_STATE) {
+        txIdleCounter++;
+        if (txIdleCounter == 1) {
+            lookForExpiredPackets();
+            checkQueues();
+        } else {
+            throw cRuntimeError("Value of txIdleCounter is higher than zero: %d", txIdleCounter);
+        }
+    }
 }
 
 } //namespace

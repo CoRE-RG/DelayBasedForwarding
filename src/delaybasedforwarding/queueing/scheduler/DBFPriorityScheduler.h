@@ -21,6 +21,7 @@
 #include "inet/queueing/scheduler/PriorityScheduler.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/queueing/scheduler/DBFScheduleMsg.h"
+#include "inet/linklayer/ethernet/EtherMacFullDuplex.h"
 
 using namespace omnetpp;
 
@@ -34,10 +35,11 @@ namespace delaybasedforwarding {
  * @author Mehmet Cakir
  */
 
-class DBFPriorityScheduler : public inet::queueing::PriorityScheduler
+class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cListener
 {
   public:
     virtual ~DBFPriorityScheduler();
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, long l, cObject *details) override;
 
   protected:
     virtual void initialize(int stage) override;
@@ -54,9 +56,20 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler
     /**
      * The self message which
      * will be used for scheduling
-     *
      */
     DBFScheduleMsg *selfMsg;
+
+    /**
+     * Indicates the idle state
+     * of the mac module
+     */
+    int txIdleCounter;
+
+    /**
+     * The MAC module which notifies about
+     * the availability of the Ethernet interface
+     */
+    inet::EtherMacFullDuplex *etherMacFullDuplex;
 };
 
 } //namespace

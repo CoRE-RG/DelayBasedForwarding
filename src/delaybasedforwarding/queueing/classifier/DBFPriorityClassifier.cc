@@ -15,7 +15,6 @@
 
 #include "DBFPriorityClassifier.h"
 
-
 namespace delaybasedforwarding {
 
 Define_Module(DBFPriorityClassifier);
