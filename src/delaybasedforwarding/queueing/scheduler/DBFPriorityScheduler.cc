@@ -19,8 +19,6 @@
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
 #include "inet/linklayer/ethernet/EtherMacBase.h"
-//TODO remove timetag include and creation time tag dependent uses
-#include "inet/common/TimeTag_m.h"
 
 namespace delaybasedforwarding {
 
@@ -67,17 +65,6 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
 
             inet::TlvOptions &tlvOptions = dbfIpv4Header->getOptionsForUpdate();
             tlvOptions.deleteOptionByType(DBFIpv4OptionType::DBFPARAMETERS, false);
-
-            //########################Remove from here ... ###################################
-            auto data = scheduledPacket->peekData();
-            auto regions = data->getAllTags<inet::CreationTimeTag>();
-            const SimTime simtime = inet::SimTime::parse("246.857090645169s");
-            for (auto &region : regions) {
-                if (region.getTag()->getCreationTime() == simtime) {
-                    EV_DEBUG << "Problematic packet leaving from " << this->getFullName() << endl;
-                }
-            }
-            //########################Remove till here ... ###################################
 
             dbfIpv4Option->setEDelay(dbfHeaderTag->getEDelay() + simTime() - dbfHeaderTag->getTRcv());
             dbfIpv4Header->addOption(dbfIpv4Option);

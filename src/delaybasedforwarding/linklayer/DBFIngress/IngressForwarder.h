@@ -37,6 +37,7 @@ class IngressForwarder : public cSimpleModule
 
   private:
     void attachTrcv(cMessage *msg);
+    static simsignal_t rxPkSignal;
 };
 
 } //namespace

@@ -16,12 +16,12 @@
 #include "IngressForwarder.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
-//TODO remove timetag include and creation time tag dependent uses
-#include "inet/common/TimeTag_m.h"
 
 namespace delaybasedforwarding {
 
 Define_Module(IngressForwarder);
+
+simsignal_t IngressForwarder::rxPkSignal = registerSignal("rxPk");
 
 void IngressForwarder::initialize()
 {
@@ -37,19 +37,7 @@ void IngressForwarder::handleMessage(cMessage *msg)
 
 void IngressForwarder::attachTrcv(cMessage *msg) {
     inet::Packet *packet = dynamic_cast<inet::Packet*>(msg);
-
-
-    //########################Remove from here ... ###################################
-    auto data = packet->peekData();
-    auto regions = data->getAllTags<inet::CreationTimeTag>();
-    const SimTime simtime = inet::SimTime::parse("246.857090645169s");
-    for (auto &region : regions) {
-        if (region.getTag()->getCreationTime() == simtime) {
-            EV_DEBUG << "Problematic packet arrived in " << this->getFullName() << endl;
-        }
-    }
-    //########################Remove till here ... ###################################
-
+    emit(rxPkSignal, packet);
     auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
     dbfHeaderTag->setTRcv(simTime());
     dbfHeaderTag->setFromNetwork(true);
