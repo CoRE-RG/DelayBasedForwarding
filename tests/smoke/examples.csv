@@ -1,0 +1,3 @@
+# workingdir,                                                            args,                                          simtimelimit,    fingerprint
+/examples/tcpclientserver,                                               -f omnetpp.ini -c General -r 0
+/examples/udpclientserver,                                               -f omnetpp.ini -c udp_OK_ipv4 -r 0

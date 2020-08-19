@@ -2,6 +2,7 @@
 *.sca
 *.vci
 *.vec
+**/test.out
 **/.qtenvrc
 /src/Makefile
 /src/**/*_m.h
