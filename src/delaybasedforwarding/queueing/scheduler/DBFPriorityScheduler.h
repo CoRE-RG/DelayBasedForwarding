@@ -40,6 +40,7 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
   public:
     virtual ~DBFPriorityScheduler();
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, long l, cObject *details) override;
+    void addDBFQueue(cModule *dbfQueue);
 
   protected:
     virtual void initialize(int stage) override;

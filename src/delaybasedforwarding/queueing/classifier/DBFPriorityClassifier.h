@@ -34,6 +34,7 @@ namespace delaybasedforwarding {
 class DBFPriorityClassifier : public inet::queueing::PriorityClassifier
 {
   protected:
+    virtual void initialize(int stage) override;
     virtual void handleMessage(cMessage *msg);
 };
 

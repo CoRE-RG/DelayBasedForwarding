@@ -21,7 +21,7 @@
 
 using namespace std;
 
-namespace SDN4CoRE {
+namespace delaybasedforwarding {
 
 cRuntimeError createErrorMessage(const char* name, const char* nedModulePath, const char* reason) {
     string msg = "Cannot create dynamic module \"";

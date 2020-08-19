@@ -160,4 +160,20 @@ void DBFPriorityScheduler::receiveSignal(cComponent *source, simsignal_t signalI
     }
 }
 
+void DBFPriorityScheduler::addDBFQueue(cModule *dbfQueue) {
+    // 1. createInGate()
+    int numGates = this->gateSize("in");
+    this->setGateSize("in", numGates+1);
+    if ((this->gateSize("in") - numGates) != 1) {
+        throw cRuntimeError("Gate not created.");
+    }
+    // 2. connectInGate()
+    numGates = this->gateSize("in");
+    auto inputGate = this->gate("in", numGates-1);
+    auto queueOutGate = dbfQueue->gate("out");
+    queueOutGate->connectTo(inputGate);
+    // 3. pushBackQueue() in scheduler
+    collections.push_back(dynamic_cast<IPacketCollection *>(dbfQueue));
+}
+
 } //namespace

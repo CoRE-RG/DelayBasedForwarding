@@ -22,7 +22,7 @@
 
 using namespace omnetpp;
 
-namespace SDN4CoRE {
+namespace delaybasedforwarding {
 
 /**
  * Creates a module by calling createDynamicModule and finalizes it if the
