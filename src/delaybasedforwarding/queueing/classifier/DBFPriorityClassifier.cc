@@ -24,29 +24,7 @@ Define_Module(DBFPriorityClassifier);
 void DBFPriorityClassifier::initialize(int stage) {
     inet::queueing::PacketClassifierBase::initialize(stage);
     if (stage == inet::INITSTAGE_LAST) {
-        // 1. createQueue()
-        //cModule *dbfQueue = createDynamicModule("delaybasedforwarding.queueing.queue.DBFPacketQueue", "queue", this->getParentModule(), true);
-        cModule *dbfQueue = createFinalizeAndScheduleDynamicModule("delaybasedforwarding.queueing.queue.DBFPacketQueue", "queue", this->getParentModule(), true);
-        if (!dbfQueue) {
-            throw cRuntimeError("DBFQueue is null.");
-        }
-        // 2. createOutGate()
-        int numGates = this->gateSize("out");
-        this->setGateSize("out", numGates+1);
-        if ((this->gateSize("out") - numGates) != 1) {
-            throw cRuntimeError("Gate not created.");
-        }
-        // 3. connectOutGate()
-        numGates = this->gateSize("out");
-        auto outputGate = this->gate("out", numGates-1);
-        auto queueInGate = dbfQueue->gate("in");
-        outputGate->connectTo(queueInGate);
-        // 4. pushBackQueue() in classifier
-        outputGates.push_back(outputGate);
-        consumers.push_back(dynamic_cast<IPassivePacketSink*>(dbfQueue));
-        // 5. inform scheduler
-        DBFPriorityScheduler *dbfPriorityScheduler = dynamic_cast<DBFPriorityScheduler*>(this->getParentModule()->getSubmodule("scheduler"));
-        dbfPriorityScheduler->addDBFQueue(dbfQueue);
+        createDBFQueue();
     }
 }
 
@@ -56,6 +34,31 @@ void DBFPriorityClassifier::handleMessage(cMessage *msg)
     auto packet = dynamic_cast<inet::Packet*>(msg);
     int consumerIdx = classifyPacket(packet);
     consumers[consumerIdx]->pushPacket(packet, outputGates[consumerIdx]);
+}
+
+void DBFPriorityClassifier::createDBFQueue() {
+    // 1. createQueue()
+    cModule *dbfQueue = createFinalizeAndScheduleDynamicModule("delaybasedforwarding.queueing.queue.DBFPacketQueue", "queue", this->getParentModule(), true);
+    if (!dbfQueue) {
+        throw cRuntimeError("DBFQueue is null.");
+    }
+    // 2. createOutGate()
+    int numGates = this->gateSize("out");
+    this->setGateSize("out", numGates+1);
+    if ((this->gateSize("out") - numGates) != 1) {
+        throw cRuntimeError("Gate not created.");
+    }
+    // 3. connectOutGate()
+    numGates = this->gateSize("out");
+    auto outputGate = this->gate("out", numGates-1);
+    auto queueInGate = dbfQueue->gate("in");
+    outputGate->connectTo(queueInGate);
+    // 4. pushBackQueue() in classifier
+    outputGates.push_back(outputGate);
+    consumers.push_back(dynamic_cast<IPassivePacketSink*>(dbfQueue));
+    // 5. inform scheduler
+    DBFPriorityScheduler *dbfPriorityScheduler = dynamic_cast<DBFPriorityScheduler*>(this->getParentModule()->getSubmodule("scheduler"));
+    dbfPriorityScheduler->addDBFQueue(dbfQueue);
 }
 
 } //namespace
