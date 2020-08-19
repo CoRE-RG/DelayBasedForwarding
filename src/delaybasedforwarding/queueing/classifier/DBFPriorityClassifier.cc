@@ -38,7 +38,7 @@ void DBFPriorityClassifier::handleMessage(cMessage *msg)
 
 void DBFPriorityClassifier::createDBFQueue() {
     // 1. createQueue()
-    cModule *dbfQueue = createFinalizeAndScheduleDynamicModule("delaybasedforwarding.queueing.queue.DBFPacketQueue", "queue", this->getParentModule(), true);
+    cModule *dbfQueue = createDynamicModule("delaybasedforwarding.queueing.queue.DBFPacketQueue", "queue", this->getParentModule(), true);
     if (!dbfQueue) {
         throw cRuntimeError("DBFQueue is null.");
     }
@@ -59,6 +59,8 @@ void DBFPriorityClassifier::createDBFQueue() {
     // 5. inform scheduler
     DBFPriorityScheduler *dbfPriorityScheduler = dynamic_cast<DBFPriorityScheduler*>(this->getParentModule()->getSubmodule("scheduler"));
     dbfPriorityScheduler->addDBFQueue(dbfQueue);
+    finalizeModuleAndSchedule(dbfQueue);
+
 }
 
 } //namespace

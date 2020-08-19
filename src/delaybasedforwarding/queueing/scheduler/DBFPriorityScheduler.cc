@@ -173,6 +173,8 @@ void DBFPriorityScheduler::addDBFQueue(cModule *dbfQueue) {
     auto queueOutGate = dbfQueue->gate("out");
     queueOutGate->connectTo(inputGate);
     // 3. pushBackQueue() in scheduler
+    inputGates.push_back(inputGate);
+    providers.push_back(dynamic_cast<IPassivePacketSource*>(dbfQueue));
     collections.push_back(dynamic_cast<IPacketCollection *>(dbfQueue));
 }
 
