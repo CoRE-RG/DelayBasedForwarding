@@ -34,13 +34,18 @@ void DBFPriorityScheduler::initialize(int stage) {
     PriorityScheduler::initialize(stage);
     if (stage == inet::INITSTAGE_LOCAL) {
         selfMsg = nullptr;
-        cModule *macModule = getParentModule()->getParentModule()->getParentModule()->getSubmodule("mac");
+        cModule *macModule = this->getParentModule()->getParentModule()->getParentModule()->getSubmodule("mac");
         if ((etherMacFullDuplex = dynamic_cast<inet::EtherMacFullDuplex*>(macModule))) {
             etherMacFullDuplex->subscribe("transmissionStateChanged", this);
         } else {
             throw cRuntimeError("Not the expected EtherMacFullDuplex module: %s",macModule);
         }
         txIdleCounter = 0;
+        cModule *classifierModule = this->getParentModule()->getSubmodule("classifier");
+        if((dbfPriorityClassifier = dynamic_cast<DBFPriorityClassifier*>(classifierModule))) {
+        } else {
+            throw cRuntimeError("Not the expected DBFPriorityClassifier module: %s",classifierModule);
+        }
     }
 }
 
@@ -89,6 +94,14 @@ void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
     if (txIdleCounter == 1) {
         checkQueues();
     }
+}
+
+int DBFPriorityScheduler::schedulePacket() {
+    auto deltaQueueMap = dbfPriorityClassifier->getDeltaQueueMap();
+    for (auto it = deltaQueueMap->begin(); it != deltaQueueMap->end(); ++it)
+        if (providers[it->second]->canPopSomePacket(inputGates[it->second]->getPathStartGate()))
+            return it->second;
+    return -1;
 }
 
 void DBFPriorityScheduler::checkQueues() {
@@ -160,7 +173,8 @@ void DBFPriorityScheduler::receiveSignal(cComponent *source, simsignal_t signalI
     }
 }
 
-void DBFPriorityScheduler::addDBFQueue(cModule *dbfQueue) {
+int DBFPriorityScheduler::addDBFQueue(cModule *dbfQueue) {
+    int providerIdx = -1;
     // 1. createInGate()
     int numGates = this->gateSize("in");
     this->setGateSize("in", numGates+1);
@@ -168,14 +182,15 @@ void DBFPriorityScheduler::addDBFQueue(cModule *dbfQueue) {
         throw cRuntimeError("Gate not created.");
     }
     // 2. connectInGate()
-    numGates = this->gateSize("in");
-    auto inputGate = this->gate("in", numGates-1);
+    providerIdx = this->gateSize("in")-1;
+    auto inputGate = this->gate("in", providerIdx);
     auto queueOutGate = dbfQueue->gate("out");
     queueOutGate->connectTo(inputGate);
     // 3. pushBackQueue() in scheduler
     inputGates.push_back(inputGate);
     providers.push_back(dynamic_cast<IPassivePacketSource*>(dbfQueue));
     collections.push_back(dynamic_cast<IPacketCollection *>(dbfQueue));
+    return providerIdx;
 }
 
 } //namespace

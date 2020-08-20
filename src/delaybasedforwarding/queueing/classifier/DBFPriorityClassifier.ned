@@ -29,4 +29,6 @@ simple DBFPriorityClassifier extends PriorityClassifier
 {
     parameters:
         @class(DBFPriorityClassifier);
+        double deltaSteps @unit(s) = default(0.010s); // Determines if a new queue is required
+        double maximumDelta @unit(s) = default(0.050s); // Determines if dbf packet should be pushed into infinite queue
 }

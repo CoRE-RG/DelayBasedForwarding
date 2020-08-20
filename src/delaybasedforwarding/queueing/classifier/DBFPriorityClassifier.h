@@ -18,6 +18,7 @@
 
 #include <omnetpp.h>
 #include <inet/queueing/classifier/PriorityClassifier.h>
+#include <map>
 
 using namespace omnetpp;
 
@@ -35,12 +36,29 @@ class DBFPriorityClassifier : public inet::queueing::PriorityClassifier
 {
   protected:
     virtual void initialize(int stage) override;
-    virtual void handleMessage(cMessage *msg);
+    virtual void handleMessage(cMessage *msg) override;
+    virtual int classifyPacket(inet::Packet *packet) override;
   private:
     /**
-     * Creates dynamically a queue
+     * Creates dynamically a dbf queue
      */
-    void createDBFQueue();
+    int createDBFQueue();
+
+    /**
+     * Returns index of priority queue for a given delta.
+     * If there is no queue available then it will be created.
+     */
+    int getIndexOfQueueForDelta(simtime_t delta);
+  public:
+    /**
+     * Returns the deltaQueueMap
+     */
+    std::map<simtime_t, int> *getDeltaQueueMap();
+
+  private:
+    simtime_t deltaSteps;
+    simtime_t maximumDelta;
+    std::map<simtime_t, int, std::less<simtime_t>> *deltaQueueMap;
 };
 
 } //namespace

@@ -22,6 +22,7 @@
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/queueing/scheduler/DBFScheduleMsg.h"
 #include "inet/linklayer/ethernet/EtherMacFullDuplex.h"
+#include "delaybasedforwarding/queueing/classifier/DBFPriorityClassifier.h"
 
 using namespace omnetpp;
 
@@ -40,12 +41,13 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
   public:
     virtual ~DBFPriorityScheduler();
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, long l, cObject *details) override;
-    void addDBFQueue(cModule *dbfQueue);
+    int addDBFQueue(cModule *dbfQueue);
 
   protected:
     virtual void initialize(int stage) override;
     virtual void handleMessage(cMessage *msg) override;
     virtual void handleCanPopPacket(cGate *gate) override;
+    virtual int schedulePacket() override;
 
   private:
     void checkQueues();
@@ -71,6 +73,11 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
      * the availability of the Ethernet interface
      */
     inet::EtherMacFullDuplex *etherMacFullDuplex;
+
+    /**
+     * The DBF priority classifier
+     */
+    DBFPriorityClassifier *dbfPriorityClassifier;
 };
 
 } //namespace

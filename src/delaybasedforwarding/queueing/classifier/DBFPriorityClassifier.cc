@@ -16,6 +16,7 @@
 #include "DBFPriorityClassifier.h"
 #include "delaybasedforwarding/utilities/DynamicModuleHandling.h"
 #include "delaybasedforwarding/queueing/scheduler/DBFPriorityScheduler.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 
 namespace delaybasedforwarding {
 
@@ -23,20 +24,55 @@ Define_Module(DBFPriorityClassifier);
 
 void DBFPriorityClassifier::initialize(int stage) {
     inet::queueing::PacketClassifierBase::initialize(stage);
-    if (stage == inet::INITSTAGE_LAST) {
-        createDBFQueue();
+    if (stage == inet::INITSTAGE_LOCAL) {
+        deltaSteps = par("deltaSteps");
+        maximumDelta = par("maximumDelta");
+        deltaQueueMap = new std::map<simtime_t, int, std::less<simtime_t>>();
     }
 }
 
-void DBFPriorityClassifier::handleMessage(cMessage *msg)
-{
-    //TODO override classifyPacket to choose an appropriate queue
+void DBFPriorityClassifier::handleMessage(cMessage *msg) {
     auto packet = dynamic_cast<inet::Packet*>(msg);
     int consumerIdx = classifyPacket(packet);
     consumers[consumerIdx]->pushPacket(packet, outputGates[consumerIdx]);
 }
 
-void DBFPriorityClassifier::createDBFQueue() {
+int DBFPriorityClassifier::classifyPacket(inet::Packet *packet) {
+    int consumerIdx = -1;
+    if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
+        simtime_t lqbudget = dbfHeaderTag->getLqBudgetMax() - dbfHeaderTag->getLqBudgetMin();
+        if (lqbudget >= maximumDelta) {
+            consumerIdx = getIndexOfQueueForDelta(maximumDelta);
+        } else {
+            simtime_t bestDelta = deltaSteps;
+            while(lqbudget > bestDelta) {
+                bestDelta += deltaSteps;
+            }
+            consumerIdx = getIndexOfQueueForDelta(bestDelta);
+        }
+    } else {
+        consumerIdx = getIndexOfQueueForDelta(maximumDelta);
+    }
+    return consumerIdx;
+}
+
+int DBFPriorityClassifier::getIndexOfQueueForDelta(simtime_t delta) {
+    int consumerIdx = -1;
+    for (auto it = deltaQueueMap->begin(); it != deltaQueueMap->end(); ++it) {
+        if (it->first == delta) {
+            consumerIdx = it->second;
+            break;
+        }
+    }
+    if (consumerIdx == -1) {
+        consumerIdx = createDBFQueue();
+        deltaQueueMap->insert({delta,consumerIdx});
+    }
+    return consumerIdx;
+}
+
+int DBFPriorityClassifier::createDBFQueue() {
+    int consumerIdx = -1;
     // 1. createQueue()
     cModule *dbfQueue = createDynamicModule("delaybasedforwarding.queueing.queue.DBFPacketQueue", "queue", this->getParentModule(), true);
     if (!dbfQueue) {
@@ -49,8 +85,8 @@ void DBFPriorityClassifier::createDBFQueue() {
         throw cRuntimeError("Gate not created.");
     }
     // 3. connectOutGate()
-    numGates = this->gateSize("out");
-    auto outputGate = this->gate("out", numGates-1);
+    consumerIdx = this->gateSize("out")-1;
+    auto outputGate = this->gate("out", consumerIdx);
     auto queueInGate = dbfQueue->gate("in");
     outputGate->connectTo(queueInGate);
     // 4. pushBackQueue() in classifier
@@ -58,9 +94,16 @@ void DBFPriorityClassifier::createDBFQueue() {
     consumers.push_back(dynamic_cast<IPassivePacketSink*>(dbfQueue));
     // 5. inform scheduler
     DBFPriorityScheduler *dbfPriorityScheduler = dynamic_cast<DBFPriorityScheduler*>(this->getParentModule()->getSubmodule("scheduler"));
-    dbfPriorityScheduler->addDBFQueue(dbfQueue);
+    int providerIdx = dbfPriorityScheduler->addDBFQueue(dbfQueue);
+    if (consumerIdx != providerIdx) {
+        throw cRuntimeError("Queues are in different indices: At classifier: %d, at scheduler: %d",consumerIdx,providerIdx);
+    }
     finalizeModuleAndSchedule(dbfQueue);
+    return consumerIdx;
+}
 
+std::map<simtime_t, int> *DBFPriorityClassifier::getDeltaQueueMap() {
+    return deltaQueueMap;
 }
 
 } //namespace
