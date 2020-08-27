@@ -99,7 +99,7 @@ void DBFComputer::calculate(inet::Packet *packet) {
     simtime_t ldelay = SimTime(cableDelay.dbl() + (double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);
     simtime_t hdelay = ldelay;
     simtime_t fromdelay = SimTime((double)dbfFIB->at(dbfIpv4Header->getSrcAddress()) * ldelay.dbl());
-    simtime_t todelay = SimTime((double)dbfHeaderTag->getToHops() * ldelay.dbl());
+    simtime_t todelay = SimTime((double)dbfHeaderTag->getToHops() * ldelay.dbl()); //TODO add with calculated toDelay from fib, don't forget to take out cableDelay from calculation before
     dbfHeaderTag->setLDelay(ldelay);
     dbfHeaderTag->setHDelay(hdelay);
     dbfHeaderTag->setFromDelay(fromdelay);
