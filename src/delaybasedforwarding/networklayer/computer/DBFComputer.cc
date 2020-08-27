@@ -18,6 +18,7 @@
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
+#include "inet/networklayer/common/L3AddressResolver.h"
 
 namespace delaybasedforwarding {
 
@@ -37,11 +38,22 @@ void DBFComputer::initialize()
     dMax = par("dMax");
     admit = par("admit");
     cModule *network = getModuleByPath("<root>");
-    fromHops = par("fromHops");
-    toHops = par("toHops");
     cableDelay = SimTime(network->par("_delay"));
     cableLength = network->par("_length");
     cableDatarate = network->par("_datarate");
+
+    dbfFIB = new std::map<inet::Ipv4Address, int>();
+
+    cXMLElement *config = par("dbfFIB").xmlValue();
+    cXMLElementList nodes = config->getChildrenByTagName("node");
+    for (int i = 0; i < nodes.size(); i++) {
+        cXMLElement* node = nodes[i];
+        const char* ip = node->getAttribute("ip");
+        const inet::L3Address address = inet::L3AddressResolver().resolve(ip);
+        const int hops = atoi(node->getAttribute("hops"));
+        EV_DEBUG << ip << " has hops: " << hops << endl;
+        dbfFIB->insert({address.toIpv4(), hops});
+    }
 }
 
 void DBFComputer::handleMessage(cMessage *msg)
@@ -79,16 +91,15 @@ void DBFComputer::calculate(inet::Packet *packet) {
     dbfHeaderTag->setDMax(dbfIpv4Option->getDMax());
     dbfHeaderTag->setEDelay(dbfIpv4Option->getEDelay());
     dbfHeaderTag->setAdmit(dbfIpv4Option->getAdmit());
-    dbfHeaderTag->setToHops(toHops);
-
+    dbfHeaderTag->setToHops(dbfFIB->at(dbfIpv4Header->getDestAddress()));
 
 
     // Calculate link dependent delays
     double ethPadding = (double)packet->getBitLength() >= ETHERNET_MIN_PAYLOAD_BITS ? 0.0 : ETHERNET_MIN_PAYLOAD_BITS - (double)packet->getBitLength();
     simtime_t ldelay = SimTime(cableDelay.dbl() + (double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);
     simtime_t hdelay = ldelay;
-    simtime_t fromdelay = SimTime((double)fromHops * ldelay.dbl());
-    simtime_t todelay = SimTime((double)toHops * ldelay.dbl());
+    simtime_t fromdelay = SimTime((double)dbfFIB->at(dbfIpv4Header->getSrcAddress()) * ldelay.dbl());
+    simtime_t todelay = SimTime((double)dbfHeaderTag->getToHops() * ldelay.dbl());
     dbfHeaderTag->setLDelay(ldelay);
     dbfHeaderTag->setHDelay(hdelay);
     dbfHeaderTag->setFromDelay(fromdelay);
@@ -110,8 +121,8 @@ void DBFComputer::calculate(inet::Packet *packet) {
     // Calculate queueing budget and send time
     simtime_t fqdelayMin = dbfHeaderTag->getDMin() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
     simtime_t fqdelayMax = dbfHeaderTag->getDMax() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
-    dbfHeaderTag->setLqBudgetMin(SimTime(fqdelayMin.dbl() / (double)(toHops + THISNODE)));
-    dbfHeaderTag->setLqBudgetMax(SimTime(fqdelayMax.dbl() / (double)(toHops + THISNODE)));
+    dbfHeaderTag->setLqBudgetMin(SimTime(fqdelayMin.dbl() / (double)(dbfHeaderTag->getToHops() + THISNODE)));
+    dbfHeaderTag->setLqBudgetMax(SimTime(fqdelayMax.dbl() / (double)(dbfHeaderTag->getToHops()+ THISNODE)));
     dbfHeaderTag->setTMin(dbfHeaderTag->getLqBudgetMin() + dbfHeaderTag->getTRcv());
     dbfHeaderTag->setTMax(dbfHeaderTag->getLqBudgetMax() + dbfHeaderTag->getTRcv());
 }

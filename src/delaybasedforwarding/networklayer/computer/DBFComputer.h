@@ -46,11 +46,10 @@ class DBFComputer : public cSimpleModule
     simtime_t dMin;
     simtime_t dMax;
     uint32_t admit;
-    int fromHops;
-    int toHops;
     double cableLength;
     double cableDatarate;
     simtime_t cableDelay;
+    std::map<inet::Ipv4Address, int> *dbfFIB;
 
   private:
     void calculate(inet::Packet *packet);

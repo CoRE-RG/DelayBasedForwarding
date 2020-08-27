@@ -1,5 +1,5 @@
 # workingdir,                        args,                                          simtimelimit,    fingerprint
-/examples/tcpclientserver,           -f omnetpp.ini -c verified -r 0,               1000s,           34bb-15dd
+/examples/tcpclientserver,           -f omnetpp.ini -c verified -r 0,               1000s,           f1bd-cd5d
 /examples/udpclientserver,           -f omnetpp.ini -c verified -r 0,               1000s,           d145-4731
-/examples/tcpclientserver,           -f omnetpp.ini -c three_queues -r 0,           1000s,           245b-40fa
+/examples/tcpclientserver,           -f omnetpp.ini -c three_queues -r 0,           1000s,           b8ca-2b1d
 /examples/udpclientserver,           -f omnetpp.ini -c three_queues -r 0,           1000s,           3ff2-9e3c
