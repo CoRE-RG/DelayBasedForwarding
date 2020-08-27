@@ -22,6 +22,7 @@ import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import delaybasedforwarding.node.inet.DBFHost;
 import inet.node.ethernet.EtherLink;
 import delaybasedforwarding.node.inet.DBFRouter;
+import inet.visualizer.integrated.IntegratedCanvasVisualizer;
 
 network ClientServer
 {
@@ -56,7 +57,10 @@ network ClientServer
         }
         configurator: Ipv4NetworkConfigurator {
             parameters:
-                @display("p=100,100;is=s");
+                @display("p=45,101;is=s");
+        }
+        visualizer: IntegratedCanvasVisualizer {
+            @display("p=45,203");
         }
 
         router1: DBFRouter {

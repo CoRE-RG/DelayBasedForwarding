@@ -1,0 +1,5 @@
+<nodes>
+  <node ip="10.0.1.50" hops=2/>
+  <node ip="10.0.3.50" hops=2/>
+  <node ip="10.0.4.50" hops=3/>
+</nodes>
