@@ -20,12 +20,13 @@ namespace delaybasedforwarding;
 class DBFHeaderTag extends inet::TagBase
 {
     // Parameters to lookup
-    simtime_t fromDelay; // sum of delay from origin node up to actual node
     simtime_t lDelay; // delay from predecessor node up to actual node
-    string nexthop; // next node where the packet will be forwarded to
+    simtime_t hDelay; // delay from actual node to next node
+    simtime_t fromDelay; // sum of delay from origin node up to actual node
     simtime_t toDelay; // sum of delay from actual node up to destination node
+    uint32_t fromHops; // sum of hops from origin node up to actual node
     uint32_t toHops; // sum of hops from actual node up to destination node
-    simtime_t hDelay; // delay from actual node to next node 
+    string nexthop; // next node where the packet will be forwarded to
     
     // Parameters to calculate with
     uint32_t admit; // admit flag determines higher priority over non-admitted packets

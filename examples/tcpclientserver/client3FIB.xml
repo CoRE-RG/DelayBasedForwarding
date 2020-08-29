@@ -1,6 +1,6 @@
 <nodes>
-  <node ip="10.0.1.50" hops="2"/>
-  <node ip="10.0.2.50" hops="2"/>
-  <node ip="10.0.3.50" hops="0"/>
-  <node ip="10.0.4.50" hops="3"/>
+  <node ip="10.0.1.50" hops="2" lDelay="0.5s" hDelay="0.5s" fromDelay="1.0s" toDelay="1.0s"/>
+  <node ip="10.0.2.50" hops="2" lDelay="0.5s" hDelay="0.5s" fromDelay="1.0s" toDelay="1.0s"/>
+  <node ip="10.0.3.50" hops="0" lDelay="0.0s" hDelay="0.0s" fromDelay="0.0s" toDelay="0.0s"/>
+  <node ip="10.0.4.50" hops="3" lDelay="0.5s" hDelay="0.5s" fromDelay="1.5s" toDelay="1.5s"/>
 </nodes>

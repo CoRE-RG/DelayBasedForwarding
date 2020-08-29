@@ -42,17 +42,21 @@ void DBFComputer::initialize()
     cableLength = network->par("_length");
     cableDatarate = network->par("_datarate");
 
-    dbfFIB = new std::map<inet::Ipv4Address, int>();
+    dbfFIB = new std::map<inet::Ipv4Address, DbfFibEntry>();
 
     cXMLElement *config = par("dbfFIB").xmlValue();
     cXMLElementList nodes = config->getChildrenByTagName("node");
-    for (int i = 0; i < nodes.size(); i++) {
+    for (size_t i = 0; i < nodes.size(); i++) {
         cXMLElement* node = nodes[i];
         const char* ip = node->getAttribute("ip");
         const inet::L3Address address = inet::L3AddressResolver().resolve(ip);
         const int hops = atoi(node->getAttribute("hops"));
+        const simtime_t lDelay = SimTime::parse(node->getAttribute("lDelay"));
+        const simtime_t hDelay = SimTime::parse(node->getAttribute("hDelay"));
+        const simtime_t fromDelay = SimTime::parse(node->getAttribute("fromDelay"));
+        const simtime_t toDelay = SimTime::parse(node->getAttribute("toDelay"));
         EV_DEBUG << ip << " has hops: " << hops << endl;
-        dbfFIB->insert({address.toIpv4(), hops});
+        dbfFIB->insert({address.toIpv4(), DbfFibEntry(hops,lDelay,hDelay,fromDelay,toDelay)});
     }
 }
 
@@ -91,23 +95,22 @@ void DBFComputer::calculate(inet::Packet *packet) {
     dbfHeaderTag->setDMax(dbfIpv4Option->getDMax());
     dbfHeaderTag->setEDelay(dbfIpv4Option->getEDelay());
     dbfHeaderTag->setAdmit(dbfIpv4Option->getAdmit());
-    dbfHeaderTag->setToHops(dbfFIB->at(dbfIpv4Header->getDestAddress()));
-
+    dbfHeaderTag->setFromHops(dbfFIB->at(dbfIpv4Header->getSrcAddress()).getHops());
+    dbfHeaderTag->setToHops(dbfFIB->at(dbfIpv4Header->getDestAddress()).getHops());
+    dbfHeaderTag->setLDelay(dbfFIB->at(dbfIpv4Header->getSrcAddress()).getLDelay());
+    dbfHeaderTag->setHDelay(dbfFIB->at(dbfIpv4Header->getDestAddress()).getHDelay());
 
     // Calculate link dependent delays
     double ethPadding = (double)packet->getBitLength() >= ETHERNET_MIN_PAYLOAD_BITS ? 0.0 : ETHERNET_MIN_PAYLOAD_BITS - (double)packet->getBitLength();
-    simtime_t ldelay = SimTime(cableDelay.dbl() + (double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);
-    simtime_t hdelay = ldelay;
-    simtime_t fromdelay = SimTime((double)dbfFIB->at(dbfIpv4Header->getSrcAddress()) * ldelay.dbl());
-    simtime_t todelay = SimTime((double)dbfHeaderTag->getToHops() * ldelay.dbl()); //TODO add with calculated toDelay from fib, don't forget to take out cableDelay from calculation before
-    dbfHeaderTag->setLDelay(ldelay);
-    dbfHeaderTag->setHDelay(hdelay);
+    simtime_t transmissionTime = SimTime((double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);
+    simtime_t fromdelay = SimTime((double)dbfHeaderTag->getFromHops() * transmissionTime.dbl() + dbfFIB->at(dbfIpv4Header->getSrcAddress()).getFromDelay().dbl());
+    simtime_t todelay = SimTime((double)dbfHeaderTag->getToHops() * transmissionTime.dbl() + dbfFIB->at(dbfIpv4Header->getDestAddress()).getToDelay().dbl());
     dbfHeaderTag->setFromDelay(fromdelay);
     dbfHeaderTag->setToDelay(todelay);
 
     // Update experienced delay (eDelay)
     if (dbfHeaderTag->getFromNetwork()) {
-        dbfHeaderTag->setEDelay(dbfHeaderTag->getEDelay() + dbfHeaderTag->getLDelay());
+        dbfHeaderTag->setEDelay(dbfHeaderTag->getEDelay() + dbfHeaderTag->getLDelay() + transmissionTime);
     }
     inet::TlvOptions &tlvOptions = dbfIpv4Header->getOptionsForUpdate();
     tlvOptions.deleteOptionByType(DBFIpv4OptionType::DBFPARAMETERS, false);

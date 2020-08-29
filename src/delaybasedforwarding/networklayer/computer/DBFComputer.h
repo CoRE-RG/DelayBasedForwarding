@@ -16,10 +16,8 @@
 #ifndef __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
 #define __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
 
-#include <omnetpp.h>
+#include <delaybasedforwarding/networklayer/computer/DbfFibEntry.h>
 #include "inet/common/packet/Packet.h"
-
-using namespace omnetpp;
 
 namespace delaybasedforwarding {
 
@@ -49,7 +47,7 @@ class DBFComputer : public cSimpleModule
     double cableLength;
     double cableDatarate;
     simtime_t cableDelay;
-    std::map<inet::Ipv4Address, int> *dbfFIB;
+    std::map<inet::Ipv4Address, DbfFibEntry> *dbfFIB;
 
   private:
     void calculate(inet::Packet *packet);
