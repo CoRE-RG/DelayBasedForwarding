@@ -41,6 +41,7 @@ class DBFComputer : public cSimpleModule
     bool isAlreadyExpired(inet::Packet *packet);
 
   private:
+    simtime_t dBE;
     simtime_t dMin;
     simtime_t dMax;
     uint32_t admit;

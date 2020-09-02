@@ -34,8 +34,16 @@ Define_Module(DBFComputer);
 
 void DBFComputer::initialize()
 {
+    dBE = par("dBE");
     dMin = par("dMin");
     dMax = par("dMax");
+    dMax = dMax == SimTime::ZERO ? dBE : dMax;
+    if (dMin > dMax) {
+        throw cRuntimeError("dMax must be greater than dMin.");
+    }
+    if (dMin < 0 || dMax < 0) {
+        throw cRuntimeError("dMin and dMax must be positive");
+    }
     admit = par("admit");
     cModule *network = getModuleByPath("<root>");
     cableDatarate = network->par("_datarate");
@@ -53,7 +61,6 @@ void DBFComputer::initialize()
         const simtime_t hDelay = SimTime::parse(node->getAttribute("hDelay"));
         const simtime_t fromDelay = SimTime::parse(node->getAttribute("fromDelay"));
         const simtime_t toDelay = SimTime::parse(node->getAttribute("toDelay"));
-        EV_DEBUG << ip << " has hops: " << hops << endl;
         dbfFIB->insert({address.toIpv4(), DbfFibEntry(hops,lDelay,hDelay,fromDelay,toDelay)});
     }
 }
