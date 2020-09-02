@@ -38,8 +38,6 @@ void DBFComputer::initialize()
     dMax = par("dMax");
     admit = par("admit");
     cModule *network = getModuleByPath("<root>");
-    cableDelay = SimTime(network->par("_delay"));
-    cableLength = network->par("_length");
     cableDatarate = network->par("_datarate");
 
     dbfFIB = new std::map<inet::Ipv4Address, DbfFibEntry>();

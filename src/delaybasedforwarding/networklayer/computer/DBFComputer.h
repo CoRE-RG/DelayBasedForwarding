@@ -44,9 +44,7 @@ class DBFComputer : public cSimpleModule
     simtime_t dMin;
     simtime_t dMax;
     uint32_t admit;
-    double cableLength;
     double cableDatarate;
-    simtime_t cableDelay;
     std::map<inet::Ipv4Address, DbfFibEntry> *dbfFIB;
 
   private:
