@@ -46,8 +46,4 @@ void DBFIpv4::encapsulate(inet::Packet *packet) {
     dbfComputer->addSLOParameters(packet);
 }
 
-void DBFIpv4::decapsulate(inet::Packet *packet) {
-    inet::Ipv4::decapsulate(packet);
-}
-
 } //namespace
