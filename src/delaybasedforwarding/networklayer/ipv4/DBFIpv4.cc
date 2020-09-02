@@ -30,11 +30,16 @@ void DBFIpv4::initialize(int stage) {
 }
 
 void DBFIpv4::sendPacketToNIC(inet::Packet *packet) {
-    dbfComputer->processDBFPacket(packet);
-    if (!dbfComputer->isAlreadyExpired(packet)) {
+    if (packet->findTag<DBFHeaderTag>()) {
+        dbfComputer->processDBFPacket(packet);
+        if (dbfComputer->isAlreadyExpired(packet)) {
+            delete packet;
+            packet = nullptr;
+        }
+    }
+
+    if (packet) {
         Ipv4::sendPacketToNIC(packet);
-    } else {
-        delete packet;
     }
 }
 

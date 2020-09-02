@@ -17,7 +17,6 @@
 #define __DELAYBASEDFORWARDING_DBFPRIORITYSCHEDULER_H_
 
 #include <omnetpp.h>
-#include <mutex>
 #include "inet/queueing/scheduler/PriorityScheduler.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/queueing/scheduler/DBFScheduleMsg.h"

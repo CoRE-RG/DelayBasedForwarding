@@ -16,6 +16,10 @@
 #include "IngressForwarder.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
+#include "inet/linklayer/ethernet/EtherPhyFrame_m.h"
+#include "inet/linklayer/ethernet/EtherFrame_m.h"
+#include "inet/networklayer/ipv4/Ipv4Header_m.h"
+#include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
 
 namespace delaybasedforwarding {
 
@@ -29,10 +33,24 @@ void IngressForwarder::initialize()
 
 void IngressForwarder::handleMessage(cMessage *msg)
 {
-    if (containsIpv4Header(msg)) {
+    if (containsIpv4Header(msg) && containsDBFOptions(msg)) {
         attachTrcv(msg);
     }
     send(msg,"out");
+}
+
+bool IngressForwarder::containsDBFOptions(cMessage *msg) {
+    bool result = false;
+    inet::Packet *packet = dynamic_cast<inet::Packet*>(msg);
+    auto ipv4Header = packet->peekAtFront<inet::Ipv4Header>();
+    const inet::TlvOptionBase *tlvOptionBase = ipv4Header->findOptionByType(DBFIpv4OptionType::DBFPARAMETERS);
+    auto tlvOptionBaseCastable = tlvOptionBase->dup();
+    DBFIpv4Option *dbfIpv4Option = dynamic_cast<DBFIpv4Option*>(tlvOptionBaseCastable);
+    if (dbfIpv4Option) {
+        result = true;
+    }
+    delete tlvOptionBaseCastable;
+    return result;
 }
 
 void IngressForwarder::attachTrcv(cMessage *msg) {
