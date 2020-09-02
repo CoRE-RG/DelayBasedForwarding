@@ -26,8 +26,9 @@ simple DBFComputer
 {
     parameters:
         @class(DBFComputer);
-        double dMin @unit(s) = default(-1s);
-        double dMax @unit(s) = default(-1s);
+        double dMin @unit(s) = default(0.0s);
+        double dMax @unit(s) = default(0.0s);
+        double dBE @unit(s) = default(9000000.0s);
         xml dbfFIB;
         int admit = default(0);
 }
