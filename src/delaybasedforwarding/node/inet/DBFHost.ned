@@ -21,8 +21,8 @@ import delaybasedforwarding.networklayer.computer.DBFComputer;
 module DBFHost extends StandardHost
 {
     parameters:
-        eth[*].egressTC.typename = "DBFEgressTrafficConditioner";
-        eth[*].ingressTC.typename = "DBFIngressTrafficConditioner";
+        eth[*].egressTC.typename = default("DBFEgressTrafficConditioner");
+        eth[*].ingressTC.typename = default("DBFIngressTrafficConditioner");
         ipv4.typename = "DBFIpv4NetworkLayer";
         
     submodules:

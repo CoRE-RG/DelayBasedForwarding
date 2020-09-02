@@ -44,12 +44,11 @@ bool IngressForwarder::containsDBFOptions(cMessage *msg) {
     inet::Packet *packet = dynamic_cast<inet::Packet*>(msg);
     auto ipv4Header = packet->peekAtFront<inet::Ipv4Header>();
     const inet::TlvOptionBase *tlvOptionBase = ipv4Header->findOptionByType(DBFIpv4OptionType::DBFPARAMETERS);
-    auto tlvOptionBaseCastable = tlvOptionBase->dup();
-    DBFIpv4Option *dbfIpv4Option = dynamic_cast<DBFIpv4Option*>(tlvOptionBaseCastable);
-    if (dbfIpv4Option) {
-        result = true;
+    if (tlvOptionBase) {
+        auto tlvOptionBaseCastable = tlvOptionBase->dup();
+        result = dynamic_cast<DBFIpv4Option*>(tlvOptionBaseCastable) ? true : false;
+        delete tlvOptionBaseCastable;
     }
-    delete tlvOptionBaseCastable;
     return result;
 }
 

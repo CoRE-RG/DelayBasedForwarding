@@ -28,7 +28,6 @@ network JitterReduction
     parameters:
         double _datarate @unit(bps) = 100Mbps;
         double _length @unit(m) = 20000.0m;
-        double _delay @unit(s) = replaceUnit(_length / 2e8, "s");
 
     types:
         channel ETH_100MBIT extends EtherLink
@@ -43,22 +42,22 @@ network JitterReduction
                 @display("p=140,160;i=device/pc3");
         }
 
-        S2_R2: DBFHost {
+        S2_R2: StandardHost {
             parameters:
                 @display("p=300,25;i=device/pc3");
         }
 
-        S3_R3: DBFHost {
+        S3_R3: StandardHost {
             parameters:
                 @display("p=460,25;i=device/pc3");
         }
 
-        S4_R4: DBFHost {
+        S4_R4: StandardHost {
             parameters:
                 @display("p=620,25;i=device/pc3");
         }
 
-        S5_R1: DBFHost {
+        S5_R1: StandardHost {
             parameters:
                 @display("p=780,25;i=device/pc3");
         }
