@@ -24,6 +24,12 @@ package delaybasedforwarding.linklayer.DBFEgress;
 //
 simple EgressForwarder
 {
+    parameters:
+        //Signal emitted when a frame is received, contains received EtherFrame
+        @signal[rxPk](type=inet::Packet);
+        //End-to-end latency
+        @statistic[rxLatency](title="End-to-end latency"; source="messageAge(rxPk)"; unit=s; record=stats,histogram?,vector; interpolationmode=none);
+    
     gates:
         input in;
         output out;

@@ -21,6 +21,8 @@ namespace delaybasedforwarding {
 
 Define_Module(EgressForwarder);
 
+simsignal_t EgressForwarder::rxPkSignal = registerSignal("rxPk");
+
 void EgressForwarder::initialize()
 {
 }
@@ -30,6 +32,7 @@ void EgressForwarder::handleMessage(cMessage *msg)
     if (msg->arrivedOn("in")) {
         send(msg,"schedule");
     } else {
+        emit(rxPkSignal, msg);
         send(msg,"out");
     }
 }
