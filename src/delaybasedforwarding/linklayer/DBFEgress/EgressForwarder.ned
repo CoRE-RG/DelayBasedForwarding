@@ -25,10 +25,14 @@ package delaybasedforwarding.linklayer.DBFEgress;
 simple EgressForwarder
 {
     parameters:
-        //Signal emitted when a frame is received, contains received EtherFrame
+        //Signal emitted for frame transmitted to particular port, contains sending packet
         @signal[txPkToPort_*](type=inet::Packet);
-        //End-to-end latency
+        //Signal emitted when a frame is transmitted, contains sending packet
+        @signal[txPks](type=inet::Packet);
+        //End-to-end latency for packets per port
         @statisticTemplate[txPk](title="End-to-end latency"; unit=s; record=stats,histogram?,vector; interpolationmode=none);
+        //End-to-end latency for packets
+        @statistic[txPks](title="End-to-end latency"; source="messageAge(txPks)"; unit=s; record=stats,histogram?,vector; interpolationmode=none);
     
     gates:
         input in;

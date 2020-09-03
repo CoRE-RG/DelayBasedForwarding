@@ -41,6 +41,7 @@ class EgressForwarder : public cSimpleModule, public inet::IProtocolRegistration
 
   private:
     std::map<uint32_t,simsignal_t> txPktToPortSignals;
+    static simsignal_t txPksSignal;
 
   private:
     void emitPacket(cMessage *msg);
