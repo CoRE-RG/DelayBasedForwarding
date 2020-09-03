@@ -39,6 +39,7 @@ class DBFComputer : public cSimpleModule
     void addSLOParameters(inet::Packet *packet);
     void processDBFPacket(inet::Packet *packet);
     bool isAlreadyExpired(inet::Packet *packet);
+    bool isBEMode();
 
   private:
     simtime_t dBE;

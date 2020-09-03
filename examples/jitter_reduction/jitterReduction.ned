@@ -22,6 +22,7 @@ import inet.node.ethernet.EtherLink;
 import inet.node.inet.Router;
 import delaybasedforwarding.node.inet.DBFRouter;
 import inet.visualizer.integrated.IntegratedCanvasVisualizer;
+import inet.node.inet.INetworkNode;
 
 network JitterReduction
 {

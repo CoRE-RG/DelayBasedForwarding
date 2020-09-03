@@ -45,10 +45,12 @@ void DBFIpv4::sendPacketToNIC(inet::Packet *packet) {
 
 void DBFIpv4::encapsulate(inet::Packet *packet) {
     inet::Ipv4::encapsulate(packet);
-    auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
-    dbfHeaderTag->setTRcv(simTime());
-    dbfHeaderTag->setFromNetwork(false);
-    dbfComputer->addSLOParameters(packet);
+    if (!dbfComputer->isBEMode()) {
+        auto dbfHeaderTag = packet->addTag<DBFHeaderTag>();
+        dbfHeaderTag->setTRcv(simTime());
+        dbfHeaderTag->setFromNetwork(false);
+        dbfComputer->addSLOParameters(packet);
+    }
 }
 
 } //namespace

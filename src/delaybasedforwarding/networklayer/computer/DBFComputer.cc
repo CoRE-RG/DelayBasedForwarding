@@ -37,7 +37,7 @@ void DBFComputer::initialize()
     dBE = par("dBE");
     dMin = par("dMin");
     dMax = par("dMax");
-    dMax = dMax == SimTime::ZERO ? dBE : dMax;
+    dMax = dMin > SimTime::ZERO && dMax == SimTime::ZERO ? dBE : dMax;
     if (dMin > dMax) {
         throw cRuntimeError("dMax must be greater than dMin.");
     }
@@ -138,6 +138,10 @@ void DBFComputer::calculate(inet::Packet *packet) {
 bool DBFComputer::isAlreadyExpired(inet::Packet *packet) {
     auto dbfHeaderTag = packet->findTag<DBFHeaderTag>();
     return dbfHeaderTag->getTMax() < dbfHeaderTag->getTRcv();
+}
+
+bool DBFComputer::isBEMode() {
+    return dMin == SimTime::ZERO && dMax == SimTime::ZERO;
 }
 
 } //namespace
