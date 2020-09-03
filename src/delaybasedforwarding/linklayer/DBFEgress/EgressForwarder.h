@@ -17,6 +17,7 @@
 #define __DELAYBASEDFORWARDING_FORWARDER_H_
 
 #include <omnetpp.h>
+#include <map>
 #include "inet/common/IProtocolRegistrationListener.h"
 
 using namespace omnetpp;
@@ -39,7 +40,10 @@ class EgressForwarder : public cSimpleModule, public inet::IProtocolRegistration
     virtual void handleRegisterProtocol(const inet::Protocol& protocol, cGate *in, inet::ServicePrimitive servicePrimitive) override;
 
   private:
-    static simsignal_t rxPkSignal;
+    std::map<uint32_t,simsignal_t> txPktToPortSignals;
+
+  private:
+    void emitPacket(cMessage *msg);
 };
 
 } //namespace

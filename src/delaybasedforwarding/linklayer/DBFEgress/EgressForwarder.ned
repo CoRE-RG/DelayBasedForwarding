@@ -26,9 +26,9 @@ simple EgressForwarder
 {
     parameters:
         //Signal emitted when a frame is received, contains received EtherFrame
-        @signal[rxPk](type=inet::Packet);
+        @signal[txPkToPort_*](type=inet::Packet);
         //End-to-end latency
-        @statistic[rxLatency](title="End-to-end latency"; source="messageAge(rxPk)"; unit=s; record=stats,histogram?,vector; interpolationmode=none);
+        @statisticTemplate[txPk](title="End-to-end latency"; unit=s; record=stats,histogram?,vector; interpolationmode=none);
     
     gates:
         input in;
