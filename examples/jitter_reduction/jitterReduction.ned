@@ -15,6 +15,7 @@
 
 package delaybasedforwarding.examples.jitter_reduction;
 
+import ned.DelayChannel;
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.node.inet.StandardHost;
 import delaybasedforwarding.node.inet.DBFHost;
@@ -27,14 +28,19 @@ import inet.node.inet.INetworkNode;
 network JitterReduction
 {
     parameters:
-        double _datarate @unit(bps) = 100Mbps;
+        //double _datarate @unit(bps) = 100Mbps; // use only if EtherLink is used
         double _length @unit(m) = 20000.0m;
 
     types:
-        channel ETH_100MBIT extends EtherLink
+//        channel Link extends EtherLink
+//        {
+//            datarate = _datarate;
+//            length = _length;
+//        }
+        
+        channel Link extends DelayChannel
         {
-            datarate = _datarate;
-            length = _length;
+            delay = 100us;
         }
 
     submodules:
@@ -127,23 +133,23 @@ network JitterReduction
         }
 
     connections:
-        S1_R1.ethg++ <--> ETH_100MBIT <--> FWD1.ethg++;
-        S2_R2.ethg++ <--> ETH_100MBIT <--> FWD1.ethg++;
-        FWD1.ethg++ <--> ETH_100MBIT <--> FWD2.ethg++;
+        S1_R1.ethg++ <--> Link <--> FWD1.ethg++;
+        S2_R2.ethg++ <--> Link <--> FWD1.ethg++;
+        FWD1.ethg++ <--> Link <--> FWD2.ethg++;
 
-        S3_R3.ethg++ <--> ETH_100MBIT <--> FWD2.ethg++;
-        FWD2.ethg++ <--> ETH_100MBIT <--> FWD2_1.ethg++;
-        FWD2_1.ethg++ <--> ETH_100MBIT <--> FWD2_2.ethg++;
-        FWD2_2.ethg++ <--> ETH_100MBIT <--> R2.ethg++;
-        FWD2.ethg++ <--> ETH_100MBIT <--> FWD3.ethg++;
+        S3_R3.ethg++ <--> Link <--> FWD2.ethg++;
+        FWD2.ethg++ <--> Link <--> FWD2_1.ethg++;
+        FWD2_1.ethg++ <--> Link <--> FWD2_2.ethg++;
+        FWD2_2.ethg++ <--> Link <--> R2.ethg++;
+        FWD2.ethg++ <--> Link <--> FWD3.ethg++;
 
-        S4_R4.ethg++ <--> ETH_100MBIT <--> FWD3.ethg++;
-        FWD3.ethg++ <--> ETH_100MBIT <--> FWD3_1.ethg++;
-        FWD3_1.ethg++ <--> ETH_100MBIT <--> R3.ethg++;
-        FWD3.ethg++ <--> ETH_100MBIT <--> FWD4.ethg++;
+        S4_R4.ethg++ <--> Link <--> FWD3.ethg++;
+        FWD3.ethg++ <--> Link <--> FWD3_1.ethg++;
+        FWD3_1.ethg++ <--> Link <--> R3.ethg++;
+        FWD3.ethg++ <--> Link <--> FWD4.ethg++;
 
-        S5_R1.ethg++ <--> ETH_100MBIT <--> FWD4.ethg++;
-        FWD4.ethg++ <--> ETH_100MBIT <--> R1.ethg++;
-        FWD4.ethg++ <--> ETH_100MBIT <--> R4.ethg++;
+        S5_R1.ethg++ <--> Link <--> FWD4.ethg++;
+        FWD4.ethg++ <--> Link <--> R1.ethg++;
+        FWD4.ethg++ <--> Link <--> R4.ethg++;
 
 }

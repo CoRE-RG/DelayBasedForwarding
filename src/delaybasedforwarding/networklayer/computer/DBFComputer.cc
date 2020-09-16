@@ -19,6 +19,7 @@
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
 #include "inet/networklayer/common/L3AddressResolver.h"
+#include <exception>
 
 namespace delaybasedforwarding {
 
@@ -46,7 +47,12 @@ void DBFComputer::initialize()
     }
     admit = par("admit");
     cModule *network = getModuleByPath("<root>");
-    cableDatarate = network->par("_datarate");
+
+    try {
+        cableDatarate = network->par("_datarate");
+    } catch (std::exception& e) {
+        cableDatarate = 0.0;
+    }
 
     dbfFIB = new std::map<inet::Ipv4Address, DbfFibEntry>();
 
@@ -107,7 +113,10 @@ void DBFComputer::calculate(inet::Packet *packet) {
 
     // Calculate link dependent delays
     double ethPadding = (double)packet->getBitLength() >= ETHERNET_MIN_PAYLOAD_BITS ? 0.0 : ETHERNET_MIN_PAYLOAD_BITS - (double)packet->getBitLength();
-    simtime_t transmissionTime = SimTime((double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);
+    simtime_t transmissionTime = SimTime(0.0);
+    if (cableDatarate != 0.0) {
+        transmissionTime = SimTime((double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);
+    }
     simtime_t fromdelay = SimTime((double)dbfHeaderTag->getFromHops() * transmissionTime.dbl() + dbfFIB->at(dbfIpv4Header->getSrcAddress()).getFromDelay().dbl());
     simtime_t todelay = SimTime((double)dbfHeaderTag->getToHops() * transmissionTime.dbl() + dbfFIB->at(dbfIpv4Header->getDestAddress()).getToDelay().dbl());
     dbfHeaderTag->setFromDelay(fromdelay);
