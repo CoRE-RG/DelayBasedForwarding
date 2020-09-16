@@ -28,19 +28,14 @@ import inet.node.inet.INetworkNode;
 network JitterReduction
 {
     parameters:
-        //double _datarate @unit(bps) = 100Mbps; // use only if EtherLink is used
+        double _datarate @unit(bps) = 100Gbps; // use only if EtherLink is used
         double _length @unit(m) = 20000.0m;
 
     types:
-//        channel Link extends EtherLink
-//        {
-//            datarate = _datarate;
-//            length = _length;
-//        }
-        
-        channel Link extends DelayChannel
+        channel Link extends EtherLink
         {
-            delay = 100us;
+            datarate = _datarate;
+            length = _length;
         }
 
     submodules:

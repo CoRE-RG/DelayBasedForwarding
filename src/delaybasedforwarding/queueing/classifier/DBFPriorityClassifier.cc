@@ -13,6 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+#include <cmath>
 #include "DBFPriorityClassifier.h"
 #include "delaybasedforwarding/utilities/DynamicModuleHandling.h"
 #include "delaybasedforwarding/queueing/scheduler/DBFPriorityScheduler.h"
@@ -40,7 +41,7 @@ void DBFPriorityClassifier::handleMessage(cMessage *msg) {
 int DBFPriorityClassifier::classifyPacket(inet::Packet *packet) {
     int consumerIdx = -1;
     if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
-        simtime_t lqbudget = dbfHeaderTag->getLqBudgetMax() - dbfHeaderTag->getLqBudgetMin();
+        simtime_t lqbudget = SimTime(std::abs(dbfHeaderTag->getLqBudgetMax().dbl() - dbfHeaderTag->getLqBudgetMin().dbl()));
         if (lqbudget >= maximumDelta) {
             consumerIdx = getIndexOfQueueForDelta(maximumDelta);
         } else {

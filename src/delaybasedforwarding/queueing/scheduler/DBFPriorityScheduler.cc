@@ -97,11 +97,22 @@ void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
 }
 
 int DBFPriorityScheduler::schedulePacket() {
+    simtime_t delta = SimTime().ZERO;
+    int collectionIdx = -1;
     auto deltaQueueMap = dbfPriorityClassifier->getDeltaQueueMap();
     for (auto it = deltaQueueMap->begin(); it != deltaQueueMap->end(); ++it)
-        if (providers[it->second]->canPopSomePacket(inputGates[it->second]->getPathStartGate()))
-            return it->second;
-    return -1;
+        if (providers[it->second]->canPopSomePacket(inputGates[it->second]->getPathStartGate())) {
+            inet::Packet *packet = collections[it->second]->getPacket(FRONTIDX);
+            simtime_t difference = SimTime().ZERO;
+            if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
+                difference = dbfHeaderTag->getTMin() - simTime();
+            }
+            if (delta == SimTime().ZERO || difference < delta ) {
+                delta = difference;
+                collectionIdx = it->second;
+            }
+        }
+    return collectionIdx;
 }
 
 void DBFPriorityScheduler::checkQueues() {

@@ -38,11 +38,10 @@ void DBFComputer::initialize()
     dBE = par("dBE");
     dMin = par("dMin");
     dMax = par("dMax");
-    dMax = dMin > SimTime::ZERO && dMax == SimTime::ZERO ? dBE : dMax;
-    if (dMin > dMax) {
+    if (dMin > 0.0 && dMax > 0.0 && dMin > dMax) {
         throw cRuntimeError("dMax must be greater than dMin.");
     }
-    if (dMin < 0 || dMax < 0) {
+    if (dMin < 0.0 || dMax < 0.0) {
         throw cRuntimeError("dMin and dMax must be positive");
     }
     admit = par("admit");
@@ -113,7 +112,7 @@ void DBFComputer::calculate(inet::Packet *packet) {
 
     // Calculate link dependent delays
     double ethPadding = (double)packet->getBitLength() >= ETHERNET_MIN_PAYLOAD_BITS ? 0.0 : ETHERNET_MIN_PAYLOAD_BITS - (double)packet->getBitLength();
-    simtime_t transmissionTime = SimTime(0.0);
+    simtime_t transmissionTime = SimTime().ZERO;
     if (cableDatarate != 0.0) {
         transmissionTime = SimTime((double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);
     }
@@ -137,11 +136,14 @@ void DBFComputer::calculate(inet::Packet *packet) {
 
     // Calculate queueing budget and send time
     simtime_t fqdelayMin = dbfHeaderTag->getDMin() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
-    simtime_t fqdelayMax = dbfHeaderTag->getDMax() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
     dbfHeaderTag->setLqBudgetMin(SimTime(fqdelayMin.dbl() / (double)(dbfHeaderTag->getToHops() + THISNODE)));
-    dbfHeaderTag->setLqBudgetMax(SimTime(fqdelayMax.dbl() / (double)(dbfHeaderTag->getToHops()+ THISNODE)));
     dbfHeaderTag->setTMin(dbfHeaderTag->getLqBudgetMin() + dbfHeaderTag->getTRcv());
+
+
+    simtime_t fqdelayMax = getSuitableDMax(dbfHeaderTag->getDMax()) - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
+    dbfHeaderTag->setLqBudgetMax(SimTime(fqdelayMax.dbl() / (double)(dbfHeaderTag->getToHops()+ THISNODE)));
     dbfHeaderTag->setTMax(dbfHeaderTag->getLqBudgetMax() + dbfHeaderTag->getTRcv());
+    dbfHeaderTag->setLqBudgetMax(dbfHeaderTag->getDMax() == SimTime().ZERO ? SimTime().ZERO : dbfHeaderTag->getLqBudgetMax());
 }
 
 bool DBFComputer::isAlreadyExpired(inet::Packet *packet) {
@@ -151,6 +153,10 @@ bool DBFComputer::isAlreadyExpired(inet::Packet *packet) {
 
 bool DBFComputer::isBEMode() {
     return dMin == SimTime::ZERO && dMax == SimTime::ZERO;
+}
+
+simtime_t DBFComputer::getSuitableDMax(simtime_t dMax) {
+    return dMax == SimTime().ZERO ? dBE : dMax;
 }
 
 } //namespace

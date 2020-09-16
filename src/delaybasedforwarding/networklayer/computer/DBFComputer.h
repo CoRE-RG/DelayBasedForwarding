@@ -51,6 +51,7 @@ class DBFComputer : public cSimpleModule
 
   private:
     void calculate(inet::Packet *packet);
+    simtime_t getSuitableDMax(simtime_t dMax);
 };
 
 } //namespace
