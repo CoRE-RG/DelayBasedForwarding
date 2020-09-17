@@ -13,11 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include <delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h>
 #include "DBFComputer.h"
-#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
-#include "inet/networklayer/ipv4/Ipv4Header_m.h"
 #include "inet/networklayer/common/L3AddressResolver.h"
 #include <exception>
 
@@ -95,54 +92,30 @@ void DBFComputer::processDBFPacket(inet::Packet *packet) {
 }
 
 void DBFComputer::calculate(inet::Packet *packet) {
-    auto ipv4Header = packet->peekAtFront<inet::Ipv4Header>();
-    auto dbfIpv4Header = inet::IntrusivePtr<inet::Ipv4Header>(ipv4Header->dup());
-    const inet::TlvOptionBase *tlvOptionBase = dbfIpv4Header->findOptionByType(DBFIpv4OptionType::DBFPARAMETERS);
-    DBFIpv4Option *dbfIpv4Option = dynamic_cast<DBFIpv4Option*>(tlvOptionBase->dup());
+    inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header = getMutableIpv4Header(packet);
+    DBFIpv4Option *dbfIpv4Option = getMutableDBFIpv4Option(dbfIpv4Header);
+    DBFHeaderTag* dbfHeaderTag = prepareDBFTag(packet, dbfIpv4Option, dbfIpv4Header);
 
-    auto dbfHeaderTag = packet->findTag<DBFHeaderTag>();
-    dbfHeaderTag->setDMin(dbfIpv4Option->getDMin());
-    dbfHeaderTag->setDMax(dbfIpv4Option->getDMax());
-    dbfHeaderTag->setEDelay(dbfIpv4Option->getEDelay());
-    dbfHeaderTag->setAdmit(dbfIpv4Option->getAdmit());
-    dbfHeaderTag->setFromHops(dbfFIB->at(dbfIpv4Header->getSrcAddress()).getHops());
-    dbfHeaderTag->setToHops(dbfFIB->at(dbfIpv4Header->getDestAddress()).getHops());
-    dbfHeaderTag->setLDelay(dbfFIB->at(dbfIpv4Header->getSrcAddress()).getLDelay());
-    dbfHeaderTag->setHDelay(dbfFIB->at(dbfIpv4Header->getDestAddress()).getHDelay());
-
-    // Calculate link dependent delays
-    double ethPadding = (double)packet->getBitLength() >= ETHERNET_MIN_PAYLOAD_BITS ? 0.0 : ETHERNET_MIN_PAYLOAD_BITS - (double)packet->getBitLength();
-    simtime_t transmissionTime = SimTime().ZERO;
-    if (cableDatarate != 0.0) {
-        transmissionTime = SimTime((double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);
-    }
-    simtime_t fromdelay = SimTime((double)dbfHeaderTag->getFromHops() * transmissionTime.dbl() + dbfFIB->at(dbfIpv4Header->getSrcAddress()).getFromDelay().dbl());
-    simtime_t todelay = SimTime((double)dbfHeaderTag->getToHops() * transmissionTime.dbl() + dbfFIB->at(dbfIpv4Header->getDestAddress()).getToDelay().dbl());
+    simtime_t transmissionTime = calculateTransmissionTime(packet);
+    simtime_t fromdelay = getDelay((double)dbfHeaderTag->getFromHops(), transmissionTime.dbl(), dbfFIB->at(dbfIpv4Header->getSrcAddress()).getFromDelay().dbl());
+    simtime_t todelay = getDelay((double)dbfHeaderTag->getToHops(), transmissionTime.dbl(), dbfFIB->at(dbfIpv4Header->getDestAddress()).getToDelay().dbl());
     dbfHeaderTag->setFromDelay(fromdelay);
     dbfHeaderTag->setToDelay(todelay);
 
-    // Update experienced delay (eDelay)
-    if (dbfHeaderTag->getFromNetwork()) {
-        dbfHeaderTag->setEDelay(dbfHeaderTag->getEDelay() + dbfHeaderTag->getLDelay() + transmissionTime);
-    }
-    inet::TlvOptions &tlvOptions = dbfIpv4Header->getOptionsForUpdate();
-    tlvOptions.deleteOptionByType(DBFIpv4OptionType::DBFPARAMETERS, false);
+    updateEdelay(dbfHeaderTag, transmissionTime);
+    removeDBFIpv4Options(dbfIpv4Header);
     dbfIpv4Option->setEDelay(dbfHeaderTag->getEDelay());
     dbfIpv4Header->addOption(dbfIpv4Option);
+    updateDBFIpv4Header(packet, dbfIpv4Header);
 
-    packet->popAtFront<inet::Ipv4Header>();
-    packet->trimFront();
-    packet->insertAtFront(dbfIpv4Header);
+    // Calculate queuing budget and send time
+    simtime_t fqdelayMin = calculateFqDelay(dbfHeaderTag->getDMin(), dbfHeaderTag);
+    dbfHeaderTag->setLqBudgetMin(calculateLqBudget(fqdelayMin, dbfHeaderTag));
+    dbfHeaderTag->setTMin(calculateSendTime(dbfHeaderTag->getLqBudgetMin(), dbfHeaderTag));
 
-    // Calculate queueing budget and send time
-    simtime_t fqdelayMin = dbfHeaderTag->getDMin() - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
-    dbfHeaderTag->setLqBudgetMin(SimTime(fqdelayMin.dbl() / (double)(dbfHeaderTag->getToHops() + THISNODE)));
-    dbfHeaderTag->setTMin(dbfHeaderTag->getLqBudgetMin() + dbfHeaderTag->getTRcv());
-
-
-    simtime_t fqdelayMax = getSuitableDMax(dbfHeaderTag->getDMax()) - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
-    dbfHeaderTag->setLqBudgetMax(SimTime(fqdelayMax.dbl() / (double)(dbfHeaderTag->getToHops()+ THISNODE)));
-    dbfHeaderTag->setTMax(dbfHeaderTag->getLqBudgetMax() + dbfHeaderTag->getTRcv());
+    simtime_t fqdelayMax = calculateFqDelay(getSuitableDMax(dbfHeaderTag->getDMax()), dbfHeaderTag);
+    dbfHeaderTag->setLqBudgetMax(calculateLqBudget(fqdelayMax, dbfHeaderTag));
+    dbfHeaderTag->setTMax(calculateSendTime(dbfHeaderTag->getLqBudgetMax(), dbfHeaderTag));
     dbfHeaderTag->setLqBudgetMax(dbfHeaderTag->getDMax() == SimTime().ZERO ? SimTime().ZERO : dbfHeaderTag->getLqBudgetMax());
 }
 
@@ -157,6 +130,50 @@ bool DBFComputer::isBEMode() {
 
 simtime_t DBFComputer::getSuitableDMax(simtime_t dMax) {
     return dMax == SimTime().ZERO ? dBE : dMax;
+}
+
+DBFHeaderTag* DBFComputer::prepareDBFTag(inet::Packet *packet, DBFIpv4Option *dbfIpv4Option, inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header) {
+    DBFHeaderTag* dbfHeaderTag = packet->findTag<DBFHeaderTag>();
+    dbfHeaderTag->setDMin(dbfIpv4Option->getDMin());
+    dbfHeaderTag->setDMax(dbfIpv4Option->getDMax());
+    dbfHeaderTag->setEDelay(dbfIpv4Option->getEDelay());
+    dbfHeaderTag->setAdmit(dbfIpv4Option->getAdmit());
+    dbfHeaderTag->setFromHops(dbfFIB->at(dbfIpv4Header->getSrcAddress()).getHops());
+    dbfHeaderTag->setToHops(dbfFIB->at(dbfIpv4Header->getDestAddress()).getHops());
+    dbfHeaderTag->setLDelay(dbfFIB->at(dbfIpv4Header->getSrcAddress()).getLDelay());
+    dbfHeaderTag->setHDelay(dbfFIB->at(dbfIpv4Header->getDestAddress()).getHDelay());
+    return dbfHeaderTag;
+}
+
+simtime_t DBFComputer::calculateTransmissionTime(inet::Packet *packet) {
+    simtime_t transmissionTime = SimTime().ZERO;
+    if (cableDatarate != 0.0) {
+        double ethPadding = (double)packet->getBitLength() >= ETHERNET_MIN_PAYLOAD_BITS ? 0.0 : ETHERNET_MIN_PAYLOAD_BITS - (double)packet->getBitLength();
+        transmissionTime = SimTime((double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);
+    }
+    return transmissionTime;
+}
+
+void DBFComputer::updateEdelay(DBFHeaderTag *dbfHeaderTag, simtime_t transmissionTime) {
+    if (dbfHeaderTag->getFromNetwork()) {
+        dbfHeaderTag->setEDelay(dbfHeaderTag->getEDelay() + dbfHeaderTag->getLDelay() + transmissionTime);
+    }
+}
+
+simtime_t DBFComputer::getDelay(double hops, double transmissionTime, double delay) {
+    return SimTime(hops * transmissionTime + delay);
+}
+
+simtime_t DBFComputer::calculateFqDelay(simtime_t dBound, DBFHeaderTag* dbfHeaderTag) {
+    return dBound - dbfHeaderTag->getToDelay() - dbfHeaderTag->getEDelay();
+}
+
+simtime_t DBFComputer::calculateLqBudget(simtime_t fqDelay, DBFHeaderTag* dbfHeaderTag) {
+    return SimTime(fqDelay.dbl() / (double)dbfHeaderTag->getToHops());
+}
+
+simtime_t DBFComputer::calculateSendTime(simtime_t lqBudget, DBFHeaderTag* dbfHeaderTag) {
+    return lqBudget + dbfHeaderTag->getTRcv();
 }
 
 } //namespace

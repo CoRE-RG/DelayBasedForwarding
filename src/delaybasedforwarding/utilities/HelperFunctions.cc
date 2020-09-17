@@ -33,4 +33,25 @@ bool containsIpv4Header(omnetpp::cMessage *msg) {
     return containsIpv4Header;
 }
 
+inet::IntrusivePtr<inet::Ipv4Header> getMutableIpv4Header(inet::Packet *packet) {
+    inet::Ptr<const inet::Ipv4Header> ipv4Header = packet->peekAtFront<inet::Ipv4Header>();
+    return inet::IntrusivePtr<inet::Ipv4Header>(ipv4Header->dup());
+}
+
+DBFIpv4Option* getMutableDBFIpv4Option(inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header) {
+    const inet::TlvOptionBase *tlvOptionBase = dbfIpv4Header->findOptionByType(DBFIpv4OptionType::DBFPARAMETERS);
+    return dynamic_cast<DBFIpv4Option*>(tlvOptionBase->dup());
+}
+
+void removeDBFIpv4Options(inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header) {
+    inet::TlvOptions &tlvOptions = dbfIpv4Header->getOptionsForUpdate();
+    tlvOptions.deleteOptionByType(DBFIpv4OptionType::DBFPARAMETERS, false);
+}
+
+void updateDBFIpv4Header(inet::Packet *packet, inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header) {
+    packet->popAtFront<inet::Ipv4Header>();
+    packet->trimFront();
+    packet->insertAtFront(dbfIpv4Header);
+}
+
 } // namespace

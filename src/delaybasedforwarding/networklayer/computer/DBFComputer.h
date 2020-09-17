@@ -17,7 +17,10 @@
 #define __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
 
 #include <delaybasedforwarding/networklayer/computer/DbfFibEntry.h>
+#include <delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h>
+#include "inet/networklayer/ipv4/Ipv4Header_m.h"
 #include "inet/common/packet/Packet.h"
+#include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 
 namespace delaybasedforwarding {
 
@@ -52,6 +55,13 @@ class DBFComputer : public cSimpleModule
   private:
     void calculate(inet::Packet *packet);
     simtime_t getSuitableDMax(simtime_t dMax);
+    DBFHeaderTag* prepareDBFTag(inet::Packet *packet, DBFIpv4Option *dbfIpv4Option, inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header);
+    simtime_t calculateTransmissionTime(inet::Packet *packet);
+    void updateEdelay(DBFHeaderTag *dbfHeaderTag, simtime_t transmissionTime);
+    simtime_t getDelay(double hops, double transmissionTime, double delay);
+    simtime_t calculateFqDelay(simtime_t dBound, DBFHeaderTag* dbfHeaderTag);
+    simtime_t calculateLqBudget(simtime_t fqDelay, DBFHeaderTag* dbfHeaderTag);
+    simtime_t calculateSendTime(simtime_t lqBudget, DBFHeaderTag* dbfHeaderTag);
 };
 
 } //namespace

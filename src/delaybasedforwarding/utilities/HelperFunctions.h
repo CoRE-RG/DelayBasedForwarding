@@ -10,6 +10,8 @@
 
 #include "inet/common/ProtocolTag_m.h"
 #include "inet/common/packet/Packet_m.h"
+#include "inet/networklayer/ipv4/Ipv4Header_m.h"
+#include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
 
 namespace delaybasedforwarding {
 
@@ -18,6 +20,10 @@ namespace delaybasedforwarding {
  */
 bool containsProtocol(inet::Packet *packet, const inet::Protocol *requestedProtocol);
 bool containsIpv4Header(omnetpp::cMessage *msg);
+inet::IntrusivePtr<inet::Ipv4Header> getMutableIpv4Header(inet::Packet *packet);
+DBFIpv4Option* getMutableDBFIpv4Option(inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header);
+void removeDBFIpv4Options(inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header);
+void updateDBFIpv4Header(inet::Packet *packet, inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header);
 
 } // namespace
 #endif /* DELAYBASEDFORWARDING_UTILITIES_HELPERFUNCTIONS_H_ */

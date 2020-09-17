@@ -61,20 +61,14 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
         collections[collectionsIdx]->removePacket(scheduledPacket);
         take(scheduledPacket);
         if (auto dbfHeaderTag = scheduledPacket->findTag<DBFHeaderTag>()) {
-            auto ipv4Header = scheduledPacket->popAtFront<inet::Ipv4Header>();
-            scheduledPacket->trimFront();
-
-            auto dbfIpv4Header = inet::IntrusivePtr<inet::Ipv4Header>(ipv4Header->dup());
-            const inet::TlvOptionBase *tlvOptionBase = dbfIpv4Header->findOptionByType(DBFIpv4OptionType::DBFPARAMETERS);
-            DBFIpv4Option *dbfIpv4Option = dynamic_cast<DBFIpv4Option*>(tlvOptionBase->dup());
-
-            inet::TlvOptions &tlvOptions = dbfIpv4Header->getOptionsForUpdate();
-            tlvOptions.deleteOptionByType(DBFIpv4OptionType::DBFPARAMETERS, false);
+            inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header = getMutableIpv4Header(scheduledPacket);
+            DBFIpv4Option *dbfIpv4Option = getMutableDBFIpv4Option(dbfIpv4Header);
+            removeDBFIpv4Options(dbfIpv4Header);
 
             dbfIpv4Option->setEDelay(dbfHeaderTag->getEDelay() + simTime() - dbfHeaderTag->getTRcv());
             dbfIpv4Header->addOption(dbfIpv4Option);
+            updateDBFIpv4Header(scheduledPacket, dbfIpv4Header);
 
-            scheduledPacket->insertAtFront(dbfIpv4Header);
             scheduledPacket->removeTag<DBFHeaderTag>();
         }
         if (txIdleCounter == 1 ) {
