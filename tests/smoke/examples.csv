@@ -3,3 +3,14 @@
 /examples/udpclientserver,                                               -f omnetpp.ini -c verified -r 0
 /examples/tcpclientserver,                                               -f omnetpp.ini -c three_queues -r 0
 /examples/udpclientserver,                                               -f omnetpp.ini -c three_queues -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c NoCompetingTrafficBE -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c F1BE_F2BE -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c F1BE_F2BE_F3BE -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c F1BE_F2BE_F3BE_F4BE -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c F1BE_F2BE_F3BE_F4BE_F5BE -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c NoCompetingTrafficDBF -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c F1DBF_F2BE -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c F1DBF_F2BE_F3BE -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE_F5BE -r 0
+/examples/jitter_reduction,                                              -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE_F5BE_Series -r 0

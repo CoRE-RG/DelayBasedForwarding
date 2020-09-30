@@ -1,5 +1,16 @@
-# workingdir,                        args,                                          simtimelimit,    fingerprint
-/examples/tcpclientserver,           -f omnetpp.ini -c verified -r 0,               1000s,           f1bd-cd5d
-/examples/udpclientserver,           -f omnetpp.ini -c verified -r 0,               1000s,           d145-4731
-/examples/tcpclientserver,           -f omnetpp.ini -c three_queues -r 0,           1000s,           ef8f-db78
-/examples/udpclientserver,           -f omnetpp.ini -c three_queues -r 0,           1000s,           3ff2-9e3c
+# workingdir,                        args,                                                     simtimelimit,    fingerprint
+/examples/tcpclientserver,           -f omnetpp.ini -c verified -r 0,                          1000s,           f1bd-cd5d
+/examples/udpclientserver,           -f omnetpp.ini -c verified -r 0,                          1000s,           d145-4731
+/examples/tcpclientserver,           -f omnetpp.ini -c three_queues -r 0,                      1000s,           ef8f-db78
+/examples/udpclientserver,           -f omnetpp.ini -c three_queues -r 0,                      1000s,           3ff2-9e3c
+/examples/jitter_reduction,          -f omnetpp.ini -c NoCompetingTrafficBE -r 0,                 5s,           8ab9-c2db
+/examples/jitter_reduction,          -f omnetpp.ini -c F1BE_F2BE -r 0,                            5s,           f04f-1ffa
+/examples/jitter_reduction,          -f omnetpp.ini -c F1BE_F2BE_F3BE -r 0,                       5s,           e7cf-423d
+/examples/jitter_reduction,          -f omnetpp.ini -c F1BE_F2BE_F3BE_F4BE -r 0,                  5s,           8bfb-c35e
+/examples/jitter_reduction,          -f omnetpp.ini -c F1BE_F2BE_F3BE_F4BE_F5BE -r 0,             5s,           6ce6-5c62
+/examples/jitter_reduction,          -f omnetpp.ini -c NoCompetingTrafficDBF -r 0,                5s,           8661-d0c7
+/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE -r 0,                           5s,           1cbb-744d
+/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE -r 0,                      5s,           c6dc-9565
+/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE -r 0,                 5s,           8fe5-3c94
+/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE_F5BE -r 0,            5s,           59a5-fb93
+/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE_F5BE_Series -r 0,     5s,           59a5-fb93
