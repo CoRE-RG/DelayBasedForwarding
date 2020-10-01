@@ -8,9 +8,9 @@
 /examples/jitter_reduction,          -f omnetpp.ini -c F1BE_F2BE_F3BE -r 0,         5s,              e7cf-423d
 /examples/jitter_reduction,          -f omnetpp.ini -c F1BE_F2BE_F3BE_F4BE -r 0,    5s,              8bfb-c35e
 /examples/jitter_reduction,          -f omnetpp.ini -c F1BE_F2BE_F3BE_F4BE_F5BE -r 0, 5s,              6ce6-5c62
-/examples/jitter_reduction,          -f omnetpp.ini -c NoCompetingTrafficDBF -r 0,  5s,              0ac2-ae8c
-/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE -r 0,             5s,              690e-5a97
-/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE -r 0,        5s,              1578-5b14
-/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE -r 0,   5s,              c2e4-725d
-/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE_F5BE -r 0, 5s,              8658-2b02
-/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE_F5BE_Series -r 0, 5s,              8658-2b02
+/examples/jitter_reduction,          -f omnetpp.ini -c NoCompetingTrafficDBF -r 0,  5s,              8661-d0c7
+/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE -r 0,             5s,              c50c-42ea
+/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE -r 0,        5s,              144b-f218
+/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE -r 0,   5s,              bfdf-1129
+/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE_F5BE -r 0, 5s,              11b9-e83b
+/examples/jitter_reduction,          -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE_F5BE_Series -r 0, 5s,              11b9-e83b

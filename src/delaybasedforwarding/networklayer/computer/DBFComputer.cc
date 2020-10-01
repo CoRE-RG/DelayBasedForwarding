@@ -119,7 +119,7 @@ void DBFComputer::calculate(inet::Packet *packet) {
 
 bool DBFComputer::isAlreadyExpired(inet::Packet *packet) {
     auto dbfHeaderTag = packet->findTag<DBFHeaderTag>();
-    return dbfHeaderTag->getTMax() < dbfHeaderTag->getTRcv();
+    return !hasInfiniteDmax(dbfHeaderTag) && dbfHeaderTag->getTMax() < dbfHeaderTag->getTRcv();
 }
 
 bool DBFComputer::isBEMode() {
