@@ -18,6 +18,7 @@
 #include "delaybasedforwarding/utilities/DynamicModuleHandling.h"
 #include "delaybasedforwarding/queueing/scheduler/DBFPriorityScheduler.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
+#include "delaybasedforwarding/utilities/HelperFunctions.h"
 
 namespace delaybasedforwarding {
 
@@ -42,7 +43,7 @@ int DBFPriorityClassifier::classifyPacket(inet::Packet *packet) {
     int consumerIdx = -1;
     if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
         simtime_t lqbudget = SimTime(std::abs(dbfHeaderTag->getLqBudgetMax().dbl() - dbfHeaderTag->getLqBudgetMin().dbl()));
-        if (lqbudget >= maximumDelta) {
+        if (hasInfiniteDmax(dbfHeaderTag) || lqbudget >= maximumDelta) {
             consumerIdx = getIndexOfQueueForDelta(maximumDelta);
         } else {
             simtime_t bestDelta = deltaSteps;

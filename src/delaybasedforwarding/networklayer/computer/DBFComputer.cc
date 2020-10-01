@@ -32,7 +32,6 @@ Define_Module(DBFComputer);
 
 void DBFComputer::initialize()
 {
-    dBE = par("dBE");
     dMin = par("dMin");
     dMax = par("dMax");
     if (dMin > 0.0 && dMax > 0.0 && dMin > dMax) {
@@ -113,10 +112,9 @@ void DBFComputer::calculate(inet::Packet *packet) {
     dbfHeaderTag->setLqBudgetMin(calculateLqBudget(fqdelayMin, dbfHeaderTag));
     dbfHeaderTag->setTMin(calculateSendTime(dbfHeaderTag->getLqBudgetMin(), dbfHeaderTag));
 
-    simtime_t fqdelayMax = calculateFqDelay(getSuitableDMax(dbfHeaderTag->getDMax()), dbfHeaderTag);
+    simtime_t fqdelayMax = calculateFqDelay(dbfHeaderTag->getDMax(), dbfHeaderTag);
     dbfHeaderTag->setLqBudgetMax(calculateLqBudget(fqdelayMax, dbfHeaderTag));
     dbfHeaderTag->setTMax(calculateSendTime(dbfHeaderTag->getLqBudgetMax(), dbfHeaderTag));
-    dbfHeaderTag->setLqBudgetMax(dbfHeaderTag->getDMax() == SimTime().ZERO ? SimTime().ZERO : dbfHeaderTag->getLqBudgetMax());
 }
 
 bool DBFComputer::isAlreadyExpired(inet::Packet *packet) {
@@ -125,11 +123,7 @@ bool DBFComputer::isAlreadyExpired(inet::Packet *packet) {
 }
 
 bool DBFComputer::isBEMode() {
-    return dMin == SimTime::ZERO && dMax == SimTime::ZERO;
-}
-
-simtime_t DBFComputer::getSuitableDMax(simtime_t dMax) {
-    return dMax == SimTime().ZERO ? dBE : dMax;
+    return dMin == SIMTIME_ZERO && dMax == SIMTIME_ZERO;
 }
 
 DBFHeaderTag* DBFComputer::prepareDBFTag(inet::Packet *packet, DBFIpv4Option *dbfIpv4Option, inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header) {
@@ -146,7 +140,7 @@ DBFHeaderTag* DBFComputer::prepareDBFTag(inet::Packet *packet, DBFIpv4Option *db
 }
 
 simtime_t DBFComputer::calculateTransmissionTime(inet::Packet *packet) {
-    simtime_t transmissionTime = SimTime().ZERO;
+    simtime_t transmissionTime = SIMTIME_ZERO;
     if (cableDatarate != 0.0) {
         double ethPadding = (double)packet->getBitLength() >= ETHERNET_MIN_PAYLOAD_BITS ? 0.0 : ETHERNET_MIN_PAYLOAD_BITS - (double)packet->getBitLength();
         transmissionTime = SimTime((double)(packet->getBitLength() + ETHERNET_HEADER_BITS + ethPadding) / cableDatarate);

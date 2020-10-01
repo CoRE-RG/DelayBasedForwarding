@@ -148,13 +148,14 @@ void DBFPriorityScheduler::lookForExpiredPackets() {
    for (int i = 0; i < sumOfPackets; i++) {
        inet::Packet *packet = collection->getPacket(i);
        if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
-           if (isExpired(dbfHeaderTag)) {
+           if (!hasInfiniteDmax(dbfHeaderTag) && isExpired(dbfHeaderTag)) {
                expiredPackets.push_back(packet);
-           }
-           if (selfMsg && selfMsg->getScheduledPacket() == packet) {
-               selfMsg->setScheduledPacket(nullptr);
-               cancelAndDelete(selfMsg);
-               selfMsg = nullptr;
+
+               if (selfMsg && selfMsg->getScheduledPacket() == packet) {
+                   selfMsg->setScheduledPacket(nullptr);
+                   cancelAndDelete(selfMsg);
+                   selfMsg = nullptr;
+               }
            }
        }
    }

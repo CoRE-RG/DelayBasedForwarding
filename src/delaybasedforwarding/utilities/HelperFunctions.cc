@@ -54,4 +54,8 @@ void updateDBFIpv4Header(inet::Packet *packet, inet::IntrusivePtr<inet::Ipv4Head
     packet->insertAtFront(dbfIpv4Header);
 }
 
+bool hasInfiniteDmax(DBFHeaderTag* dbfHeaderTag) {
+    return dbfHeaderTag->getDMax() == SIMTIME_ZERO;
+}
+
 } // namespace

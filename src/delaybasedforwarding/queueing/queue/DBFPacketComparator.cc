@@ -36,9 +36,9 @@ int DBFPacketComparator::comparePackets(inet::Packet *packet1, inet::Packet *pac
             result = PACKET2HIGHERPRIORITY;
         }
     } else if (tag1) {
-        result = PACKET1HIGHERPRIORITY;
-    } else if (tag2) {
         result = PACKET2HIGHERPRIORITY;
+    } else if (tag2) {
+        result = PACKET1HIGHERPRIORITY;
     }
     return result;
 }
