@@ -26,7 +26,7 @@ simple EgressForwarder
 {
     parameters:
         //Signal emitted for frame transmitted to particular port, contains sending packet
-        @signal[txPkToPort_*](type=inet::Packet);
+        @signal[txPkToPort_*](type=simtime_t);
         //Signal emitted when a frame is transmitted, contains sending packet
         @signal[txPks](type=inet::Packet);
         //End-to-end latency for packets per port
