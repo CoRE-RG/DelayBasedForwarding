@@ -28,7 +28,6 @@ import inet.node.inet.INetworkNode;
 network JitterReduction
 {
     parameters:
-        //double _datarate @unit(bps) = 100Gbps; // use only if EtherLink is used to calculate the transmission time in the dbf computer
 
     types:
         channel Link extends EtherLink
