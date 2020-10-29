@@ -34,21 +34,31 @@ namespace delaybasedforwarding {
 class DBFIpv4 : public inet::Ipv4
 {
   protected:
+    /**
+     * @brief The initialize method
+     *
+     * @param stage The stage of the initialization process
+     */
     virtual void initialize(int stage) override;
 
     /**
-     * Encapsulate packet coming from higher layers into Ipv4Header, using
-     * the given control info. Override if you subclassed controlInfo and/or
-     * want to add options etc to the datagram.
+     * @brief Encapsulates packets coming from higher layers into Ipv4Header
+     *
+     * @param packet The packet coming from application layer
      */
     virtual void encapsulate(inet::Packet *packet) override;
 
     /**
      * Sends packet to the network interface controller
+     *
+     * @param packet The packet processed by the network layer
      */
     virtual void sendPacketToNIC(inet::Packet *packet) override;
 
   private:
+    /**
+     * @brief The reference of the DBFComputer module
+     */
     DBFComputer *dbfComputer = nullptr;
 };
 

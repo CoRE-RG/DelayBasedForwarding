@@ -16,7 +16,7 @@
 package delaybasedforwarding.linklayer.DBFIngress;
 
 //
-// The forwarder at ingress for delay based forwarded packets
+// The forwarder at ingress for delay-based forwarded packets
 //
 // @author Mehmet Cakir
 //

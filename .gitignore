@@ -7,6 +7,7 @@
 /src/Makefile
 /src/**/*_m.h
 /src/**/*_m.cc
+/doc/
 libDelayBasedForwarding_dbg.dll
 libDelayBasedForwarding.dll
 libDelayBasedForwarding_dbg.so

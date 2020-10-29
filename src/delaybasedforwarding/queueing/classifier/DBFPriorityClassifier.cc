@@ -40,22 +40,18 @@ void DBFPriorityClassifier::handleMessage(cMessage *msg) {
 }
 
 int DBFPriorityClassifier::classifyPacket(inet::Packet *packet) {
-    int consumerIdx = -1;
+    simtime_t delta = maximumDelta;
     if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
         simtime_t lqbudget = SimTime(std::abs(dbfHeaderTag->getLqBudgetMax().dbl() - dbfHeaderTag->getLqBudgetMin().dbl()));
-        if (hasInfiniteDmax(dbfHeaderTag) || lqbudget >= maximumDelta) {
-            consumerIdx = getIndexOfQueueForDelta(maximumDelta);
-        } else {
+        if (!hasInfiniteDmax(dbfHeaderTag) && lqbudget < maximumDelta) {
             simtime_t bestDelta = deltaSteps;
             while(lqbudget > bestDelta) {
                 bestDelta += deltaSteps;
             }
-            consumerIdx = getIndexOfQueueForDelta(bestDelta);
+            delta = bestDelta;
         }
-    } else {
-        consumerIdx = getIndexOfQueueForDelta(maximumDelta);
     }
-    return consumerIdx;
+    return getIndexOfQueueForDelta(delta);
 }
 
 int DBFPriorityClassifier::getIndexOfQueueForDelta(simtime_t delta) {

@@ -18,6 +18,11 @@ package delaybasedforwarding.node.inet;
 import inet.node.inet.StandardHost;
 import delaybasedforwarding.networklayer.computer.DBFComputer;
 
+//
+// The delay-based forwarding host
+//
+// @author Mehmet Cakir
+//
 module DBFHost extends StandardHost
 {
     parameters:

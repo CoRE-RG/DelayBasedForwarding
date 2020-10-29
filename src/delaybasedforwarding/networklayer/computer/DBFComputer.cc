@@ -87,10 +87,6 @@ void DBFComputer::addSLOParameters(inet::Packet *packet)
 }
 
 void DBFComputer::processDBFPacket(inet::Packet *packet) {
-    calculate(packet);
-}
-
-void DBFComputer::calculate(inet::Packet *packet) {
     inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header = getMutableIpv4Header(packet);
     DBFIpv4Option *dbfIpv4Option = getMutableDBFIpv4Option(dbfIpv4Header);
     DBFHeaderTag* dbfHeaderTag = prepareDBFTag(packet, dbfIpv4Option, dbfIpv4Header);

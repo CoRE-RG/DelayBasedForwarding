@@ -18,6 +18,11 @@ package delaybasedforwarding.node.inet;
 import inet.node.inet.Router;
 import delaybasedforwarding.networklayer.computer.DBFComputer;
 
+//
+// The delay-based forwarding router
+//
+// @author Mehmet Cakir
+//
 module DBFRouter extends Router
 {
     parameters:

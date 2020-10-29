@@ -18,13 +18,10 @@ package delaybasedforwarding.queueing.scheduler;
 import inet.queueing.scheduler.PriorityScheduler;
 
 //
-// @brief This module implements a priority scheduler for delay based forwarding packets.
-//
-// @ingroup delaybasedforwarding/queueing/scheduler
+// This module implements a priority scheduler for delay-based forwarding packets.
 //
 // @author Mehmet Cakir
 //
-
 simple DBFPriorityScheduler extends PriorityScheduler
 {
     parameters:

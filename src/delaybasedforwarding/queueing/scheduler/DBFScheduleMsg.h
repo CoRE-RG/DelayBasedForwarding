@@ -13,11 +13,26 @@
 
 namespace delaybasedforwarding {
 
+/**
+ * @brief The delay-based forwarding schedule message to schedule a delay-based forwarding (dbf) packet
+ *
+ * @ingroup delaybasedforwarding/queueing/scheduler
+ *
+ * @author Mehmet Cakir
+ */
 class DBFScheduleMsg : public DBFScheduleMsg_Base {
 
+/**
+ * Methods
+ */
+private:
     /**
-     * Methods
+     * @brief Copies the scheduled dbf packet within a dbf schedule message to this dbf schedule message
+     *
+     * @param other The dbf schedule message from which the scheduled packet to be copied
      */
+    void copy(const DBFScheduleMsg& other);
+
 public:
     /**
      * @brief Constructor
@@ -30,6 +45,8 @@ public:
 
     /**
      * @brief Copy constructor
+     *
+     * @param other An other dbf schedule message
      */
     DBFScheduleMsg(const DBFScheduleMsg& other) : DBFScheduleMsg_Base(other)
     {
@@ -38,6 +55,10 @@ public:
 
     /**
      * @brief Assignment operator
+     *
+     * @param other The dbf schedule message which has to be assigned to this message
+     *
+     * @return The assigned dbf schedule message
      */
     DBFScheduleMsg& operator=(const DBFScheduleMsg& other)
     {
@@ -49,26 +70,39 @@ public:
 
     /**
      * @brief DBFScheduleMsg duplication
+     *
+     * @return The duplicate of this dbf schedule message
      */
     virtual DBFScheduleMsg *dup() const
     {
         return new DBFScheduleMsg(*this);
     }
 
+    /**
+     * @brief Returns the scheduled dbf packet
+     *
+     * @return the scheduled dbf packet
+     */
     inet::Packet* getScheduledPacket();
 
+    /**
+     * @brief Sets the dbf packet which has to be scheduled
+     *
+     * @param packet The dbf packet which has to be scheduled
+     */
     void setScheduledPacket(inet::Packet *packet);
 
-private:
-    void copy(const DBFScheduleMsg& other);
 
     /**
      * Member variables
      */
-private:
-    inet::Packet *scheduledPacket;
-};
+    private:
+        /**
+         * @brief The scheduled dbf packet
+         */
+        inet::Packet *scheduledPacket;
 
+};
 } /* namespace delaybasedforwarding */
 
 #endif /* DELAYBASEDFORWARDING_QUEUEING_SCHEDULER_DBFSCHEDULEMSG_H_ */

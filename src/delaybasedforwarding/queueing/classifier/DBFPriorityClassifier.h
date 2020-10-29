@@ -34,30 +34,69 @@ namespace delaybasedforwarding {
 
 class DBFPriorityClassifier : public inet::queueing::PriorityClassifier
 {
-  protected:
-    virtual void initialize(int stage) override;
-    virtual void handleMessage(cMessage *msg) override;
-    virtual int classifyPacket(inet::Packet *packet) override;
+
   private:
     /**
-     * Creates dynamically a dbf queue
+     * @brief Creates dynamically a delay-based forwarding queue
+     *
+     * @return The index of the queue in the consumers list of this classifier
      */
     int createDBFQueue();
 
     /**
-     * Returns index of priority queue for a given delta.
-     * If there is no queue available then it will be created.
+     * @brief Returns index of priority queue for a given delta. If there is no queue available then it will be created.
+     *
+     * @param delta The given delta
+     * @return The index of the priority queue for the given delta
      */
     int getIndexOfQueueForDelta(simtime_t delta);
   public:
     /**
-     * Returns the deltaQueueMap
+     * @brief Returns the deltaQueueMap
+     *
+     * @return The deltaQueueMap
      */
     std::map<simtime_t, int> *getDeltaQueueMap();
 
+  protected:
+    /**
+     * @brief The initialize method
+     *
+     * @param stage The stage of the initialization process
+     */
+    virtual void initialize(int stage) override;
+
+    /**
+     * @brief The handle message method
+     *
+     * @param msg A scheduled self message or received message
+     */
+    virtual void handleMessage(cMessage *msg) override;
+
+    /**
+     * @brief Classifies packets to determine in which queue the packet is pushed
+     *
+     * @param packet The given packet which is classified
+     *
+     * @return The index of the queue where the packet fits the best
+     */
+    virtual int classifyPacket(inet::Packet *packet) override;
+
   private:
+
+    /**
+     * @brief The delta steps used determining if new queue is needed
+     */
     simtime_t deltaSteps;
+
+    /**
+     * @brief The maximum delta used determining if packet should be pushed in infinite queue
+     */
     simtime_t maximumDelta;
+
+    /**
+     * @brief The delta queue map which contains the index of a delta queue in the consumer and provider list
+     */
     std::map<simtime_t, int, std::less<simtime_t>> *deltaQueueMap;
 };
 

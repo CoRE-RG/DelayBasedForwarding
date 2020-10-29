@@ -17,16 +17,26 @@ import inet.common.TlvOptions;
 
 namespace delaybasedforwarding;
 
+//
+// The enum for delay-based forwarding options
+//
+// @author Mehmet Cakir
+// 
 enum DBFIpv4OptionType {
-    DBFPARAMETERS = 2020;
+    DBFPARAMETERS = 2020; // The delay-based forwarding parameters type 
 }
 
+//
+// This class implements the delay-based forwarding options parameters for the Ipv4 header
+//
+// @author Mehmet Cakir
+// 
 class DBFIpv4Option extends inet::TlvOptionBase
 {
-    type = DBFPARAMETERS;
-    length = 28;
-    simtime_t dMin = 0;
-    simtime_t dMax = 0;
-    simtime_t eDelay = 0;
-    uint32_t admit = 0;
+    type = DBFPARAMETERS; // The type of the delay-based forwarding options
+    length = 28;          // The length of a DBFIpv4Option instance
+    simtime_t dMin = 0;   // The lower bound of the Service Level Objective (SLO)
+    simtime_t dMax = 0;   // The upper bound of the SLO
+    simtime_t eDelay = 0; // The experienced delay of the SLO
+    uint32_t admit = 0;   // The admit bit of the SLO
 }

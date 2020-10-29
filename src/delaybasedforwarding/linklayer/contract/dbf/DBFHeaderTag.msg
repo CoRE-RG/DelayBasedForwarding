@@ -17,6 +17,11 @@ import inet.common.TagBase;
 
 namespace delaybasedforwarding;
 
+//
+// Provides delay-based forwarding related paramaters for tagging
+//
+// @author Mehmet Cakir
+//
 class DBFHeaderTag extends inet::TagBase
 {
     // Parameters to lookup

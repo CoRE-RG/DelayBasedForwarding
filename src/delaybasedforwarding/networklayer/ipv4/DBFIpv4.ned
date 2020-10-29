@@ -18,7 +18,7 @@ package delaybasedforwarding.networklayer.ipv4;
 import inet.networklayer.ipv4.Ipv4;
 
 //
-// The Ipv4 module for delay based forwarded packets
+// The Ipv4 module for delay-based forwarded packets
 //
 // @author Mehmet Cakir
 //

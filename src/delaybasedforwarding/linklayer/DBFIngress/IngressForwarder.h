@@ -23,7 +23,7 @@ using namespace omnetpp;
 namespace delaybasedforwarding {
 
 /**
- * @brief The forwarder at ingress for delay based forwarded packets
+ * @brief The forwarder at ingress for delay-based forwarded packets
  *
  * @ingroup delaybasedforwarding/linklayer/DBFIngress
  *
@@ -31,13 +31,42 @@ namespace delaybasedforwarding {
  */
 class IngressForwarder : public cSimpleModule
 {
+  private:
+    /**
+     * @brief Attaches the time of receipt to a message
+     *
+     * @param msg The message the time of receipt is attached
+     */
+    void attachTrcv(cMessage *msg);
+
+    /**
+     * @brief Checks if a message contains delay-based forwarding options
+     *
+     * @param msg The message that is checked
+     *
+     * @return true if the message contains delay-based forwarding options
+     */
+    bool containsDBFOptions(cMessage *msg);
+
   protected:
+    /**
+     * @brief The initialize method
+     *
+     * @param stage The stage of the initialization process
+     */
     virtual void initialize();
+
+    /**
+     * @brief The handle message method
+     *
+     * @param msg A scheduled self message or received message
+     */
     virtual void handleMessage(cMessage *msg);
 
   private:
-    void attachTrcv(cMessage *msg);
-    bool containsDBFOptions(cMessage *msg);
+    /**
+     * @brief The signal that is emitted when a packet is received
+     */
     static simsignal_t rxPkSignal;
 };
 

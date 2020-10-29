@@ -18,6 +18,11 @@ package delaybasedforwarding.linklayer;
 import inet.linklayer.contract.ITrafficConditioner;
 import delaybasedforwarding.linklayer.DBFIngress.IngressForwarder;
 
+//
+// The traffic conditioner which us used at ingress in the network interface card
+//
+// @author Mehmet Cakir
+//
 module DBFIngressTrafficConditioner like ITrafficConditioner
 {
     gates:

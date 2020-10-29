@@ -16,9 +16,7 @@
 package delaybasedforwarding.networklayer.computer;
 
 //
-// @brief The parameter computer for delay based forwarded packets
-//
-// @ingroup delaybasedforwarding/networklayer/computer/
+// The parameter computer for delay based forwarded packets
 //
 // @author Mehmet Cakir
 //
@@ -26,9 +24,8 @@ simple DBFComputer
 {
     parameters:
         @class(DBFComputer);
-        double dMin @unit(s) = default(0.0s);
-        double dMax @unit(s) = default(0.0s);
-        double dBE @unit(s) = default(9000000.0s);
-        xml dbfFIB;
-        int admit = default(0);
+        double dMin @unit(s) = default(0.0s);  // The lower bound of the Service Level Object (SLO)
+        double dMax @unit(s) = default(0.0s);  // The upper bound of the SLO
+        xml dbfFIB;                            // The delay-based forwarding Forwarding Information Base
+        int admit = default(0);                // The admit bit to distinguish dbf packets with the same SLO but different admit bit
 }

@@ -15,7 +15,12 @@
 
 namespace delaybasedforwarding;
 
+//
+// The delay-based forwarding schedule message to schedule a dbf packet
+//
+// @author Mehmet Cakir
+//
 packet DBFScheduleMsg {
     @customize(true);
-    int collectionIdx;
+    int collectionIdx; // Determines the index of the collection where the dbf packet is queued 
 }

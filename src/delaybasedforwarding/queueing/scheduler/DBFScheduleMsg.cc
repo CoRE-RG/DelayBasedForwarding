@@ -12,7 +12,7 @@ namespace delaybasedforwarding {
 Register_Class(DBFScheduleMsg)
 
 void DBFScheduleMsg::copy(const DBFScheduleMsg& other) {
-    this->scheduledPacket = other.scheduledPacket;
+    this->scheduledPacket = other.scheduledPacket->dup();
 }
 
 inet::Packet* DBFScheduleMsg::getScheduledPacket() {

@@ -18,11 +18,9 @@ package delaybasedforwarding.queueing.queue;
 import inet.queueing.queue.PriorityQueue;
 
 //
-// @brief This module implements a priority queue for delay based forwarding packets.
+// This module implements a priority queue for delay based forwarding packets.
 //
-// @ingroup delaybasedforwarding/queueing/queue
-//
-// @author Mehmet
+// @author Mehmet Cakir
 //
 
 module DBFPriorityQueue extends PriorityQueue

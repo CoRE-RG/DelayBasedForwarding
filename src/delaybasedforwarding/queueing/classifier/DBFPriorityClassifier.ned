@@ -18,17 +18,14 @@ package delaybasedforwarding.queueing.classifier;
 import inet.queueing.classifier.PriorityClassifier;
 
 //
-// @brief The priority classifier for delay based forwarded packets
-//
-// @ingroup delaybasedforwarding/queueing/classifier
+// The priority classifier for delay based forwarded packets
 //
 // @author Mehmet Cakir
 //
-
 simple DBFPriorityClassifier extends PriorityClassifier
 {
     parameters:
         @class(DBFPriorityClassifier);
-        double deltaSteps @unit(s) = default(0.010s); // Determines if a new queue is required
-        double maximumDelta @unit(s) = default(9000000.0s); // Determines if dbf packet should be pushed into infinite queue
+        double deltaSteps @unit(s) = default(0.010s);       // The delta steps used determining if new queue is needed
+        double maximumDelta @unit(s) = default(9000000.0s); // The maximum delta used determining if packet should be pushed in infinite queue
 }

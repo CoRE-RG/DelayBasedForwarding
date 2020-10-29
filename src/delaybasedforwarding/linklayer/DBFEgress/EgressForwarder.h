@@ -25,7 +25,7 @@ using namespace omnetpp;
 namespace delaybasedforwarding {
 
 /**
- * @brief The forwarder at egress for delay based forwarded packets
+ * @brief The forwarder at egress for delay-based forwarded packets
  *
  * @ingroup delaybasedforwarding/linklayer/DBFEgress
  *
@@ -33,18 +33,59 @@ namespace delaybasedforwarding {
  */
 class EgressForwarder : public cSimpleModule, public inet::IProtocolRegistrationListener
 {
+  private:
+    /**
+     * @brief Emits every specific flow by its destination port
+     *
+     * @param msg The message which is emitted
+     */
+    void emitPacket(cMessage *msg);
+
   protected:
+    /**
+     * @brief The initialize method
+     *
+     * @param stage The stage of the initialization process
+     */
     virtual void initialize() override;
+
+    /**
+     * @brief The handle message method
+     *
+     * @param msg A scheduled self message or received message
+     */
     virtual void handleMessage(cMessage *msg) override;
+
+    /**
+     * @brief Passes the registration of the service through
+     *
+     * @param protocol
+     * @param out
+     * @param servicePrimitive
+     */
     virtual void handleRegisterService(const inet::Protocol& protocol, cGate *out, inet::ServicePrimitive servicePrimitive) override;
+
+    /**
+     * @brief Passes the registration of the protocol through
+     *
+     * @param protocol
+     * @param out
+     * @param servicePrimitive
+     */
     virtual void handleRegisterProtocol(const inet::Protocol& protocol, cGate *in, inet::ServicePrimitive servicePrimitive) override;
 
   private:
+
+    /**
+     * @brief The map containing all signals for specific flows for emitting them by their destination port
+     */
     std::map<uint32_t,simsignal_t> txPktToPortSignals;
+
+    /**
+     * @brief Signal for emitting a packet when it is sent
+     */
     static simsignal_t txPksSignal;
 
-  private:
-    void emitPacket(cMessage *msg);
 };
 
 } //namespace

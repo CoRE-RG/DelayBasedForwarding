@@ -20,6 +20,11 @@ import inet.linklayer.contract.ITrafficConditioner;
 import delaybasedforwarding.linklayer.DBFEgress.EgressForwarder;
 import delaybasedforwarding.queueing.queue.DBFPriorityQueue;
 
+//
+// The traffic conditioner at egress which is used in the network interface card
+//
+// @author Mehmet Cakir
+//
 module DBFEgressTrafficConditioner like ITrafficConditioner
 {
     gates:
