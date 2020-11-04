@@ -1,0 +1,19 @@
+Demonstrates Delay-Based Forwarding (DBF) using UDP.
+One sender sends DBF traffic which is the Flow Under Test (FUT).
+All other senders generate crosstraffic. 
+
+ - The network consists of five senders, four receivers and seven routers.
+   
+ - The senders are denoted by an S in the beginning of their name.
+ 
+ - The receivers are denoted by an R in the beginning of their name.
+ 
+ - Senders have the name of the receiver in the name to which they send traffic.
+ 
+ - Sender S1_R1 sends DBF traffic to R1. All other senders send Best-Effort (BE) traffic to their according receiver.
+   See omnetpp.ini for the Service Level Objectives (SLO).
+ 
+ - The senders send for 9ms 1Mbps and burst then for 1ms with a different bitrate (see omnetpp.ini) 
+ 
+ - The routers FWD1, FWD2, FWD3 and FWD4 perform the DBF mechanism.
+   All other routers handle traffic like usual BE traffic.

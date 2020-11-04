@@ -1,0 +1,9 @@
+Demonstrates Delay-Based Forwarding (DBF) using UDP.
+
+ - The network consists of three clients, two routers and one server.
+   The routers connect the clients with the server.
+   
+ - The clients, routers and server perform the DBF mechanism. 
+ 
+ - The clients and servers send DBF packets.
+   See omnetpp.ini for the Service Level Objectives (SLO)
