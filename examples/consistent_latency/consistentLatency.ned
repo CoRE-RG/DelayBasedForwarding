@@ -28,6 +28,7 @@ import inet.node.inet.INetworkNode;
 network ConsistentLatency
 {
     parameters:
+        
 
     types:
         channel LinkDelay100us extends EtherLink
