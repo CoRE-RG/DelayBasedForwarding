@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scave:Analysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:scave="http://www.omnetpp.org/omnetpp/scave">
+  <inputs>
+    <inputs name="/DelayBasedForwarding/examples/consistent_latency/results/General-*.vec"/>
+    <inputs name="/DelayBasedForwarding/examples/consistent_latency/results/General-*.sca"/>
+    <inputs name="/DelayBasedForwarding/examples/consistent_latency/results/DBF-#0.sca"/>
+    <inputs name="/DelayBasedForwarding/examples/consistent_latency/results/DBF-#0.vec"/>
+  </inputs>
+  <datasets>
+    <datasets name="Slow Start Compare S1_R1">
+      <items xsi:type="scave:Group">
+        <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/General-#0.vec) AND attr:configname(General) AND attr:runnumber(0) AND module(ConsistentLatency.S1_R1.tcp.conn-12) AND name(cwnd:vector)" type="VECTOR"/>
+        <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/DBF-#0.vec) AND attr:configname(DBF) AND attr:runnumber(0) AND module(ConsistentLatency.S1_R1.tcp.conn-12) AND name(cwnd:vector)" type="VECTOR"/>
+        <items xsi:type="scave:LineChart" name="S1_R1 con-12" lineNameFormat="">
+          <properties name="Legend.Display" value="true"/>
+          <properties name="Legend.Anchoring" value="NorthWest"/>
+          <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/DBF-#0.vec DBF-0-20201118-11:32:35-13088 DBF" value="DBF"/>
+          <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/General-#0.vec General-0-20201118-11:31:41-12983 General" value="BE"/>
+        </items>
+      </items>
+    </datasets>
+  </datasets>
+  <chartSheets>
+    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.0/@items.2"/>
+  </chartSheets>
+</scave:Analysis>
