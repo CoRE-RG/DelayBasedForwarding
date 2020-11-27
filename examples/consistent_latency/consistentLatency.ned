@@ -31,16 +31,16 @@ network ConsistentLatency
         
 
     types:
-        channel LinkDelay100us extends EtherLink
+        channel LinkDelay10ms extends EtherLink
         {
-            datarate = 100Mbps; // 24us transmission delay
-            length = 15200.0m;  // 76us link delay
+            datarate = 1Mbps; // 2,4ms transmission delay
+            length = 1520000.0m;  // 7,6ms link delay
         }
 
-        channel LinkDelay1000us extends EtherLink
+        channel LinkDelay100ms extends EtherLink
         {
-            datarate = 100Mbps; // 24us transmission delay
-            length = 195200.0m;  // 976us link delay
+            datarate = 1Mbps; // 2,4ms transmission delay
+            length = 19520000.0m;  // 97,6ms link delay
         }
 
     submodules:
@@ -93,13 +93,13 @@ network ConsistentLatency
         }
 
     connections:
-        S1_R1.ethg++ <--> LinkDelay100us <--> FWD1.ethg++;
-        FWD1.ethg++ <--> LinkDelay100us <--> FWD2.ethg++;
-        FWD2.ethg++ <--> LinkDelay100us <--> R1.ethg++;
+        S1_R1.ethg++ <--> LinkDelay10ms <--> FWD1.ethg++;
+        FWD1.ethg++ <--> LinkDelay10ms <--> FWD2.ethg++;
+        FWD2.ethg++ <--> LinkDelay10ms <--> R1.ethg++;
 
-        S2_R2.ethg++ <--> LinkDelay100us <--> FWD3.ethg++;
-        FWD3.ethg++ <--> LinkDelay1000us <--> FWD1.ethg++;
-        FWD2.ethg++ <--> LinkDelay1000us <--> FWD4.ethg++;
-        FWD4.ethg++ <--> LinkDelay100us <--> R2.ethg++;
+        S2_R2.ethg++ <--> LinkDelay10ms <--> FWD3.ethg++;
+        FWD3.ethg++ <--> LinkDelay100ms <--> FWD1.ethg++;
+        FWD2.ethg++ <--> LinkDelay100ms <--> FWD4.ethg++;
+        FWD4.ethg++ <--> LinkDelay10ms <--> R2.ethg++;
 
 }
