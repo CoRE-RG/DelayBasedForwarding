@@ -35,6 +35,11 @@ int DBFPacketComparator::comparePackets(inet::Packet *packet1, inet::Packet *pac
         } else if (tag2->getAdmit()){
             result = PACKET2HIGHERPRIORITY;
         }
+    /*
+     * These conditions can only occur for DBF-Packets, which reach the maximum delta.
+     * These packets are pushed in the low priority queue with possibly existing BE-Packets.
+     * BE-Packets are sent immediately whereas DBF-Packets have to fulfill at least their lqmin.
+     */
     } else if (tag1) {
         result = PACKET2HIGHERPRIORITY;
     } else if (tag2) {
