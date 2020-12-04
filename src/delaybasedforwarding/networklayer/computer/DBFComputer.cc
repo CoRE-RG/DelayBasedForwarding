@@ -104,11 +104,17 @@ void DBFComputer::processDBFPacket(inet::Packet *packet) {
     updateDBFIpv4Header(packet, dbfIpv4Header);
 
     // Calculate queuing budget and send time
-    simtime_t fqdelayMin = calculateFqDelay(dbfHeaderTag->getDMin(), dbfHeaderTag);
+    simtime_t fqdelayMin = SIMTIME_ZERO;
+    if (dbfHeaderTag->getDMin() != SIMTIME_ZERO) {
+        fqdelayMin = calculateFqDelay(dbfHeaderTag->getDMin(), dbfHeaderTag);
+    }
     dbfHeaderTag->setLqBudgetMin(calculateLqBudget(fqdelayMin, dbfHeaderTag));
     dbfHeaderTag->setTMin(calculateSendTime(dbfHeaderTag->getLqBudgetMin(), dbfHeaderTag));
 
-    simtime_t fqdelayMax = calculateFqDelay(dbfHeaderTag->getDMax(), dbfHeaderTag);
+    simtime_t fqdelayMax = SIMTIME_ZERO;
+    if (!hasInfiniteDmax(dbfHeaderTag)){
+        fqdelayMax = calculateFqDelay(dbfHeaderTag->getDMax(), dbfHeaderTag);
+    }
     dbfHeaderTag->setLqBudgetMax(calculateLqBudget(fqdelayMax, dbfHeaderTag));
     dbfHeaderTag->setTMax(calculateSendTime(dbfHeaderTag->getLqBudgetMax(), dbfHeaderTag));
 }

@@ -28,4 +28,5 @@ simple DBFPacketQueue extends PacketQueue
     parameters:
         @class(DBFPacketQueue);
         comparatorClass = "delaybasedforwarding::DBFPacketComparator";
+        dropperClass = "delaybasedforwarding::DBFPacketDropper";
 }

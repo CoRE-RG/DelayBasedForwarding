@@ -136,10 +136,6 @@ void DBFPriorityScheduler::checkQueues() {
     }
 }
 
-bool DBFPriorityScheduler::isExpired(DBFHeaderTag *dbfHeaderTag) {
-    return dbfHeaderTag->getTMax() < simTime();
-}
-
 void DBFPriorityScheduler::lookForExpiredPackets() {
    int collectionIdx = schedulePacket();
    auto collection = collectionIdx >= 0 ? collections[collectionIdx] : nullptr;
@@ -148,7 +144,7 @@ void DBFPriorityScheduler::lookForExpiredPackets() {
    for (int i = 0; i < sumOfPackets; i++) {
        inet::Packet *packet = collection->getPacket(i);
        if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
-           if (!hasInfiniteDmax(dbfHeaderTag) && isExpired(dbfHeaderTag)) {
+           if (isExpired(dbfHeaderTag)) {
                expiredPackets.push_back(packet);
 
                if (selfMsg && selfMsg->getScheduledPacket() == packet) {

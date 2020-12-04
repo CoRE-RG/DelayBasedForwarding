@@ -45,15 +45,6 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
     void checkQueues();
 
     /**
-     * @brief Checks if the send time in the given delay-based forwarding (dbf) tag is exceeded
-     *
-     * @param dbfHeaderTag The given dbf tag
-     *
-     * @return true if send time is exceeded
-     */
-    bool isExpired(DBFHeaderTag *dbfHeaderTag);
-
-    /**
      * @brief Looks for the first queue containing packets beginning from the highest priority queue.
      * Expired packets in that queue will be removed and deleted.
      */

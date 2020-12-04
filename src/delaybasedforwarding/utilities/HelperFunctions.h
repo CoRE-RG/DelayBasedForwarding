@@ -86,5 +86,16 @@ void updateDBFIpv4Header(inet::Packet *packet, inet::IntrusivePtr<inet::Ipv4Head
  */
 bool hasInfiniteDmax(DBFHeaderTag* dbfHeaderTag);
 
+/**
+ * @brief Checks if the send time in the given delay-based forwarding (dbf) tag is exceeded
+ *
+ * @param dbfHeaderTag The given dbf tag
+ *
+ * @return true if send time is exceeded
+ *
+ * @author Mehmet Cakir
+ */
+bool isExpired(DBFHeaderTag *dbfHeaderTag);
+
 } // namespace
 #endif /* DELAYBASEDFORWARDING_UTILITIES_HELPERFUNCTIONS_H_ */

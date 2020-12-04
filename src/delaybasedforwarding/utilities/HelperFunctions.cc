@@ -58,4 +58,8 @@ bool hasInfiniteDmax(DBFHeaderTag* dbfHeaderTag) {
     return dbfHeaderTag->getDMax() == SIMTIME_ZERO;
 }
 
+bool isExpired(DBFHeaderTag *dbfHeaderTag) {
+    return !hasInfiniteDmax(dbfHeaderTag) && dbfHeaderTag->getTMax() < inet::simTime();
+}
+
 } // namespace
