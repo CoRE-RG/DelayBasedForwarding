@@ -14,17 +14,22 @@
 // 
 
 package delaybasedforwarding.applications.tcp;
+import inet.applications.tcpapp.TcpEchoApp;
+import inet.applications.tcpapp.TcpEchoAppThread;
 
-import inet.applications.tcpapp.TcpSessionApp;
-
-//
-// A TCP app which sends continuously packets with the size of the given byte parameter 
-//
-// @author Mehmet Cakir
-//
-simple DBFTcpSessionApp extends TcpSessionApp
+simple TcpEchoAppStatistics extends TcpEchoApp
 {
     parameters:
-        @class(DBFTcpSessionApp);
-        active = true;
+        @class(TcpEchoAppStatistics);
+        @signal[rxBytesRate](type=long); // Signal emitted when capture rate is reached
+        @statistic[rateOverTime](title="Rate over time"; source=rxBytesRate; unit=s; record=stats,histogram?,vector; interpolationmode=none); // Captures the bytes according the capture rate
+        
+        serverThreadModuleType = default("delaybasedforwarding.applications.tcp.TcpEchoAppThreadStatistics");
+}
+
+// Thread for ~TcpEchoApp
+simple TcpEchoAppThreadStatistics extends TcpEchoAppThread
+{
+    parameters:
+        @class(TcpEchoAppThreadStatistics);
 }

@@ -1,0 +1,81 @@
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+// 
+
+#ifndef __DELAYBASEDFORWARDING_TCPECHOAPPSTATISTICS_H_
+#define __DELAYBASEDFORWARDING_TCPECHOAPPSTATISTICS_H_
+
+#include <omnetpp.h>
+#include <inet/applications/tcpapp/TcpEchoApp.h>
+
+using namespace omnetpp;
+
+namespace delaybasedforwarding {
+
+/**
+ * @brief Extended TcpEchoApp to capture various statistics
+ *
+ * @ingroup delaybasedforwarding/applications/tcp/
+ *
+ * @author Mehmet Cakir
+ */
+class TcpEchoAppStatistics : public inet::TcpEchoApp
+{
+  private:
+
+    /**
+     * @brief The rate of every capture of received bytes
+     */
+    simtime_t captureRate = SimTime(10,SimTimeUnit::SIMTIME_MS);
+
+  protected:
+    /**
+     * @brief Counter for received bytes
+     */
+    long bytesRcvdRate = 0;
+
+    /**
+     * @brief Counter for passed intervals
+     */
+    long intervalsPassed = 0;
+
+
+    /**
+     * @brief Captures the bytes according the captureRate
+     */
+    void captureBytesAtRate(inet::Packet *msg);
+
+    /**
+     * @brief The signal that is emitted according the capture rate when a packet is received
+     */
+    static simsignal_t rxBytesRateSignal;
+
+  public:
+    friend class TcpEchoAppThreadStatistics;
+};
+
+class TcpEchoAppThreadStatistics : public inet::TcpEchoAppThread {
+public:
+    virtual void init(inet::TcpServerHostApp *hostmodule, inet::TcpSocket *socket) override { TcpServerThreadBase::init(hostmodule, socket); echoAppModule = check_and_cast<TcpEchoAppStatistics *>(hostmod); }
+
+    /*
+     * @brief Called when a data packet arrives
+     */
+    virtual void dataArrived(inet::Packet *msg, bool urgent) override;
+
+};
+
+} //namespace
+
+#endif

@@ -42,12 +42,11 @@ void DBFComputer::initialize()
     }
     admit = par("admit");
     cModule *network = getModuleByPath("<root>");
-
-    try {
+    cableDatarate = 0.0;
+    if (network->hasPar("_datarate")) {
         cableDatarate = network->par("_datarate");
-    } catch (std::exception& e) {
-        cableDatarate = 0.0;
     }
+
 
     dbfFIB = new std::map<inet::Ipv4Address, DbfFibEntry>();
 
