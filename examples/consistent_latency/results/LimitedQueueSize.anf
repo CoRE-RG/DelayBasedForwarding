@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scave:Analysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:scave="http://www.omnetpp.org/omnetpp/scave">
+  <inputs>
+    <inputs name="/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize*.vec"/>
+    <inputs name="/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize*.sca"/>
+  </inputs>
+  <datasets>
+    <datasets name="CompareLimitedQueueSize">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.sca) AND attr:configname(LimitedQueueSize) AND attr:runnumber(1) AND module(ConsistentLatency.R1.app[0]) AND name(bytesRcvd)"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.sca) AND attr:configname(LimitedQueueSize) AND attr:runnumber(1) AND module(ConsistentLatency.R2.app[0]) AND name(bytesRcvd)"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.sca) AND attr:configname(LimitedQueueSize) AND attr:runnumber(0) AND module(ConsistentLatency.R2.app[0]) AND name(bytesRcvd)"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.sca) AND attr:configname(LimitedQueueSize) AND attr:runnumber(0) AND module(ConsistentLatency.R1.app[0]) AND name(bytesRcvd)"/>
+      <items xsi:type="scave:BarChart" name="Limited queue size compare">
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Legend.Font" value="Arial-regular-15"/>
+        <properties name="Legend.Position" value="Inside"/>
+      </items>
+    </datasets>
+    <datasets name="CompareByteRatePer10ms">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize) AND attr:runnumber(0) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize) AND attr:runnumber(0) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize) AND attr:runnumber(1) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize) AND attr:runnumber(1) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="Byte-Rate per 10ms, Dmin=2400us" lineNameFormat="">
+        <properties name="Graph.Title" value="Byte-Rate per 10ms, Dmin=2400us"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210121-23:47:23-32282 0 ConsistentLatency.R1.app[0] $N=0.0s" value="R1 BE"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210121-23:47:23-32282 0 ConsistentLatency.R2.app[0] $N=0.0s" value="R2 BE"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210121-23:47:23-32281 1 ConsistentLatency.R1.app[0] $N=0.0024s" value="R1 DBF"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210121-23:47:23-32281 1 ConsistentLatency.R2.app[0] $N=0.0024s" value="R2 DBF"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210129-14:07:03-22357 1 ConsistentLatency.R1.app[0] $N=0.0024s" value="R1 DBF"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210129-14:07:03-22357 1 ConsistentLatency.R2.app[0] $N=0.0024s" value="R2 DBF"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210129-14:07:03-22358 0 ConsistentLatency.R1.app[0] $N=0.0s" value="R1 BE"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210129-14:07:03-22358 0 ConsistentLatency.R2.app[0] $N=0.0s" value="R2 BE"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210129-17:02:36-30676 0 ConsistentLatency.R1.app[0] $N=0.0s" value="R1 BE"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210129-17:02:36-30676 0 ConsistentLatency.R2.app[0] $N=0.0s" value="R2 BE"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210129-17:02:36-30675 1 ConsistentLatency.R1.app[0] $N=0.0024s" value="R1 DBF"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210129-17:02:36-30675 1 ConsistentLatency.R2.app[0] $N=0.0024s" value="R2 DBF"/>
+        <properties name="Line.Type" value="Linear"/>
+      </items>
+    </datasets>
+    <datasets name="CompareBitsRatePer10ms-TcpVegas">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpVegas-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize_TcpVegas) AND attr:runnumber(1) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpVegas-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize_TcpVegas) AND attr:runnumber(1) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpVegas-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize_TcpVegas) AND attr:runnumber(0) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpVegas-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize_TcpVegas) AND attr:runnumber(0) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="Byte-Rate per 10ms, Dmin=2400us Vegas" lineNameFormat="">
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Type" value="Linear"/>
+      </items>
+    </datasets>
+    <datasets name="CompareBitsRatePer10ms-TcpWestwood">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpWestwood-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize_TcpWestwood) AND attr:runnumber(0) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpWestwood-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize_TcpWestwood) AND attr:runnumber(0) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpWestwood-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize_TcpWestwood) AND attr:runnumber(1) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpWestwood-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize_TcpWestwood) AND attr:runnumber(1) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="Byte-Rate per 10ms, Dmin=2400us Westwood" lineNameFormat="">
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Type" value="Linear"/>
+      </items>
+    </datasets>
+    <datasets name="CompareBitsRatePer10ms-TcpNewReno">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpNewReno-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize_TcpNewReno) AND attr:runnumber(1) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpNewReno-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize_TcpNewReno) AND attr:runnumber(1) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpNewReno-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize_TcpNewReno) AND attr:runnumber(0) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpNewReno-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize_TcpNewReno) AND attr:runnumber(0) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="Byte-Rate per 10ms, Dmin=2400us NewReno" lineNameFormat="">
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Type" value="Linear"/>
+      </items>
+    </datasets>
+    <datasets name="CompareBitsRatePer10ms-TcpTahoe">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpTahoe-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize_TcpTahoe) AND attr:runnumber(1) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpTahoe-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize_TcpTahoe) AND attr:runnumber(1) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpTahoe-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize_TcpTahoe) AND attr:runnumber(0) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize_TcpTahoe-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize_TcpTahoe) AND attr:runnumber(0) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="Byte-Rate per 10ms, Dmin=2400us Tahoe" lineNameFormat="">
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Type" value="Linear"/>
+      </items>
+    </datasets>
+  </datasets>
+  <chartSheets>
+    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.4 //@datasets/@datasets.1/@items.4 //@datasets/@datasets.2/@items.4 //@datasets/@datasets.3/@items.4 //@datasets/@datasets.4/@items.4 //@datasets/@datasets.5/@items.4"/>
+  </chartSheets>
+</scave:Analysis>
