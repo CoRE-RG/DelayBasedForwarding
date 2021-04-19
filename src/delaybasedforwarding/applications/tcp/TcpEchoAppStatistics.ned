@@ -21,8 +21,8 @@ simple TcpEchoAppStatistics extends TcpEchoApp
 {
     parameters:
         @class(TcpEchoAppStatistics);
-        @signal[rxBytesRate](type=long); // Signal emitted when capture rate is reached
-        @statistic[rateOverTime](title="Rate over time"; source=rxBytesRate; unit=s; record=stats,histogram?,vector; interpolationmode=none); // Captures the bytes according the capture rate
+        @signal[rxBitsRate](type=long); // Signal emitted when capture rate is reached
+        @statistic[throughput](title="Rate over time"; source=rxBitsRate; unit=bps; record=stats,histogram?,vector; interpolationmode=none); // Captures the bits according the capture rate
         
         serverThreadModuleType = default("delaybasedforwarding.applications.tcp.TcpEchoAppThreadStatistics");
 }

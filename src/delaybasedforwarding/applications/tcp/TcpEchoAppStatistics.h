@@ -40,16 +40,13 @@ class TcpEchoAppStatistics : public inet::TcpEchoApp
     simtime_t captureRate = SimTime(10,SimTimeUnit::SIMTIME_MS);
 
   protected:
-    /**
-     * @brief Counter for received bytes
-     */
-    long bytesRcvdRate = 0;
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
 
     /**
-     * @brief Counter for passed intervals
+     * @brief Counter for received bits
      */
-    long intervalsPassed = 0;
-
+    long bitsRcvdRate = 0;
 
     /**
      * @brief Captures the bytes according the captureRate
@@ -59,7 +56,7 @@ class TcpEchoAppStatistics : public inet::TcpEchoApp
     /**
      * @brief The signal that is emitted according the capture rate when a packet is received
      */
-    static simsignal_t rxBytesRateSignal;
+    static simsignal_t rxBitsRateSignal;
 
   public:
     friend class TcpEchoAppThreadStatistics;

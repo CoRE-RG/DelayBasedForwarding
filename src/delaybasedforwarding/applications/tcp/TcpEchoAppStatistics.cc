@@ -21,17 +21,27 @@ Define_Module(TcpEchoAppStatistics);
 
 Define_Module(TcpEchoAppThreadStatistics);
 
-simsignal_t TcpEchoAppStatistics::rxBytesRateSignal = registerSignal("rxBytesRate");
+simsignal_t TcpEchoAppStatistics::rxBitsRateSignal = registerSignal("rxBitsRate");
+
+void TcpEchoAppStatistics::initialize(int stage) {
+    TcpEchoApp::initialize(stage);
+    if (stage == inet::INITSTAGE_LOCAL) {
+        scheduleAt(captureRate, new cMessage("captureRate"));
+    }
+}
+
+void TcpEchoAppStatistics::handleMessage(cMessage *msg) {
+    if (msg->isSelfMessage() && !strcmp(msg->getName(),"captureRate")) {
+        emit(rxBitsRateSignal,bitsRcvdRate*static_cast<long>((SimTime(1,SimTimeUnit::SIMTIME_S)/captureRate)));
+        bitsRcvdRate = 0;
+        scheduleAt(simTime()+captureRate, msg);
+    } else {
+        TcpEchoApp::handleMessage(msg);
+    }
+}
 
 void TcpEchoAppStatistics::captureBytesAtRate(inet::Packet *msg) {
-    bytesRcvdRate += msg->getByteLength();
-    int intervalls = simTime() / captureRate;
-    if (intervalls > intervalsPassed) {
-        emit(rxBytesRateSignal,bytesRcvdRate);
-        bytesRcvdRate = 0;
-        intervalsPassed=intervalls;
-    }
-
+    bitsRcvdRate += msg->getBitLength();
 }
 
 void TcpEchoAppThreadStatistics::dataArrived(inet::Packet *msg, bool urgent) {
