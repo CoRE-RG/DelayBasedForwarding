@@ -78,29 +78,34 @@ network BottleneckLatency
                 @display("p=329,345");
         }
 
-        Bottleneck: DBFRouter {
+        BottleneckLeft: DBFRouter {
             parameters:
-                @display("p=509,207");
+                @display("p=459,203");
+        }
+
+        BottleneckRight: DBFRouter {
+            parameters:
+                @display("p=629,203");
         }
 
         R1: DBFHost {
             parameters:
-                @display("p=658,73;i=device/pc3");
+                @display("p=752,73;i=device/pc3");
         }
 
         R2: DBFHost {
             parameters:
-                @display("p=658,160;i=device/pc3");
+                @display("p=752,160;i=device/pc3");
         }
 
         R3: DBFHost {
             parameters:
-                @display("p=658,256;i=device/pc3");
+                @display("p=752,256;i=device/pc3");
         }
 
         R4: DBFHost {
             parameters:
-                @display("p=658,345;i=device/pc3");
+                @display("p=752,345;i=device/pc3");
         }
 
         configurator: Ipv4NetworkConfigurator {
@@ -117,13 +122,15 @@ network BottleneckLatency
         Flow_3.ethg++ <--> LinkDelay1000us <--> FWD3.ethg++;
         Flow_4.ethg++ <--> LinkDelay1000us <--> FWD4.ethg++;
 
-        FWD1.ethg++ <--> LinkDelay1000us <--> Bottleneck.ethg++;
-        FWD2.ethg++ <--> LinkDelay1000us <--> Bottleneck.ethg++;
-        FWD3.ethg++ <--> LinkDelay1000us <--> Bottleneck.ethg++;
-        FWD4.ethg++ <--> LinkDelay1000us <--> Bottleneck.ethg++;
+        FWD1.ethg++ <--> LinkDelay1000us <--> BottleneckLeft.ethg++;
+        FWD2.ethg++ <--> LinkDelay1000us <--> BottleneckLeft.ethg++;
+        FWD3.ethg++ <--> LinkDelay1000us <--> BottleneckLeft.ethg++;
+        FWD4.ethg++ <--> LinkDelay1000us <--> BottleneckLeft.ethg++;
 
-        Bottleneck.ethg++ <--> LinkDelay1000us <--> R1.ethg++;
-        Bottleneck.ethg++ <--> LinkDelay1000us <--> R2.ethg++;
-        Bottleneck.ethg++ <--> LinkDelay1000us <--> R3.ethg++;
-        Bottleneck.ethg++ <--> LinkDelay1000us <--> R4.ethg++;
+        BottleneckLeft.ethg++ <--> LinkDelay1000us <--> BottleneckRight.ethg++;
+
+        BottleneckRight.ethg++ <--> LinkDelay1000us <--> R1.ethg++;
+        BottleneckRight.ethg++ <--> LinkDelay1000us <--> R2.ethg++;
+        BottleneckRight.ethg++ <--> LinkDelay1000us <--> R3.ethg++;
+        BottleneckRight.ethg++ <--> LinkDelay1000us <--> R4.ethg++;
 }

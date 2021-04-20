@@ -1,7 +1,7 @@
 <nodes>
-  <node ip="10.0.1.50" hops="3" lDelay="0.001s" hDelay="0.001s" fromDelay="0.003s" toDelay="0.003s"/>
-  <node ip="10.0.2.50" hops="3" lDelay="0.001s" hDelay="0.001s" fromDelay="0.003s" toDelay="0.003s"/>
-  <node ip="10.0.3.50" hops="3" lDelay="0.001s" hDelay="0.001s" fromDelay="0.003s" toDelay="0.003s"/>
-  <node ip="10.0.4.50" hops="3" lDelay="0.001s" hDelay="0.001s" fromDelay="0.003s" toDelay="0.003s"/>
+  <node ip="10.0.1.50" hops="4" lDelay="0.001s" hDelay="0.001s" fromDelay="0.004s" toDelay="0.004s"/>
+  <node ip="10.0.2.50" hops="4" lDelay="0.001s" hDelay="0.001s" fromDelay="0.004s" toDelay="0.004s"/>
+  <node ip="10.0.3.50" hops="4" lDelay="0.001s" hDelay="0.001s" fromDelay="0.004s" toDelay="0.004s"/>
+  <node ip="10.0.4.50" hops="4" lDelay="0.001s" hDelay="0.001s" fromDelay="0.004s" toDelay="0.004s"/>
   <node ip="10.0.12.50" hops="0" lDelay="0.0s" hDelay="0.0s" fromDelay="0.0s" toDelay="0.0s"/>
 </nodes>

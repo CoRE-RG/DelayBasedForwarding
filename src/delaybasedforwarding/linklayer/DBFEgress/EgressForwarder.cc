@@ -58,7 +58,7 @@ void EgressForwarder::emitPacket(cMessage *msg) {
         }
         auto ipv4Header = packet->popAtFront<inet::Ipv4Header>();
         packet->trimFront();
-        uint32_t port = -1;
+        int port = -1;
         switch (ipv4Header->getProtocolId()) {
             case inet::IP_PROT_UDP:
                 port = packet->peekAtFront<inet::UdpHeader>()->getDestinationPort();
@@ -67,21 +67,19 @@ void EgressForwarder::emitPacket(cMessage *msg) {
                 port = packet->peekAtFront<inet::tcp::TcpHeader>()->getDestinationPort();
                 break;
             default:
-                throw cRuntimeError("Not supported ProtocolId: %s",ipv4Header->getProtocolId());
                 break;
         }
-        if (port < 0) {
-            throw cRuntimeError("Negative destination port is not allowed: %d",port);
-        }
         packet->insertAtFront(ipv4Header);
-        auto it = this->txPktToPortSignals.find(port);
-        if (it == this->txPktToPortSignals.end()) {
-            simsignal_t signaltxPk = registerSignal(("txPkToPort_" + std::to_string(port)).c_str());
-            cProperty* statisticTemplate = getProperties()->get("statisticTemplate", "txPk");
-            getEnvir()->addResultRecorders(this, signaltxPk, ("txPkToPort_" + std::to_string(port)).c_str(), statisticTemplate);
-            txPktToPortSignals.insert({port,signaltxPk});
+        if (port > 0) {
+            auto it = this->txPktToPortSignals.find(port);
+            if (it == this->txPktToPortSignals.end()) {
+                simsignal_t signaltxPk = registerSignal(("txPkToPort_" + std::to_string(port)).c_str());
+                cProperty* statisticTemplate = getProperties()->get("statisticTemplate", "txPk");
+                getEnvir()->addResultRecorders(this, signaltxPk, ("txPkToPort_" + std::to_string(port)).c_str(), statisticTemplate);
+                txPktToPortSignals.insert({port,signaltxPk});
+            }
+            emit(this->txPktToPortSignals.at(port), simTime() - msg->getCreationTime());
         }
-        emit(this->txPktToPortSignals.at(port), simTime() - msg->getCreationTime());
     }
 
 }
