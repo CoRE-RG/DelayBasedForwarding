@@ -1,8 +1,8 @@
 # workingdir,                        args,                                          simtimelimit,    fingerprint
-/examples/tcpclientserver,           -f omnetpp.ini -c verified -r 0,               1000s,           f1bd-cd5d
-/examples/udpclientserver,           -f omnetpp.ini -c verified -r 0,               1000s,           d145-4731
-/examples/tcpclientserver,           -f omnetpp.ini -c three_queues -r 0,           1000s,           58c3-1489
-/examples/udpclientserver,           -f omnetpp.ini -c three_queues -r 0,           1000s,           3ff2-9e3c
+/examples/tcpclientserver,           -f omnetpp.ini -c verified -r 0,               1000s,           7082-e91e
+/examples/udpclientserver,           -f omnetpp.ini -c verified -r 0,               1000s,           d165-0737
+/examples/tcpclientserver,           -f omnetpp.ini -c three_queues -r 0,           1000s,           60de-bd15
+/examples/udpclientserver,           -f omnetpp.ini -c three_queues -r 0,           1000s,           cca5-269d
 /examples/jitter_reduction,          -f omnetpp.ini -c NoCompetingTrafficBE -r 0,   5s,              8ab9-c2db
 /examples/jitter_reduction,          -f omnetpp.ini -c F1BE_F2BE -r 0,              5s,              f04f-1ffa
 /examples/jitter_reduction,          -f omnetpp.ini -c F1BE_F2BE_F3BE -r 0,         5s,              e7cf-423d
