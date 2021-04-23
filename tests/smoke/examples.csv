@@ -14,3 +14,5 @@
 /examples/jitter_reduction,                                              -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE -r 0
 /examples/jitter_reduction,                                              -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE_F5BE -r 0
 /examples/jitter_reduction,                                              -f omnetpp.ini -c F1DBF_F2BE_F3BE_F4BE_F5BE_Series -r 0
+/examples/bottleneck_latency,                                            -f omnetpp.ini -c LimitedQueueSize -r 0
+/examples/consistent_latency,                                            -f omnetpp.ini -c UnlimitedQueueSize -r 0

@@ -3,6 +3,8 @@
   <inputs>
     <inputs name="/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize*.vec"/>
     <inputs name="/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize*.sca"/>
+    <inputs name="/DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.sca"/>
+    <inputs name="/DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec"/>
   </inputs>
   <datasets>
     <datasets name="CompareLimitedQueueSize">
@@ -21,8 +23,8 @@
       <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize) AND attr:runnumber(0) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
       <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize) AND attr:runnumber(1) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
       <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec) AND attr:configname(LimitedQueueSize) AND attr:runnumber(1) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
-      <items xsi:type="scave:LineChart" name="Throughput in Bits per second (Link speed=100Mbit/s, Longpath-Delay=23ms)" lineNameFormat="">
-        <properties name="Graph.Title" value="Throughput in Bits per second (Link speed=100Mbit/s, Longpath-Delay=23ms)"/>
+      <items xsi:type="scave:LineChart" name="Throughput in Bits per second (Link speed=100Mbit/s, Longpath-Delay=2.3ms)" lineNameFormat="">
+        <properties name="Graph.Title" value="Throughput in Bits per second (Link speed=100Mbit/s, Longpath-Delay=2.3ms)"/>
         <properties name="X.Axis.Title" value="Time [s]"/>
         <properties name="Y.Axis.Title" value="Throughput [Bit/s]"/>
         <properties name="Legend.Display" value="true"/>
@@ -44,9 +46,11 @@
         <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210416-18:56:47-27424 1 ConsistentLatency.R2.app[0] $N=0.0024s" value="TCP-Flow Long Path DBF min-SLO=24ms"/>
         <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210422-10:42:39-5439 0 ConsistentLatency.R1.app[0] $N=0.0s" value="Best-Effort Short Path"/>
         <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210422-10:42:39-5439 0 ConsistentLatency.R2.app[0] $N=0.0s" value="Best-Effort Long Path"/>
-        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210422-10:42:39-5438 1 ConsistentLatency.R1.app[0] $N=0.0024s" value="DBF Short Path min-SLO 24ms"/>
-        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210422-10:42:39-5438 1 ConsistentLatency.R2.app[0] $N=0.0024s" value="DBF Long Path min-SLO 24ms"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210422-10:42:39-5438 1 ConsistentLatency.R1.app[0] $N=0.0024s" value="DBF Short Path min-SLO 2.4ms"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210422-10:42:39-5438 1 ConsistentLatency.R2.app[0] $N=0.0024s" value="DBF Long Path min-SLO 2.4ms"/>
         <properties name="Line.Type" value="Linear"/>
+        <properties name="Line.Type//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210422-10:42:39-5438 1 ConsistentLatency.R1.app[0] $N=0.0024s" value="Linear"/>
+        <properties name="Line.Type//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0024s-#0.vec LimitedQueueSize-1-20210422-10:42:39-5438 1 ConsistentLatency.R2.app[0] $N=0.0024s" value="Linear"/>
       </items>
     </datasets>
     <datasets name="CompareBitsRatePer10ms-TcpVegas">
@@ -89,8 +93,37 @@
         <properties name="Line.Type" value="Linear"/>
       </items>
     </datasets>
+    <datasets name="CompareByteRateTuning">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec) AND attr:configname(UnlimitedQueueSizeTuning) AND attr:runnumber(0) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec) AND attr:configname(UnlimitedQueueSizeTuning) AND attr:runnumber(0) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize) AND attr:runnumber(0) AND module(ConsistentLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec) AND attr:configname(LimitedQueueSize) AND attr:runnumber(0) AND module(ConsistentLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="Throughput in Bits per second (Link speed=100Mbit/s, Longpath-Delay=2.3ms)" lineNameFormat="">
+        <properties name="Graph.Title" value="Throughput in Bits per second (Link speed=100Mbit/s, Longpath-Delay=2.3ms)"/>
+        <properties name="X.Axis.Title" value="Time [s]"/>
+        <properties name="Y.Axis.Title" value="Throughput [Bit/s]"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210422-10:42:39-5439 ConsistentLatency.R1.app[0] LimitedQueueSize $N=0.0s" value="Best-Effort Short Path"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210422-10:42:39-5439 ConsistentLatency.R2.app[0] LimitedQueueSize $N=0.0s" value="Best-Effort Long Path"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210423-13:15:55-10478 ConsistentLatency.R1.app[0] UnlimitedQueueSizeTuning " value="DBF Short Path"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210423-13:15:55-10478 ConsistentLatency.R2.app[0] UnlimitedQueueSizeTuning " value="DBF Long Path"/>
+        <properties name="Line.Color//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210422-10:42:39-5439 ConsistentLatency.R1.app[0] LimitedQueueSize $N=0.0s" value="#00008b"/>
+        <properties name="Line.Color//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210422-10:42:39-5439 ConsistentLatency.R2.app[0] LimitedQueueSize $N=0.0s" value="#ee0000"/>
+        <properties name="Line.Color//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210423-13:15:55-10478 ConsistentLatency.R1.app[0] UnlimitedQueueSizeTuning " value="#F5C211"/>
+        <properties name="Line.Color//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210423-13:15:55-10478 ConsistentLatency.R2.app[0] UnlimitedQueueSizeTuning " value="#26A269"/>
+        <properties name="Line.Type" value="Linear"/>
+        <properties name="Line.Type//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210423-14:11:38-12820 ConsistentLatency.R1.app[0] UnlimitedQueueSizeTuning " value="Linear"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210423-14:11:38-12820 ConsistentLatency.R1.app[0] UnlimitedQueueSizeTuning " value="DBF Short Path min-SLO=3.0ms"/>
+        <properties name="Line.Type//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210423-14:11:38-12820 ConsistentLatency.R2.app[0] UnlimitedQueueSizeTuning " value="Linear"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210423-14:11:38-12820 ConsistentLatency.R2.app[0] UnlimitedQueueSizeTuning " value="DBF Long Path min-SLO=2.4ms"/>
+        <properties name="Line.Type//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210422-10:42:39-5439 ConsistentLatency.R1.app[0] LimitedQueueSize $N=0.0s" value="Linear"/>
+        <properties name="Line.Type//DelayBasedForwarding/examples/consistent_latency/results/LimitedQueueSize-N=0.0s-#0.vec LimitedQueueSize-0-20210422-10:42:39-5439 ConsistentLatency.R2.app[0] LimitedQueueSize $N=0.0s" value="Linear"/>
+        <properties name="Line.Color//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210423-14:11:38-12820 ConsistentLatency.R1.app[0] UnlimitedQueueSizeTuning " value="#ffa500"/>
+        <properties name="Line.Color//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210423-14:11:38-12820 ConsistentLatency.R2.app[0] UnlimitedQueueSizeTuning " value="#006400"/>
+      </items>
+    </datasets>
   </datasets>
   <chartSheets>
-    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.4 //@datasets/@datasets.1/@items.4 //@datasets/@datasets.2/@items.4 //@datasets/@datasets.3/@items.4 //@datasets/@datasets.4/@items.4 //@datasets/@datasets.5/@items.4"/>
+    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.4 //@datasets/@datasets.1/@items.4 //@datasets/@datasets.2/@items.4 //@datasets/@datasets.3/@items.4 //@datasets/@datasets.4/@items.4 //@datasets/@datasets.5/@items.4 //@datasets/@datasets.6/@items.4"/>
   </chartSheets>
 </scave:Analysis>
