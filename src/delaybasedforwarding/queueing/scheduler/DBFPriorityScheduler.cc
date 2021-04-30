@@ -19,6 +19,7 @@
 #include "inet/networklayer/ipv4/Ipv4Header_m.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
 #include "inet/linklayer/ethernet/EtherMacBase.h"
+#include "delaybasedforwarding/queueing/queue/DBFPacketQueue.h"
 
 namespace delaybasedforwarding {
 
@@ -51,31 +52,30 @@ void DBFPriorityScheduler::initialize(int stage) {
 
 void DBFPriorityScheduler::handleMessage(cMessage *msg)
 {
-    if (msg->isSelfMessage()) {
+    if (msg->isSelfMessage() && msg == selfMsg) {
         int collectionsIdx = selfMsg->getCollectionIdx();
-        inet::Packet *scheduledPacket = selfMsg->getScheduledPacket();
-        selfMsg->setScheduledPacket(nullptr);
-        delete msg;
-        msg = nullptr;
         selfMsg = nullptr;
-        collections[collectionsIdx]->removePacket(scheduledPacket);
-        take(scheduledPacket);
-        if (auto dbfHeaderTag = scheduledPacket->findTag<DBFHeaderTag>()) {
-            inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header = getMutableIpv4Header(scheduledPacket);
-            DBFIpv4Option *dbfIpv4Option = getMutableDBFIpv4Option(dbfIpv4Header);
-            removeDBFIpv4Options(dbfIpv4Header);
-
-            dbfIpv4Option->setEDelay(dbfHeaderTag->getEDelay() + simTime() - dbfHeaderTag->getTRcv());
-            dbfIpv4Header->addOption(dbfIpv4Option);
-            updateDBFIpv4Header(scheduledPacket, dbfIpv4Header);
-
-            scheduledPacket->removeTag<DBFHeaderTag>();
+        if (DBFPacketQueue* queue = dynamic_cast<DBFPacketQueue*>(collections[collectionsIdx])) {
+            inet::Packet *scheduledPacket = queue->popPacket(nullptr);
+            take(scheduledPacket);
+            if (auto dbfHeaderTag = scheduledPacket->findTag<DBFHeaderTag>()) {
+                inet::IntrusivePtr<inet::Ipv4Header> dbfIpv4Header = getMutableIpv4Header(scheduledPacket);
+                DBFIpv4Option *dbfIpv4Option = getMutableDBFIpv4Option(dbfIpv4Header);
+                removeDBFIpv4Options(dbfIpv4Header);
+                dbfIpv4Option->setEDelay(dbfHeaderTag->getEDelay() + simTime() - dbfHeaderTag->getTRcv());
+                dbfIpv4Header->addOption(dbfIpv4Option);
+                updateDBFIpv4Header(scheduledPacket, dbfIpv4Header);
+                scheduledPacket->removeTag<DBFHeaderTag>();
+            }
+            if (txIdleCounter == 1 ) {
+                txIdleCounter--;
+                send(scheduledPacket, "out");
+            } else {
+                throw cRuntimeError("Value of txIdleCounter is higher than zero: %d", txIdleCounter);
+            }
         }
-        if (txIdleCounter == 1 ) {
-            txIdleCounter--;
-            send(scheduledPacket, "out");
-        } else {
-            throw cRuntimeError("Value of txIdleCounter is higher than zero: %d", txIdleCounter);
+        else {
+            throw cRuntimeError("Queue %d is not of type DBFPacketQueue", collectionsIdx);
         }
     }
     delete msg;
@@ -114,24 +114,21 @@ void DBFPriorityScheduler::checkQueues() {
     int collectionIdx = schedulePacket();
     if (collectionIdx >= 0) {
         inet::Packet *packet = collections[collectionIdx]->getPacket(FRONTIDX);
-        if (!selfMsg || packet != selfMsg->getScheduledPacket()) {
-            if (selfMsg) {
-                cancelAndDelete(selfMsg);
-            }
-            selfMsg = new DBFScheduleMsg();
-            selfMsg->setCollectionIdx(collectionIdx);
-            selfMsg->setScheduledPacket(packet);
-            if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
-                simtime_t scheduleTime = SimTime().ZERO;
-                if (dbfHeaderTag->getTMin() >= simTime()) {
-                    scheduleTime = dbfHeaderTag->getTMin();
-                } else {
-                    scheduleTime = simTime();
-                }
-                scheduleAt(scheduleTime, selfMsg);
+        if (selfMsg) {
+            cancelAndDelete(selfMsg);
+        }
+        selfMsg = new DBFScheduleMsg();
+        selfMsg->setCollectionIdx(collectionIdx);
+        if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
+            simtime_t scheduleTime = SimTime().ZERO;
+            if (dbfHeaderTag->getTMin() >= simTime()) {
+                scheduleTime = dbfHeaderTag->getTMin();
             } else {
-                scheduleAt(simTime(), selfMsg);
+                scheduleTime = simTime();
             }
+            scheduleAt(scheduleTime, selfMsg);
+        } else {
+            scheduleAt(simTime(), selfMsg);
         }
     }
 }
@@ -146,9 +143,7 @@ void DBFPriorityScheduler::lookForExpiredPackets() {
        if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
            if (isExpired(dbfHeaderTag)) {
                expiredPackets.push_back(packet);
-
-               if (selfMsg && selfMsg->getScheduledPacket() == packet) {
-                   selfMsg->setScheduledPacket(nullptr);
+               if (selfMsg && collections[collectionIdx]->getPacket(FRONTIDX) == packet) {
                    cancelAndDelete(selfMsg);
                    selfMsg = nullptr;
                }
@@ -158,7 +153,7 @@ void DBFPriorityScheduler::lookForExpiredPackets() {
 
    for (inet::Packet *packet : expiredPackets) {
        collection->removePacket(packet);
-       take(packet);
+       //take(packet);
        delete packet;
    }
 }

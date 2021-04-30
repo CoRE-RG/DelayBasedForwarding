@@ -19,7 +19,7 @@
 #include <omnetpp.h>
 #include "inet/queueing/scheduler/PriorityScheduler.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
-#include "delaybasedforwarding/queueing/scheduler/DBFScheduleMsg.h"
+#include "delaybasedforwarding/queueing/scheduler/DBFScheduleMsg_m.h"
 #include "inet/linklayer/ethernet/EtherMacFullDuplex.h"
 #include "delaybasedforwarding/queueing/classifier/DBFPriorityClassifier.h"
 
