@@ -126,6 +126,12 @@
         <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210430-10:51:39-3673 ConsistentLatency.R1.app[0] UnlimitedQueueSizeTuning " value="DBF Short Path min-SLO=3.0ms"/>
         <properties name="Line.Color//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210430-10:51:39-3673 ConsistentLatency.R2.app[0] UnlimitedQueueSizeTuning " value="#1c761c"/>
         <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210430-10:51:39-3673 ConsistentLatency.R2.app[0] UnlimitedQueueSizeTuning " value="DBF Long Path min-SLO=2.4ms"/>
+        <properties name="Line.Type//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210430-11:13:43-5016 ConsistentLatency.R1.app[0] UnlimitedQueueSizeTuning " value="Linear"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210430-11:13:43-5016 ConsistentLatency.R1.app[0] UnlimitedQueueSizeTuning " value="DBF Short Path min-SLO=3.0ms"/>
+        <properties name="Line.Type//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210430-11:13:43-5016 ConsistentLatency.R2.app[0] UnlimitedQueueSizeTuning " value="Linear"/>
+        <properties name="Line.Name//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210430-11:13:43-5016 ConsistentLatency.R2.app[0] UnlimitedQueueSizeTuning " value="DBF Long Path min-SLO=2.4ms"/>
+        <properties name="Line.Color//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210430-11:13:43-5016 ConsistentLatency.R2.app[0] UnlimitedQueueSizeTuning " value="#1c761c"/>
+        <properties name="Line.Color//DelayBasedForwarding/examples/consistent_latency/results/UnlimitedQueueSizeTuning-#0.vec UnlimitedQueueSizeTuning-0-20210430-11:13:43-5016 ConsistentLatency.R1.app[0] UnlimitedQueueSizeTuning " value="#ffa500"/>
       </items>
     </datasets>
   </datasets>

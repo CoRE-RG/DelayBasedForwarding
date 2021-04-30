@@ -93,7 +93,7 @@ void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
 int DBFPriorityScheduler::schedulePacket() {
     int collectionIdx = -1;
     auto deltaQueueMap = dbfPriorityClassifier->getDeltaQueueMap();
-    for (auto it = deltaQueueMap->begin(); it != deltaQueueMap->end(); ++it)
+    for (auto it = deltaQueueMap->begin(); it != deltaQueueMap->end(); ++it) {
         if (providers[it->second]->canPopSomePacket(inputGates[it->second]->getPathStartGate())) {
             collectionIdx = it->second;
             inet::Packet *packet = collections[it->second]->getPacket(FRONTIDX);
@@ -106,6 +106,7 @@ int DBFPriorityScheduler::schedulePacket() {
 
             }
         }
+    }
     return collectionIdx;
 }
 
@@ -119,42 +120,35 @@ void DBFPriorityScheduler::checkQueues() {
         }
         selfMsg = new DBFScheduleMsg();
         selfMsg->setCollectionIdx(collectionIdx);
+        simtime_t scheduleTime = simTime();
         if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
-            simtime_t scheduleTime = SimTime().ZERO;
             if (dbfHeaderTag->getTMin() >= simTime()) {
                 scheduleTime = dbfHeaderTag->getTMin();
-            } else {
-                scheduleTime = simTime();
             }
-            scheduleAt(scheduleTime, selfMsg);
-        } else {
-            scheduleAt(simTime(), selfMsg);
         }
+        scheduleAt(scheduleTime, selfMsg);
     }
 }
 
 void DBFPriorityScheduler::lookForExpiredPackets() {
-   int collectionIdx = schedulePacket();
-   auto collection = collectionIdx >= 0 ? collections[collectionIdx] : nullptr;
-   int sumOfPackets = collection ? collection->getNumPackets() : 0;
-   std::list<inet::Packet*> expiredPackets;
-   for (int i = 0; i < sumOfPackets; i++) {
-       inet::Packet *packet = collection->getPacket(i);
-       if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
-           if (isExpired(dbfHeaderTag)) {
-               expiredPackets.push_back(packet);
-               if (selfMsg && collections[collectionIdx]->getPacket(FRONTIDX) == packet) {
-                   cancelAndDelete(selfMsg);
-                   selfMsg = nullptr;
+   for (auto collection : collections) {
+       int sumOfPackets = collection->getNumPackets();
+       std::list<inet::Packet*> expiredPackets;
+       for (int i = 0; i < sumOfPackets; i++) {
+           inet::Packet *packet = collection->getPacket(i);
+           if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
+               if (isExpired(dbfHeaderTag)) {
+                   expiredPackets.push_back(packet);
+                   if (selfMsg && collections[selfMsg->getCollectionIdx()]->getPacket(FRONTIDX) == packet) {
+                       cancelAndDelete(selfMsg);
+                   }
                }
            }
        }
-   }
-
-   for (inet::Packet *packet : expiredPackets) {
-       collection->removePacket(packet);
-       //take(packet);
-       delete packet;
+       for (inet::Packet *packet : expiredPackets) {
+           collection->removePacket(packet);
+           delete packet;
+       }
    }
 }
 
