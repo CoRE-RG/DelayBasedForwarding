@@ -1,0 +1,14 @@
+<nodes>
+  <node ip="10.0.1.1" hops="3" lDelay="0.001s" hDelay="0.001s" fromDelay="0.003s" toDelay="0.003s"/>
+  <node ip="10.0.1.2" hops="3" lDelay="0.001s" hDelay="0.001s" fromDelay="0.003s" toDelay="0.003s"/>
+  <node ip="10.0.2.1" hops="2" lDelay="0.001s" hDelay="0.001s" fromDelay="0.002s" toDelay="0.002s"/>
+  <node ip="10.0.2.2" hops="0" lDelay="0.0s"   hDelay="0.0s"   fromDelay="0.0s"   toDelay="0.0s"/>
+  <node ip="10.0.3.1" hops="3" lDelay="0.001s" hDelay="0.001s" fromDelay="0.003s" toDelay="0.003s"/>
+  <node ip="10.0.3.2" hops="3" lDelay="0.001s" hDelay="0.001s" fromDelay="0.003s" toDelay="0.003s"/>
+  <node ip="10.0.4.1" hops="4" lDelay="0.001s" hDelay="0.001s" fromDelay="0.004s" toDelay="0.004s"/>
+  <node ip="10.0.4.2" hops="4" lDelay="0.001s" hDelay="0.001s" fromDelay="0.004s" toDelay="0.004s"/>
+  <node ip="10.0.5.1" hops="5" lDelay="0.001s" hDelay="0.001s" fromDelay="0.005s" toDelay="0.005s"/>
+  <node ip="10.0.5.2" hops="5" lDelay="0.001s" hDelay="0.001s" fromDelay="0.005s" toDelay="0.005s"/>
+  <node ip="10.0.6.1" hops="4" lDelay="0.001s" hDelay="0.001s" fromDelay="0.004s" toDelay="0.004s"/>
+  <node ip="10.0.6.2" hops="4" lDelay="0.001s" hDelay="0.001s" fromDelay="0.004s" toDelay="0.004s"/>
+</nodes>

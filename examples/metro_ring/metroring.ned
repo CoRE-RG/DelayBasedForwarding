@@ -35,34 +35,65 @@ network MetroRing
 
     submodules:
 
-        DBFHost1: DBFHost {
+        DBFSenderHost1: DBFHost {
             parameters:
-                @display("p=713,135");
+                @display("p=646,135");
         }
 
-        DBFHost2: DBFHost {
+        DBFSenderHost2: DBFHost {
             parameters:
-                @display("p=1173,185");
+                @display("p=1134,163");
         }
 
-        DBFHost3: DBFHost {
+        DBFSenderHost3: DBFHost {
             parameters:
-                @display("p=1173,693");
+                @display("p=1197,644");
         }
 
-        DBFHost4: DBFHost {
+        DBFSenderHost4: DBFHost {
             parameters:
-                @display("p=713,743");
+                @display("p=652,743");
         }
 
-        DBFHost5: DBFHost {
+        DBFSenderHost5: DBFHost {
             parameters:
-                @display("p=219,693");
+                @display("p=179,644");
         }
 
-        DBFHost6: DBFHost {
+        DBFSenderHost6: DBFHost {
             parameters:
-                @display("p=219,191");
+                @display("p=203,215");
+        }
+
+
+        DBFReceiverHost1: DBFHost {
+            parameters:
+                @display("p=796,135");
+        }
+
+        DBFReceiverHost2: DBFHost {
+            parameters:
+                @display("p=1212,236");
+        }
+
+        DBFReceiverHost3: DBFHost {
+            parameters:
+                @display("p=1095,719");
+        }
+
+        DBFReceiverHost4: DBFHost {
+            parameters:
+                @display("p=788,743");
+        }
+
+        DBFReceiverHost5: DBFHost {
+            parameters:
+                @display("p=279,719");
+        }
+
+        DBFReceiverHost6: DBFHost {
+            parameters:
+                @display("p=328,185");
         }
 
         DBFRouter1: DBFRouter {
@@ -110,11 +141,18 @@ network MetroRing
         DBFRouter4.ethg++ <--> LinkDelay1000us <--> DBFRouter5.ethg++;
         DBFRouter5.ethg++ <--> LinkDelay1000us <--> DBFRouter6.ethg++;
         DBFRouter6.ethg++ <--> LinkDelay1000us <--> DBFRouter1.ethg++;
-        
-        DBFHost1.ethg++ <--> LinkDelay1000us <--> DBFRouter1.ethg++;
-        DBFHost2.ethg++ <--> LinkDelay1000us <--> DBFRouter2.ethg++;
-        DBFHost3.ethg++ <--> LinkDelay1000us <--> DBFRouter3.ethg++;
-        DBFHost4.ethg++ <--> LinkDelay1000us <--> DBFRouter4.ethg++;
-        DBFHost5.ethg++ <--> LinkDelay1000us <--> DBFRouter5.ethg++;
-        DBFHost6.ethg++ <--> LinkDelay1000us <--> DBFRouter6.ethg++;
+
+        DBFSenderHost1.ethg++ <--> LinkDelay1000us <--> DBFRouter1.ethg++;
+        DBFSenderHost2.ethg++ <--> LinkDelay1000us <--> DBFRouter2.ethg++;
+        DBFSenderHost3.ethg++ <--> LinkDelay1000us <--> DBFRouter3.ethg++;
+        DBFSenderHost4.ethg++ <--> LinkDelay1000us <--> DBFRouter4.ethg++;
+        DBFSenderHost5.ethg++ <--> LinkDelay1000us <--> DBFRouter5.ethg++;
+        DBFSenderHost6.ethg++ <--> LinkDelay1000us <--> DBFRouter6.ethg++;
+
+        DBFReceiverHost1.ethg++ <--> LinkDelay1000us <--> DBFRouter1.ethg++;
+        DBFReceiverHost2.ethg++ <--> LinkDelay1000us <--> DBFRouter2.ethg++;
+        DBFReceiverHost3.ethg++ <--> LinkDelay1000us <--> DBFRouter3.ethg++;
+        DBFReceiverHost4.ethg++ <--> LinkDelay1000us <--> DBFRouter4.ethg++;
+        DBFReceiverHost5.ethg++ <--> LinkDelay1000us <--> DBFRouter5.ethg++;
+        DBFReceiverHost6.ethg++ <--> LinkDelay1000us <--> DBFRouter6.ethg++;
 }
