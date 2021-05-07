@@ -27,6 +27,8 @@ namespace delaybasedforwarding {
 
 Define_Module(DBFPriorityScheduler);
 
+simsignal_t DBFPriorityScheduler::queuesInUseCountSignal = registerSignal("queuesInUseCount");
+
 DBFPriorityScheduler::~DBFPriorityScheduler() {
     cancelAndDelete(selfMsg);
 }
@@ -153,7 +155,7 @@ void DBFPriorityScheduler::lookForExpiredPackets() {
 }
 
 void DBFPriorityScheduler::receiveSignal(cComponent *source, simsignal_t signalID, long l, cObject *details) {
-    if (l == inet::EtherMacBase::MacTransmitState::TX_IDLE_STATE) {
+    if (dynamic_cast<inet::EtherMacFullDuplex*>(source) && l == inet::EtherMacBase::MacTransmitState::TX_IDLE_STATE) {
         txIdleCounter++;
         if (txIdleCounter == 1) {
             lookForExpiredPackets();
@@ -164,8 +166,23 @@ void DBFPriorityScheduler::receiveSignal(cComponent *source, simsignal_t signalI
     }
 }
 
+void DBFPriorityScheduler::receiveSignal(cComponent *source, simsignal_t signalID, cObject *value, cObject *details) {
+    if (dynamic_cast<DBFPacketQueue*>(source)) {
+        int queuesInUseCount = 0;
+        for (auto collection : collections) {
+            if (!(collection->isEmpty())) {
+                queuesInUseCount++;
+            }
+        }
+        emit(queuesInUseCountSignal, queuesInUseCount);
+    }
+}
+
 int DBFPriorityScheduler::addDBFQueue(cModule *dbfQueue) {
     int providerIdx = -1;
+    dynamic_cast<inet::queueing::PacketQueue*>(dbfQueue)->subscribe("packetPopped", this);
+    dynamic_cast<inet::queueing::PacketQueue*>(dbfQueue)->subscribe("packetRemoved", this);
+    dynamic_cast<inet::queueing::PacketQueue*>(dbfQueue)->subscribe("packetPushed", this);
     // 1. createInGate()
     int numGates = this->gateSize("in");
     this->setGateSize("in", numGates+1);

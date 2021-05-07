@@ -67,6 +67,16 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, long l, cObject *details) override;
 
     /**
+     * @brief Is called whenever a subscribed signal is emitted
+     *
+     * @param source The object which emitted a signal
+     * @param signalID
+     * @param value The of the emitted signal as a long value
+     * @param details
+     */
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *value, cObject *details) override;
+
+    /**
      * @brief Adds a delay-based forwarding queue to this scheduler and connects it with this scheduler
      *
      * @param dbfQueue The delay-based forwarding queue which will be added to this scheduler and connected with this scheduler
@@ -126,6 +136,11 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
      * @brief The DBF priority classifier
      */
     DBFPriorityClassifier *dbfPriorityClassifier;
+
+    /**
+     * @brief The signal that emits the count of queues in use
+     */
+    static simsignal_t queuesInUseCountSignal;
 };
 
 } //namespace

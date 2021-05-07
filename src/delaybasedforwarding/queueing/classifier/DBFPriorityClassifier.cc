@@ -63,16 +63,17 @@ int DBFPriorityClassifier::getIndexOfQueueForDelta(simtime_t delta) {
         }
     }
     if (consumerIdx == -1) {
-        consumerIdx = createDBFQueue();
+        consumerIdx = createDBFQueue(delta);
         deltaQueueMap->insert({delta,consumerIdx});
     }
     return consumerIdx;
 }
 
-int DBFPriorityClassifier::createDBFQueue() {
+int DBFPriorityClassifier::createDBFQueue(simtime_t delta) {
     int consumerIdx = -1;
     // 1. createQueue()
-    cModule *dbfQueue = createDynamicModule("delaybasedforwarding.queueing.queue.DBFPacketQueue", "queue", this->getParentModule(), true);
+    std::string queueName = "queue(delta=" + delta.str() + ")";
+    cModule *dbfQueue = createDynamicModule("delaybasedforwarding.queueing.queue.DBFPacketQueue", queueName.c_str(), this->getParentModule(), true);
     if (!dbfQueue) {
         throw cRuntimeError("DBFQueue is null.");
     }

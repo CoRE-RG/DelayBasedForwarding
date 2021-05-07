@@ -26,4 +26,9 @@ simple DBFPriorityScheduler extends PriorityScheduler
 {
     parameters:
         @class(DBFPriorityScheduler);
+        
+        //Signal emitted when a frame is received, contains received EtherFrame
+        @signal[queuesInUseCount](type=int);
+        //End-to-end latency
+        @statistic[queuesInUseCount](title="Queues in use count"; unit=s; record=count,stats,histogram?,vector; interpolationmode=none);
 }

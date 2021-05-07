@@ -39,9 +39,10 @@ class DBFPriorityClassifier : public inet::queueing::PriorityClassifier
     /**
      * @brief Creates dynamically a delay-based forwarding queue
      *
+     * @param delta The given delta
      * @return The index of the queue in the consumers list of this classifier
      */
-    int createDBFQueue();
+    int createDBFQueue(simtime_t delta);
 
     /**
      * @brief Returns index of priority queue for a given delta. If there is no queue available then it will be created.
