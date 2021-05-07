@@ -15,15 +15,11 @@
 
 package delaybasedforwarding.examples.bottleneck_latency;
 
-import ned.DelayChannel;
-import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
-import inet.node.inet.StandardHost;
-import delaybasedforwarding.node.inet.DBFHost;
 import inet.node.ethernet.EtherLink;
-import inet.node.inet.Router;
-import delaybasedforwarding.node.inet.DBFRouter;
 import inet.visualizer.integrated.IntegratedCanvasVisualizer;
-import inet.node.inet.INetworkNode;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import delaybasedforwarding.node.inet.DBFHost;
+import delaybasedforwarding.node.inet.DBFRouter;
 
 network BottleneckLatency
 {

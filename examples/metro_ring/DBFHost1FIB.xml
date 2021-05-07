@@ -1,0 +1,8 @@
+<nodes>
+  <node ip="10.0.1.1" hops="0" lDelay="0.0s" hDelay="0.0s" fromDelay="0.0s" toDelay="0.0s"/>
+  <node ip="10.0.1.2" hops="1" lDelay="0.0s" hDelay="0.0s" fromDelay="0.0s" toDelay="0.0s"/>
+  <node ip="10.0.1.3" hops="0" lDelay="0.0s" hDelay="0.0s" fromDelay="0.0s" toDelay="0.0s"/>
+  <node ip="10.0.1.4" hops="0" lDelay="0.0s" hDelay="0.0s" fromDelay="0.0s" toDelay="0.0s"/>
+  <node ip="10.0.1.5" hops="0" lDelay="0.0s" hDelay="0.0s" fromDelay="0.0s" toDelay="0.0s"/>
+  <node ip="10.0.1.6" hops="0" lDelay="0.0s" hDelay="0.0s" fromDelay="0.0s" toDelay="0.0s"/>
+</nodes>
