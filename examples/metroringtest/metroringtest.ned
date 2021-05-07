@@ -35,34 +35,64 @@ network MetroRingTest
 
     submodules:
 
-        Host1: StandardHost {
+        SenderHost1: StandardHost {
             parameters:
-                @display("p=713,135");
+                @display("p=653,135");
         }
 
-        Host2: StandardHost {
+        SenderHost2: StandardHost {
             parameters:
-                @display("p=1173,185");
+                @display("p=1139,164");
         }
 
-        Host3: StandardHost {
+        SenderHost3: StandardHost {
             parameters:
-                @display("p=1173,693");
+                @display("p=1192,666");
         }
 
-        Host4: StandardHost {
+        SenderHost4: StandardHost {
             parameters:
-                @display("p=713,743");
+                @display("p=653,743");
         }
 
-        Host5: StandardHost {
+        SenderHost5: StandardHost {
             parameters:
                 @display("p=219,693");
         }
 
-        Host6: StandardHost {
+        SenderHost6: StandardHost {
             parameters:
-                @display("p=219,191");
+                @display("p=193,224");
+        }
+
+        ReceiverHost1: StandardHost {
+            parameters:
+                @display("p=791,135");
+        }
+
+        ReceiverHost2: StandardHost {
+            parameters:
+                @display("p=1192,224");
+        }
+
+        ReceiverHost3: StandardHost {
+            parameters:
+                @display("p=1100,726");
+        }
+
+        ReceiverHost4: StandardHost {
+            parameters:
+                @display("p=791,743");
+        }
+
+        ReceiverHost5: StandardHost {
+            parameters:
+                @display("p=321,726");
+        }
+
+        ReceiverHost6: StandardHost {
+            parameters:
+                @display("p=310,174");
         }
 
         Router1: Router {
@@ -110,11 +140,18 @@ network MetroRingTest
         Router4.ethg++ <--> LinkDelay1000us <--> Router5.ethg++;
         Router5.ethg++ <--> LinkDelay1000us <--> Router6.ethg++;
         Router6.ethg++ <--> LinkDelay1000us <--> Router1.ethg++;
-        
-        Host1.ethg++ <--> LinkDelay1000us <--> Router1.ethg++;
-        Host2.ethg++ <--> LinkDelay1000us <--> Router2.ethg++;
-        Host3.ethg++ <--> LinkDelay1000us <--> Router3.ethg++;
-        Host4.ethg++ <--> LinkDelay1000us <--> Router4.ethg++;
-        Host5.ethg++ <--> LinkDelay1000us <--> Router5.ethg++;
-        Host6.ethg++ <--> LinkDelay1000us <--> Router6.ethg++;
+
+        SenderHost1.ethg++ <--> LinkDelay1000us <--> Router1.ethg++;
+        SenderHost2.ethg++ <--> LinkDelay1000us <--> Router2.ethg++;
+        SenderHost3.ethg++ <--> LinkDelay1000us <--> Router3.ethg++;
+        SenderHost4.ethg++ <--> LinkDelay1000us <--> Router4.ethg++;
+        SenderHost5.ethg++ <--> LinkDelay1000us <--> Router5.ethg++;
+        SenderHost6.ethg++ <--> LinkDelay1000us <--> Router6.ethg++;
+
+        ReceiverHost1.ethg++ <--> LinkDelay1000us <--> Router1.ethg++;
+        ReceiverHost2.ethg++ <--> LinkDelay1000us <--> Router2.ethg++;
+        ReceiverHost3.ethg++ <--> LinkDelay1000us <--> Router3.ethg++;
+        ReceiverHost4.ethg++ <--> LinkDelay1000us <--> Router4.ethg++;
+        ReceiverHost5.ethg++ <--> LinkDelay1000us <--> Router5.ethg++;
+        ReceiverHost6.ethg++ <--> LinkDelay1000us <--> Router6.ethg++;
 }
