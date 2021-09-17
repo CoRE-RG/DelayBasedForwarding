@@ -24,5 +24,6 @@ import inet.networklayer.ipv4.Ipv4NetworkLayer;
 //
 module DBFIpv4NetworkLayer extends Ipv4NetworkLayer
 {
+    // The custom ip module implementation 
     ip.typename = "DBFIpv4";
 }

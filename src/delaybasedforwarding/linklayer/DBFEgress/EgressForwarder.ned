@@ -35,8 +35,12 @@ simple EgressForwarder
         @statistic[txPks](title="End-to-end latency"; source="messageAge(txPks)"; unit=s; record=stats,histogram?,vector; interpolationmode=none);
     
     gates:
+        // the input gate
         input in;
+        // the output gate 
         output out;
+        // scheduled traffic to forward input
         input forward @labels(pop);
-        output schedule @lables(push);
+        // traffic to be scheduled output
+        output schedule @labels(push);
 }

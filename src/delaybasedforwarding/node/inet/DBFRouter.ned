@@ -26,8 +26,11 @@ import delaybasedforwarding.networklayer.computer.DBFComputer;
 module DBFRouter extends Router
 {
     parameters:
+        // The custom egress traffic conditioner module implementation
         eth[*].egressTC.typename = "DBFEgressTrafficConditioner";
+        // The custom ingress traffic conditioner module implementation
         eth[*].ingressTC.typename = "DBFIngressTrafficConditioner";
+        // The custom IPv4 network layer module
         ipv4.typename = "DBFIpv4NetworkLayer";
 
     submodules:

@@ -24,9 +24,14 @@ import inet.applications.udpapp.UdpBasicBurst;
 //
 simple DBFUdpBurst extends UdpBasicBurst {
     parameters:
-        double burstInterval @unit(s);        // The interval the burst is periodically started
-        double burstRatePerSecond @unit(bps); // The burst rate per second in bit
-        double packetSize @unit(B);           // The whole packet size (not the payload)
+        // The interval the burst is periodically started
+        double burstInterval @unit(s);       
+        // The burst rate per second in bit 
+        double burstRatePerSecond @unit(bps);
+        // The whole packet size (not the payload)
+        double packetSize @unit(B);
+        // The duration between bursts in which no packets are sent 
         sleepDuration = burstInterval;
+        // Time between packets during bursts according packetSize and burstRatePerSecond
         sendInterval = replaceUnit(dropUnit(burstDuration)/(dropUnit(burstRatePerSecond)*dropUnit(burstDuration)/8.0/dropUnit(packetSize)),"s");
 }

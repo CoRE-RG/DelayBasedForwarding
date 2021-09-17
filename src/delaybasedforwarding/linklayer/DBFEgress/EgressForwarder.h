@@ -69,7 +69,7 @@ class EgressForwarder : public cSimpleModule, public inet::IProtocolRegistration
      * @brief Passes the registration of the protocol through
      *
      * @param protocol
-     * @param out
+     * @param in
      * @param servicePrimitive
      */
     virtual void handleRegisterProtocol(const inet::Protocol& protocol, cGate *in, inet::ServicePrimitive servicePrimitive) override;
@@ -77,12 +77,12 @@ class EgressForwarder : public cSimpleModule, public inet::IProtocolRegistration
   private:
 
     /**
-     * @brief The map containing all signals for specific flows for emitting them by their destination port
+     * @brief The map containing all signals for specific flows to emit them by their destination port
      */
     std::map<uint32_t,simsignal_t> txPktToPortSignals;
 
     /**
-     * @brief Signal for emitting a packet when it is sent
+     * @brief Signal that emits a packet when it is sent
      */
     static simsignal_t txPksSignal;
 

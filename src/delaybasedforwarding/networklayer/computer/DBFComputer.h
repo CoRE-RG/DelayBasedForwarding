@@ -56,7 +56,8 @@ class DBFComputer : public cSimpleModule
     simtime_t calculateTransmissionTime(inet::Packet *packet);
 
     /**
-     * @brief Updates the experienced delay by adding the experienced delay between the predecessor node and the actual node
+     * @brief Updates the experienced delay by adding the experienced delay
+     * between the predecessor node and the actual node
      *
      * @param dbfHeaderTag The dbf header tag which is updated
      * @param transmissionTime The calculated transmissionTime which is used for calculating the experienced delay
@@ -172,7 +173,7 @@ class DBFComputer : public cSimpleModule
     double cableDatarate;
 
     /**
-     * @brief The delay-based forwarding Forwarding Information Base map
+     * @brief The delay-based forwarding Forwarding Information Base(FIB) map
      */
     std::map<inet::Ipv4Address, DbfFibEntry> *dbfFIB;
 

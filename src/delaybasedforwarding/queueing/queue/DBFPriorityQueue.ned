@@ -22,12 +22,15 @@ import inet.queueing.queue.PriorityQueue;
 //
 // @author Mehmet Cakir
 //
-
 module DBFPriorityQueue extends PriorityQueue
 {
     parameters:
+        // The buffer 
         buffer.typename = "";
+        // The custom priority classifier module implementation
         classifier.typename = "DBFPriorityClassifier";
+        // The custom packet queue module implementation
         queue[*].typename = "DBFPacketQueue";
+        // The custom priority scheduler module implementation
         scheduler.typename = "DBFPriorityScheduler";
 }

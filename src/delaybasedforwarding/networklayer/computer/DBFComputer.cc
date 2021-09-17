@@ -22,7 +22,7 @@ namespace delaybasedforwarding {
 
 #define STARTEDELAY 0.0
 
-// TODO do we need to include node ?
+// TODO do we need to include current node ?
 #define THISNODE 0
 
 #define ETHERNET_HEADER_BITS 26.0*8.0 // includes ETHER_MAC_FRAME_BYTES(18B) + ETHER_PHY_HEADER(8B)

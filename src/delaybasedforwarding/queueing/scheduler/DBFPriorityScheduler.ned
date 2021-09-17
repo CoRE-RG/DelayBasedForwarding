@@ -27,8 +27,8 @@ simple DBFPriorityScheduler extends PriorityScheduler
     parameters:
         @class(DBFPriorityScheduler);
         
-        //Signal emitted when a frame is received, contains received EtherFrame
+        // Signal emitted when a packet is pushed into or popped out of a queue.
         @signal[queuesInUseCount](type=int);
-        //End-to-end latency
+        // Statistics to record the number of queues currently in use
         @statistic[queuesInUseCount](title="Queues in use count"; unit=s; record=count,stats,histogram?,vector; interpolationmode=none);
 }

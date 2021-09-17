@@ -26,7 +26,9 @@ import delaybasedforwarding.linklayer.DBFIngress.IngressForwarder;
 module DBFIngressTrafficConditioner like ITrafficConditioner
 {
     gates:
+        // the input gate
         input in;
+        // the output gate
         output out;
     submodules:
         ifwd: IngressForwarder {

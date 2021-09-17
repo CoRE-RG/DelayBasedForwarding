@@ -22,11 +22,12 @@ import inet.queueing.queue.PacketQueue;
 //
 // @author Mehmet Cakir
 //
-
 simple DBFPacketQueue extends PacketQueue
 {
     parameters:
         @class(DBFPacketQueue);
+        // The custom packet comparator module implementation
         comparatorClass = "delaybasedforwarding::DBFPacketComparator";
+        // The custom packet dropper module implementation
         dropperClass = "delaybasedforwarding::DBFPacketDropper";
 }

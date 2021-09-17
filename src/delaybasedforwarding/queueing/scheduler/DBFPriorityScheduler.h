@@ -57,7 +57,8 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
     virtual ~DBFPriorityScheduler();
 
     /**
-     * @brief Is called whenever a subscribed signal is emitted
+     * @brief Called whenever a subscribed signal is emitted and
+     * is used to detect if Network Interface Card (NIC) is idle.
      *
      * @param source The object which emitted a signal
      * @param signalID
@@ -67,7 +68,8 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, long l, cObject *details) override;
 
     /**
-     * @brief Is called whenever a subscribed signal is emitted
+     * @brief Called whenever a subscribed signal is emitted and
+     * is used to record the number of queues currently in use.
      *
      * @param source The object which emitted a signal
      * @param signalID

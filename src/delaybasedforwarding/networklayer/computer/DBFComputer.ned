@@ -24,8 +24,12 @@ simple DBFComputer
 {
     parameters:
         @class(DBFComputer);
-        double dMin @unit(s) = default(0.0s);  // The lower bound of the Service Level Object (SLO)
-        double dMax @unit(s) = default(0.0s);  // The upper bound of the SLO
-        xml dbfFIB;                            // The delay-based forwarding Forwarding Information Base
-        int admit = default(0);                // The admit bit to distinguish dbf packets with the same SLO but different admit bit
+        // The lower bound of the Service Level Object (SLO)
+        double dMin @unit(s) = default(0.0s);
+        // The upper bound of the SLO
+        double dMax @unit(s) = default(0.0s);
+        // The delay-based forwarding Forwarding Information Base
+        xml dbfFIB;
+        // The admit bit to distinguish dbf packets with the same SLO but different admit bit
+        int admit = default(0);
 }

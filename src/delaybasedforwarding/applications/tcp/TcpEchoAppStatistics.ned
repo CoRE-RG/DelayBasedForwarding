@@ -17,17 +17,26 @@ package delaybasedforwarding.applications.tcp;
 import inet.applications.tcpapp.TcpEchoApp;
 import inet.applications.tcpapp.TcpEchoAppThread;
 
+//
+// The TcpEchoAppStatistics module is used to collect statistics about the received Bits per second
+//
+// @author Mehmet Cakir
+//
 simple TcpEchoAppStatistics extends TcpEchoApp
 {
     parameters:
         @class(TcpEchoAppStatistics);
-        @signal[rxBitsRate](type=long); // Signal emitted when capture rate is reached
-        @statistic[throughput](title="Rate over time"; source=rxBitsRate; unit=bps; record=stats,histogram?,vector; interpolationmode=none); // Captures the bits according the capture rate
-        
+        // Signal emitted when capture rate is reached
+        @signal[rxBitsRate](type=long);
+        // Captures the bits according the capture rate
+        @statistic[throughput](title="Rate over time"; source=rxBitsRate; unit=bps; record=stats,histogram?,vector; interpolationmode=none);
+        // Custom serverThreadModuleType
         serverThreadModuleType = default("delaybasedforwarding.applications.tcp.TcpEchoAppThreadStatistics");
 }
 
-// Thread for ~TcpEchoApp
+//
+// The TcpEchoAppThreadStatistics module is the custom thread implementation for the TcpEchoAppStatistics module
+//
 simple TcpEchoAppThreadStatistics extends TcpEchoAppThread
 {
     parameters:

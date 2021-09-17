@@ -79,19 +79,19 @@ class DBFPriorityClassifier : public inet::queueing::PriorityClassifier
      *
      * @param packet The given packet which is classified
      *
-     * @return The index of the queue where the packet fits the best
+     * @return The calculated index of the queue according to the packet classification
      */
     virtual int classifyPacket(inet::Packet *packet) override;
 
   private:
 
     /**
-     * @brief The delta steps used determining if new queue is needed
+     * @brief The delta steps to determine if a new queue is needed
      */
     simtime_t deltaSteps;
 
     /**
-     * @brief The maximum delta used determining if packet should be pushed in infinite queue
+     * @brief The maximum delta to determine if packet should be pushed in infinite queue
      */
     simtime_t maximumDelta;
 

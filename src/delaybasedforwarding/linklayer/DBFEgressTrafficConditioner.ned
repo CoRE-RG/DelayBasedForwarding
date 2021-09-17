@@ -28,7 +28,9 @@ import delaybasedforwarding.queueing.queue.DBFPriorityQueue;
 module DBFEgressTrafficConditioner like ITrafficConditioner
 {
     gates:
+        // the input gate
         input in;
+        // the input gate
         output out;
     submodules:
         efwd: EgressForwarder {
