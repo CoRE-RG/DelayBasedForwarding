@@ -50,7 +50,7 @@ int DBFPacketComparator::comparePackets(inet::Packet *packet1, inet::Packet *pac
      */
     } else if (tag1) {
         result = PACKET2HIGHERPRIORITY;
-    } else if (tag2) {
+    } else if (tag2 && tag2->getLqBudgetMin() > 0) { // TODO: Correct?
         result = PACKET1HIGHERPRIORITY;
     }
     return result;
