@@ -28,7 +28,7 @@ simple DBFPriorityScheduler extends PriorityScheduler
         @class(DBFPriorityScheduler);
         
         // Signal emitted when a packet is pushed into or popped out of a queue.
-        @signal[queuesInUseCount](type=int);
+        @signal[queuesInUseCount](type=long);
         // Statistics to record the number of queues currently in use
         @statistic[queuesInUseCount](title="Queues in use count"; unit=s; record=count,stats,histogram?,vector; interpolationmode=none);
 }
