@@ -30,7 +30,7 @@ DBFPacketComparator::~DBFPacketComparator() {
 }
 
 int DBFPacketComparator::comparePackets(inet::Packet *packet1, inet::Packet *packet2) const {
-    int result = 0;
+    int result = PACKET2HIGHERPRIORITY;
     auto tag1 = packet1->findTag<DBFHeaderTag>();
     auto tag2 = packet2->findTag<DBFHeaderTag>();
     if (tag1 && tag2) {
@@ -50,7 +50,7 @@ int DBFPacketComparator::comparePackets(inet::Packet *packet1, inet::Packet *pac
      */
     } else if (tag1) {
         result = PACKET2HIGHERPRIORITY;
-    } else if (tag2) {
+    } else if (tag2 && tag2->getTMin() > omnetpp::simTime()) {
         result = PACKET1HIGHERPRIORITY;
     }
     return result;
