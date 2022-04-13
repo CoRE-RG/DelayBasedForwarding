@@ -145,13 +145,11 @@
         <properties name="X.Axis.Title" value="Time [s]"/>
         <properties name="Y.Axis.Title" value="Throughput [Bit/s]"/>
         <properties name="Legend.Display" value="true"/>
-        <properties name="Line.Name/BottleneckLatency.R1.app[0]" value="Flow 1 - DBF: max-SLO=pathdelay+4*RTT, Tstart=0sec, Tend=70sec, Send Bytes=500MB"/>
-        <properties name="Line.Name/BottleneckLatency.R2.app[0]" value="Flow 2 - DBF: max-SLO=pathdelay+3*RTT, Tstart=10sec, Tend=60sec, Send Bytes=180MB"/>
+        <properties name="Line.Name/BottleneckLatency.R1.app[0]" value="Flow 1 - DBF: max-SLO=pathdelay+4*RTT, Tstart=0sec, Tend=70sec, Send Bytes=200MB"/>
+        <properties name="Line.Name/BottleneckLatency.R2.app[0]" value="Flow 2 - DBF: max-SLO=pathdelay+3*RTT, Tstart=10sec, Tend=60sec, Send Bytes=178MB"/>
         <properties name="Line.Name/BottleneckLatency.R3.app[0]" value="Flow 3 - DBF: max-SLO=pathdelay+2*RTT, Tstart=20sec, Tend=50sec, Send Bytes=163MB"/>
         <properties name="Line.Name/BottleneckLatency.R4.app[0]" value="Flow 4 - DBF: max-SLO=pathdelay+1*RTT, Tstart=30sec, Tend=40sec, Send Bytes=82MB"/>
         <properties name="Line.Type" value="Linear"/>
-        <properties name="Line.Type/BottleneckLatency.R4.app[0]" value="Linear"/>
-        <properties name="Line.Type/BottleneckLatency.R3.app[0]" value="Linear"/>
         <properties name="Line.Type/BottleneckLatency.R2.app[0]" value="Linear"/>
         <properties name="Line.Type/BottleneckLatency.R1.app[0]" value="Linear"/>
       </items>
