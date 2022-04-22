@@ -1,0 +1,15 @@
+Demonstrates Delay-Based Forwarding (DBF) using TCP.
+
+ - The network consists of two senders, two receivers and four routers.
+   
+ - The senders are denoted by an S in the beginning of their name.
+ 
+ - The receivers are denoted by an R in the beginning of their name.
+ 
+ - Senders have the name of the receiver in the name to which they send traffic.
+ 
+ - All senders send DBF traffic to their according receiver.
+   See omnetpp.ini for the Service Level Objectives (SLO).
+ 
+ - The path between S1_R1 and R1 has a shorter delay than the path
+   between S2_R2 and R2. (see consistentLatency.ned)

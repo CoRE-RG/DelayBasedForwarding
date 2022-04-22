@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scave:Analysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:scave="http://www.omnetpp.org/omnetpp/scave">
+  <inputs>
+    <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-*.vec"/>
+    <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-*.sca"/>
+    <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.sca"/>
+    <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec"/>
+    <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_wo_BE-#0.sca"/>
+    <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_wo_BE-#0.vec"/>
+    <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse_wo_BE-#0.sca"/>
+    <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse_wo_BE-#0.vec"/>
+  </inputs>
+  <datasets>
+    <datasets name="DBF_Bottleneck_Throughput">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-#0.vec) AND attr:configname(DBF_Bottleneck) AND attr:runnumber(0) AND module(BottleneckLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-#0.vec) AND attr:configname(DBF_Bottleneck) AND attr:runnumber(0) AND module(BottleneckLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-#0.vec) AND attr:configname(DBF_Bottleneck) AND attr:runnumber(0) AND module(BottleneckLatency.R3.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-#0.vec) AND attr:configname(DBF_Bottleneck) AND attr:runnumber(0) AND module(BottleneckLatency.R4.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="DBF_Bottleneck_Throughput" lineNameFormat="">
+        <properties name="Graph.Title" value="DBF_Bottleneck_Throughput"/>
+        <properties name="X.Axis.Title" value="Time [s]"/>
+        <properties name="Y.Axis.Title" value="Throughput [Bits/s]"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name/BottleneckLatency.R1.app[0]" value="Flow 1 - Best-Effort: Tstart=0sec"/>
+        <properties name="Line.Name/BottleneckLatency.R2.app[0]" value="Flow 2 - DBF: max-SLO=pathdelay+4*RTT, Tstart=2sec"/>
+        <properties name="Line.Name/BottleneckLatency.R3.app[0]" value="Flow 3 - DBF: max-SLO=pathdelay+2*RTT, Tstart=4sec"/>
+        <properties name="Line.Name/BottleneckLatency.R4.app[0]" value="Flow 4 - DBF: max-SLO=pathdelay+1*RTT, Tstart=6sec"/>
+        <properties name="Line.Type" value="Linear"/>
+      </items>
+    </datasets>
+    <datasets name="DBF_Bottleneck_Throughput_Reverse">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(BottleneckLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(BottleneckLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(BottleneckLatency.R3.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(BottleneckLatency.R4.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="DBF_Bottleneck_Throughput_Reverse" lineNameFormat="">
+        <properties name="Graph.Title" value="DBF_Bottleneck_Throughput_Reverse"/>
+        <properties name="X.Axis.Title" value="Time [s]"/>
+        <properties name="Y.Axis.Title" value="Throughput [Bit/s]"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name/BottleneckLatency.R1.app[0]" value="Flow 1 - Best-Effort: Tstart=0sec, Tend=14sec, Send Bytes=15MB"/>
+        <properties name="Line.Name/BottleneckLatency.R2.app[0]" value="Flow 2 - DBF: max-SLO=pathdelay+4*RTT, Tstart=2sec, Tend=12sec, Send Bytes=30MB"/>
+        <properties name="Line.Name/BottleneckLatency.R3.app[0]" value="Flow 3 - DBF: max-SLO=pathdelay+2*RTT, Tstart=4sec, Tend=10sec, Send Bytes=30MB"/>
+        <properties name="Line.Name/BottleneckLatency.R4.app[0]" value="Flow 4 - DBF: max-SLO=pathdelay+1*RTT, Tstart=6sec, Tend=8sec, Send Bytes 175MB"/>
+        <properties name="Line.Type" value="Linear"/>
+        <properties name="Line.Type/BottleneckLatency.R1.app[0]" value="Linear"/>
+        <properties name="Line.Type/BottleneckLatency.R4.app[0]" value="Linear"/>
+        <properties name="Line.Type/BottleneckLatency.R3.app[0]" value="Linear"/>
+        <properties name="Line.Type/BottleneckLatency.R2.app[0]" value="Linear"/>
+      </items>
+    </datasets>
+    <datasets name="DBF_BottleneckLeft_Drops">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(&quot;BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.queue(delta=0.008)[0]&quot;) AND name(&quot;packetRemoved:vector(packetBytes)&quot;)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(&quot;BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.queue(delta=0.016)[0]&quot;) AND name(&quot;packetRemoved:vector(packetBytes)&quot;)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="DBF Bottleneck Packet Drops" lineNameFormat="">
+        <properties name="Graph.Title" value="DBF Bottleneck Packet Drops"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name/BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.queue(delta=0.008)[0]" value="Flow 3 - DBF: max-SLO=20.0ms"/>
+        <properties name="Line.Name/BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.queue(delta=0.016)[0]" value="Flow 2 - DBF: max-SLO=36.0ms"/>
+        <properties name="Line.Type" value="Pins"/>
+        <properties name="Line.Type/BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.queue(delta=0.008)[0]" value="Pins"/>
+        <properties name="Line.Color/BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.queue(delta=0.008)[0]" value="#006400"/>
+        <properties name="Line.Type/BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.queue(delta=0.016)[0]" value="Pins"/>
+        <properties name="Line.Color/BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.queue(delta=0.016)[0]" value="#ee0000"/>
+      </items>
+    </datasets>
+    <datasets name="DBF Bottleneck queues count in use">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-#0.vec) AND attr:configname(DBF_Bottleneck) AND attr:runnumber(0) AND module(BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.scheduler) AND name(queuesInUseCount:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="BottleneckLeft Queues Count in Use" lineNameFormat="">
+        <properties name="Graph.Title" value="BottleneckLeft Queues Count in Use"/>
+        <properties name="X.Axis.Title" value="Simulation Time [s]"/>
+        <properties name="Y.Axis.Title" value="Queues In Use [#]"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name/BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.scheduler queuesInUseCount:vector" value="BottleneckLeft (to receivers direction)"/>
+      </items>
+    </datasets>
+    <datasets name="DBF Bottleneck Reverse queues count in use">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.scheduler) AND name(queuesInUseCount:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="BottleneckLeft Queues Count in Use" lineNameFormat="">
+        <properties name="X.Axis.Title" value="Simulation Time [s]"/>
+        <properties name="Y.Axis.Title" value="Queues in Use [#]"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name/BottleneckLatency.BottleneckLeft.eth[4].egressTC.queue.scheduler queuesInUseCount:vector" value="BottleneckLeft (to receivers direction)"/>
+      </items>
+    </datasets>
+    <datasets name="Bottleneck Latency on Receivers">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-#0.vec) AND attr:configname(DBF_Bottleneck) AND attr:runnumber(0) AND module(BottleneckLatency.R1.app[0]) AND name(endToEndDelay:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-#0.vec) AND attr:configname(DBF_Bottleneck) AND attr:runnumber(0) AND module(BottleneckLatency.R2.app[0]) AND name(endToEndDelay:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-#0.vec) AND attr:configname(DBF_Bottleneck) AND attr:runnumber(0) AND module(BottleneckLatency.R3.app[0]) AND name(endToEndDelay:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck-#0.vec) AND attr:configname(DBF_Bottleneck) AND attr:runnumber(0) AND module(BottleneckLatency.R4.app[0]) AND name(endToEndDelay:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="Latency on Receivers" lineNameFormat="">
+        <properties name="Graph.Title" value="Latency on Receivers"/>
+        <properties name="X.Axis.Title" value="Simulation Time [s]"/>
+        <properties name="Y.Axis.Title" value="Latency [s]"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name/BottleneckLatency.R1.app[0]" value="R1"/>
+        <properties name="Line.Name/BottleneckLatency.R2.app[0]" value="R2"/>
+        <properties name="Line.Name/BottleneckLatency.R3.app[0]" value="R3"/>
+        <properties name="Line.Name/BottleneckLatency.R4.app[0]" value="R4"/>
+      </items>
+    </datasets>
+    <datasets name="Bottleneck Reverse Latency on Receivers">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(BottleneckLatency.R1.app[0]) AND name(endToEndDelay:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(BottleneckLatency.R2.app[0]) AND name(endToEndDelay:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(BottleneckLatency.R3.app[0]) AND name(endToEndDelay:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse) AND attr:runnumber(0) AND module(BottleneckLatency.R4.app[0]) AND name(endToEndDelay:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="Latency on Receivers" lineNameFormat="">
+        <properties name="Graph.Title" value="Latency on Receivers"/>
+        <properties name="X.Axis.Title" value="Simulation Time [s]"/>
+        <properties name="Y.Axis.Title" value="Latency [s]"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name/BottleneckLatency.R1.app[0]" value="R1"/>
+        <properties name="Line.Name/BottleneckLatency.R2.app[0]" value="R2"/>
+        <properties name="Line.Name/BottleneckLatency.R3.app[0]" value="R3"/>
+        <properties name="Line.Name/BottleneckLatency.R4.app[0]" value="R4"/>
+      </items>
+    </datasets>
+    <datasets name="DBF_Bottleneck_Throughput_wo_BE">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_wo_BE-#0.vec) AND attr:configname(DBF_Bottleneck_wo_BE) AND attr:runnumber(0) AND module(BottleneckLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_wo_BE-#0.vec) AND attr:configname(DBF_Bottleneck_wo_BE) AND attr:runnumber(0) AND module(BottleneckLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_wo_BE-#0.vec) AND attr:configname(DBF_Bottleneck_wo_BE) AND attr:runnumber(0) AND module(BottleneckLatency.R3.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_wo_BE-#0.vec) AND attr:configname(DBF_Bottleneck_wo_BE) AND attr:runnumber(0) AND module(BottleneckLatency.R4.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="DBF_Bottleneck_Throughput_w/o_BE" lineNameFormat="">
+        <properties name="Graph.Title" value="DBF_Bottleneck_Throughput_w/o_BE"/>
+        <properties name="X.Axis.Title" value="Time [s]"/>
+        <properties name="Y.Axis.Title" value="Throughput [Bits/s]"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name/BottleneckLatency.R1.app[0]" value="Flow 1 - DBF: max-SLO=pathdelay+4*RTT, Tstart=0sec"/>
+        <properties name="Line.Name/BottleneckLatency.R2.app[0]" value="Flow 2 - DBF: max-SLO=pathdelay+3*RTT, Tstart=10sec"/>
+        <properties name="Line.Name/BottleneckLatency.R3.app[0]" value="Flow 3 - DBF: max-SLO=pathdelay+2*RTT, Tstart=20sec"/>
+        <properties name="Line.Name/BottleneckLatency.R4.app[0]" value="Flow 4 - DBF: max-SLO=pathdelay+1*RTT, Tstart=30sec"/>
+        <properties name="Line.Type/BottleneckLatency.R1.app[0]" value="Linear"/>
+        <properties name="Line.Type/BottleneckLatency.R2.app[0]" value="Linear"/>
+        <properties name="Line.Type/BottleneckLatency.R3.app[0]" value="Linear"/>
+        <properties name="Line.Type/BottleneckLatency.R4.app[0]" value="Linear"/>
+      </items>
+    </datasets>
+    <datasets name="DBF_Bottleneck_Reverse_Throughput_wo_BE">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse_wo_BE-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse_wo_BE) AND attr:runnumber(0) AND module(BottleneckLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse_wo_BE-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse_wo_BE) AND attr:runnumber(0) AND module(BottleneckLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse_wo_BE-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse_wo_BE) AND attr:runnumber(0) AND module(BottleneckLatency.R3.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse_wo_BE-#0.vec) AND attr:configname(DBF_Bottleneck_Reverse_wo_BE) AND attr:runnumber(0) AND module(BottleneckLatency.R4.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="DBF_Bottleneck_Throughput_Reverse_wo_BE" lineNameFormat="">
+        <properties name="Graph.Title" value="DBF_Bottleneck_Throughput_Reverse_wo_BE"/>
+        <properties name="X.Axis.Title" value="Time [s]"/>
+        <properties name="Y.Axis.Title" value="Throughput [Bit/s]"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Name/BottleneckLatency.R1.app[0]" value="Flow 1 - DBF: max-SLO=pathdelay+4*RTT, Tstart=0sec, Tend=70sec, Send Bytes=175MB"/>
+        <properties name="Line.Name/BottleneckLatency.R2.app[0]" value="Flow 2 - DBF: max-SLO=pathdelay+3*RTT, Tstart=10sec, Tend=60sec, Send Bytes=178MB"/>
+        <properties name="Line.Name/BottleneckLatency.R3.app[0]" value="Flow 3 - DBF: max-SLO=pathdelay+2*RTT, Tstart=20sec, Tend=50sec, Send Bytes=163MB"/>
+        <properties name="Line.Name/BottleneckLatency.R4.app[0]" value="Flow 4 - DBF: max-SLO=pathdelay+1*RTT, Tstart=30sec, Tend=40sec, Send Bytes=82MB"/>
+        <properties name="Line.Type" value="Linear"/>
+        <properties name="Line.Type/BottleneckLatency.R2.app[0]" value="Linear"/>
+        <properties name="Line.Type/BottleneckLatency.R1.app[0]" value="Linear"/>
+      </items>
+    </datasets>
+  </datasets>
+  <chartSheets>
+    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.4 //@datasets/@datasets.1/@items.4 //@datasets/@datasets.2/@items.2 //@datasets/@datasets.3/@items.1 //@datasets/@datasets.4/@items.1 //@datasets/@datasets.5/@items.4 //@datasets/@datasets.6/@items.4 //@datasets/@datasets.7/@items.4 //@datasets/@datasets.8/@items.4"/>
+  </chartSheets>
+</scave:Analysis>

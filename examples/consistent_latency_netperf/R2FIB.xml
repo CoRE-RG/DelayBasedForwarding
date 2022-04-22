@@ -1,0 +1,4 @@
+<nodes>
+  <node ip="10.0.2.50" hops="5" lDelay="0.0001s" hDelay="0.0001s" fromDelay="0.0023s" toDelay="0.0023s"/>
+  <node ip="10.0.14.50" hops="0" lDelay="0.0s" hDelay="0.0s" fromDelay="0.0s" toDelay="0.0s"/>
+</nodes>

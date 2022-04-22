@@ -40,6 +40,8 @@ inet::Packet* DBFPacketDropper::selectPacket(inet::queueing::IPacketCollection *
                 }
             }
         }
+        // If no packet is expired, then the packet with the highest Tmin is dropped,
+        // which is enqueued at the end of the queue (see DPFPacketComparator).
         if (!packetToDrop) {
             packetToDrop = collection->getPacket(sumOfPackets-1);
         }
