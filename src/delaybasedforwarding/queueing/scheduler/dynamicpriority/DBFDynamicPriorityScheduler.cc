@@ -19,11 +19,6 @@ namespace delaybasedforwarding {
 
 Define_Module(DBFDynamicPriorityScheduler);
 
-void DBFDynamicPriorityScheduler::initialize()
-{
-    // TODO - Generated method body
-}
-
 void DBFDynamicPriorityScheduler::handleMessage(cMessage *msg)
 {
     // TODO - Generated method body

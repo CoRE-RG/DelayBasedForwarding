@@ -33,14 +33,10 @@ namespace delaybasedforwarding {
  */
 class EgressForwarder : public cSimpleModule, public inet::IProtocolRegistrationListener
 {
-  private:
-    /**
-     * @brief Emits every specific flow by its destination port
-     *
-     * @param msg The message which is emitted
-     */
-    void emitPacket(cMessage *msg);
-
+  /**
+   * Methods
+   */
+  public:
   protected:
     /**
      * @brief The initialize method
@@ -75,7 +71,19 @@ class EgressForwarder : public cSimpleModule, public inet::IProtocolRegistration
     virtual void handleRegisterProtocol(const inet::Protocol& protocol, cGate *in, inet::ServicePrimitive servicePrimitive) override;
 
   private:
+    /**
+     * @brief Emits every specific flow by its destination port
+     *
+     * @param msg The message which is emitted
+     */
+    void emitPacket(cMessage *msg);
 
+  /**
+   * Member variables
+   */
+  public:
+  protected:
+  private:
     /**
      * @brief The map containing all signals for specific flows to emit them by their destination port
      */

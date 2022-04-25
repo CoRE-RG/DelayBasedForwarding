@@ -38,18 +38,9 @@ namespace delaybasedforwarding {
 class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cListener
 {
 
-  private:
-    /**
-     * @brief Looks for a new higher prioritized packet and schedules it
-     */
-    void checkQueues();
-
-    /**
-     * @brief Looks for the first queue containing packets beginning from the highest priority queue.
-     * Expired packets in that queue will be removed and deleted.
-     */
-    void lookForExpiredPackets();
-
+  /**
+   * Methods
+   */
   public:
     /**
      * @brief Destructor
@@ -117,6 +108,23 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
      */
     virtual int schedulePacket() override;
 
+  private:
+    /**
+     * @brief Looks for a new higher prioritized packet and schedules it
+     */
+    void checkQueues();
+
+    /**
+     * @brief Looks for the first queue containing packets beginning from the highest priority queue.
+     * Expired packets in that queue will be removed and deleted.
+     */
+    void lookForExpiredPackets();
+
+  /**
+   * Member variables
+   */
+  public:
+  protected:
   private:
 
     /**

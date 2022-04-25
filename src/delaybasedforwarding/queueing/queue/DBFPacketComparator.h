@@ -28,6 +28,9 @@ namespace delaybasedforwarding {
  * @author Mehmet Cakir
  */
 class DBFPacketComparator: public omnetpp::cObject, public inet::queueing::IPacketComparatorFunction {
+/**
+ * Methods
+ */
 public:
     /**
      * @brief Constructor
@@ -55,6 +58,17 @@ public:
       * @return A new DBFPacketComparator
       */
      virtual DBFPacketComparator *dup() const override;
+
+protected:
+private:
+
+/**
+ * Member variables
+ */
+public:
+protected:
+private:
+
 };
 
 } /* namespace delaybasedforwarding */

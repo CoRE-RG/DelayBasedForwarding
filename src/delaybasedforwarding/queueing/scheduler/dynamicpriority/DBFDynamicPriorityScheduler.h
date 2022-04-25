@@ -17,19 +17,36 @@
 #define __DELAYBASEDFORWARDING_QUEUEING_SCHEDULER_DYNAMICPRIORITY_DBFDYNAMICPRIORITYSCHEDULER_H_
 
 #include <omnetpp.h>
+#include "delaybasedforwarding/queueing/scheduler/priority/DBFPriorityScheduler.h"
 
 using namespace omnetpp;
 
 namespace delaybasedforwarding {
 
 /**
- * TODO - Generated class
+ * @brief The dynamic priority scheduler for delay based forwarded packets
+ *
+ * @ingroup delaybasedforwarding/queueing/scheduler
+ *
+ * @author Mehmet Mueller
  */
-class DBFDynamicPriorityScheduler : public cSimpleModule
+
+class DBFDynamicPriorityScheduler : public DBFPriorityScheduler
 {
+  /**
+   * Methods
+   */
+  public:
   protected:
-    virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+  private:
+
+  /**
+   * Member variables
+   */
+  public:
+  protected:
+  private:
 };
 
 } //namespace

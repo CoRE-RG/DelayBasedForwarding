@@ -29,6 +29,10 @@ namespace delaybasedforwarding {
  */
 
 class DBFPacketDropper: public omnetpp::cObject, public inet::queueing::IPacketDropperFunction {
+
+/**
+ * Methods
+ */
 public:
 
     /**
@@ -49,6 +53,16 @@ public:
      * @return the packet to be dropped
      */
     virtual inet::Packet *selectPacket(inet::queueing::IPacketCollection *collection) const override;
+
+protected:
+private:
+
+/**
+ * Member variables
+ */
+public:
+protected:
+private:
 };
 
 } /* namespace delaybasedforwarding */
