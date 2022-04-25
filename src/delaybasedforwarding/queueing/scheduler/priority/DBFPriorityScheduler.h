@@ -13,15 +13,15 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __DELAYBASEDFORWARDING_DBFPRIORITYSCHEDULER_H_
-#define __DELAYBASEDFORWARDING_DBFPRIORITYSCHEDULER_H_
+#ifndef __DELAYBASEDFORWARDING_QUEUEING_SCHEDULER_PRIORITY_DBFPRIORITYSCHEDULER_H_
+#define __DELAYBASEDFORWARDING_QUEUEING_SCHEDULER_PRIORITY_DBFPRIORITYSCHEDULER_H_
 
 #include <omnetpp.h>
-#include "inet/queueing/scheduler/PriorityScheduler.h"
+#include <inet/queueing/scheduler/PriorityScheduler.h>
+#include <inet/linklayer/ethernet/EtherMacFullDuplex.h>
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
-#include "delaybasedforwarding/queueing/scheduler/DBFScheduleMsg_m.h"
-#include "inet/linklayer/ethernet/EtherMacFullDuplex.h"
 #include "delaybasedforwarding/queueing/classifier/DBFPriorityClassifier.h"
+#include "delaybasedforwarding/queueing/scheduler/priority/DBFPriorityScheduleMsg_m.h"
 
 using namespace omnetpp;
 
@@ -122,7 +122,7 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
     /**
      * @brief The self message which will be used for scheduling
      */
-    DBFScheduleMsg *selfMsg;
+    DBFPriorityScheduleMsg *selfMsg;
 
     /**
      * @brief Indicates the idle state of the mac module

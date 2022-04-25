@@ -14,12 +14,12 @@
 // 
 
 #include <list>
-#include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
-#include "DBFPriorityScheduler.h"
-#include "inet/networklayer/ipv4/Ipv4Header_m.h"
+#include <inet/networklayer/ipv4/Ipv4Header_m.h>
+#include <inet/linklayer/ethernet/EtherMacBase.h>
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
-#include "inet/linklayer/ethernet/EtherMacBase.h"
 #include "delaybasedforwarding/queueing/queue/DBFPacketQueue.h"
+#include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
+#include "delaybasedforwarding/queueing/scheduler/priority/DBFPriorityScheduler.h"
 
 namespace delaybasedforwarding {
 
@@ -120,7 +120,7 @@ void DBFPriorityScheduler::checkQueues() {
         if (selfMsg) {
             cancelAndDelete(selfMsg);
         }
-        selfMsg = new DBFScheduleMsg();
+        selfMsg = new DBFPriorityScheduleMsg();
         selfMsg->setCollectionIdx(collectionIdx);
         simtime_t scheduleTime = simTime();
         if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {

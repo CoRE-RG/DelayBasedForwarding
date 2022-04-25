@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-#include <delaybasedforwarding/queueing/queue/DBFPacketComparator.h>
+#include "delaybasedforwarding/queueing/queue/DBFPacketComparator.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 
 namespace delaybasedforwarding {

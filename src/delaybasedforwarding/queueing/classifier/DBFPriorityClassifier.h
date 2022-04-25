@@ -16,9 +16,9 @@
 #ifndef __DELAYBASEDFORWARDING_DBFPRIORITYCLASSIFIER_H_
 #define __DELAYBASEDFORWARDING_DBFPRIORITYCLASSIFIER_H_
 
+#include <map>
 #include <omnetpp.h>
 #include <inet/queueing/classifier/PriorityClassifier.h>
-#include <map>
 
 using namespace omnetpp;
 

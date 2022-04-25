@@ -20,6 +20,6 @@ namespace delaybasedforwarding;
 //
 // @author Mehmet Cakir
 //
-packet DBFScheduleMsg {
+packet DBFPriorityScheduleMsg {
     int collectionIdx; // Determines the index of the collection where the dbf packet is queued 
 }

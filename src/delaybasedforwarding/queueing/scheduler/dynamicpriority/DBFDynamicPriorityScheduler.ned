@@ -13,22 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.queueing.scheduler;
-
-import inet.queueing.scheduler.PriorityScheduler;
+package delaybasedforwarding.queueing.scheduler.dynamicpriority;
 
 //
-// This module implements a priority scheduler for delay-based forwarding packets.
+// TODO auto-generated module
 //
-// @author Mehmet Cakir
-//
-simple DBFPriorityScheduler extends PriorityScheduler
+simple DBFDynamicPriorityScheduler
 {
-    parameters:
-        @class(DBFPriorityScheduler);
-        
-        // Signal emitted when a packet is pushed into or popped out of a queue.
-        @signal[queuesInUseCount](type=long);
-        // Statistics to record the number of queues currently in use
-        @statistic[queuesInUseCount](title="Queues in use count"; unit=s; record=count,stats,histogram?,vector; interpolationmode=none);
 }
