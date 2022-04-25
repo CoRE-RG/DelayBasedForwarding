@@ -13,24 +13,22 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.queueing.queue;
+package delaybasedforwarding.queueing.scheduler.priority;
 
-import inet.queueing.queue.PriorityQueue;
+import inet.queueing.scheduler.PriorityScheduler;
 
 //
-// This module implements a priority queue for delay based forwarding packets.
+// This module implements a priority scheduler for delay-based forwarding packets.
 //
 // @author Mehmet Cakir
 //
-module DBFPriorityQueue extends PriorityQueue
+simple DBFPriorityScheduler extends PriorityScheduler
 {
     parameters:
-        // The buffer 
-        buffer.typename = "";
-        // The custom priority classifier module implementation
-        classifier.typename = "DBFPriorityClassifier";
-        // The custom packet queue module implementation
-        queue[*].typename = "DBFPacketQueue";
-        // The custom priority scheduler module implementation
-        scheduler.typename = default("DBFPriorityScheduler");
+        @class(DBFPriorityScheduler);
+        
+        // Signal emitted when a packet is pushed into or popped out of a queue.
+        @signal[queuesInUseCount](type=long);
+        // Statistics to record the number of queues currently in use
+        @statistic[queuesInUseCount](title="Queues in use count"; unit=s; record=count,stats,histogram?,vector; interpolationmode=none);
 }

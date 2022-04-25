@@ -16,11 +16,13 @@
 #ifndef __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
 #define __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
 
-#include <delaybasedforwarding/networklayer/computer/DbfFibEntry.h>
-#include <delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h>
-#include "inet/networklayer/ipv4/Ipv4Header_m.h"
-#include "inet/common/packet/Packet.h"
+//DBF
+#include "delaybasedforwarding/networklayer/computer/DbfFibEntry.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
+#include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
+//INET
+#include <inet/networklayer/ipv4/Ipv4Header_m.h>
+#include <inet/common/packet/Packet.h>
 
 namespace delaybasedforwarding {
 
@@ -33,6 +35,55 @@ namespace delaybasedforwarding {
  */
 class DBFComputer : public cSimpleModule
 {
+
+  /**
+   * Methods
+   */
+  public:
+    /**
+    * @brief Adds the initial Service Level Objective (SLO) parameters
+    *
+    * @param packet The packet which is populated with the SLO parameters
+    */
+    void addSLOParameters(inet::Packet *packet);
+
+    /**
+    * @brief Processes the delay-based forwarding packet
+    *
+    * @param packet The packet which is processed
+    */
+    void processDBFPacket(inet::Packet *packet);
+
+    /**
+    * @brief Checks if the packet is expired
+    *
+    * @param packet The packet which is checked
+    *
+    * @return true if the maximum send time is already exceeded
+    */
+    bool isAlreadyExpired(inet::Packet *packet);
+
+    /**
+    * @brief Checks if packets should be sent as best-effort packtets
+    *
+    * @return true if lower and upper bound of Service Level Objective are set to zero
+    */
+    bool isBEMode();
+
+  protected:
+    /**
+    * @brief The initialize method
+    *
+    * @param stage The stage of the initialization process
+    */
+    virtual void initialize();
+
+    /**
+    * @brief The handle message method
+    *
+    * @param msg A scheduled self message or received message
+    */
+    virtual void handleMessage(cMessage *msg);
 
   private:
     /**
@@ -106,51 +157,7 @@ class DBFComputer : public cSimpleModule
     simtime_t calculateSendTime(simtime_t lqBudget, DBFHeaderTag* dbfHeaderTag);
 
   public:
-    /**
-     * @brief Adds the initial Service Level Objective (SLO) parameters
-     *
-     * @param packet The packet which is populated with the SLO parameters
-     */
-    void addSLOParameters(inet::Packet *packet);
-
-    /**
-     * @brief Processes the delay-based forwarding packet
-     *
-     * @param packet The packet which is processed
-     */
-    void processDBFPacket(inet::Packet *packet);
-
-    /**
-     * @brief Checks if the packet is expired
-     *
-     * @param packet The packet which is checked
-     *
-     * @return true if the maximum send time is already exceeded
-     */
-    bool isAlreadyExpired(inet::Packet *packet);
-
-    /**
-     * @brief Checks if packets should be sent as best-effort packtets
-     *
-     * @return true if lower and upper bound of Service Level Objective are set to zero
-     */
-    bool isBEMode();
-
   protected:
-    /**
-     * @brief The initialize method
-     *
-     * @param stage The stage of the initialization process
-     */
-    virtual void initialize();
-
-    /**
-     * @brief The handle message method
-     *
-     * @param msg A scheduled self message or received message
-     */
-    virtual void handleMessage(cMessage *msg);
-
   private:
     /**
      * @brief The lower bound of the Service Level Objective (SLO)

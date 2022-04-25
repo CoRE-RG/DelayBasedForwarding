@@ -16,6 +16,7 @@
 #ifndef DELAYBASEDFORWARDING_QUEUEING_QUEUE_DBFPACKETCOMPARATOR_H_
 #define DELAYBASEDFORWARDING_QUEUEING_QUEUE_DBFPACKETCOMPARATOR_H_
 
+//INET
 #include <inet/queueing/contract/IPacketComparatorFunction.h>
 
 namespace delaybasedforwarding {
@@ -28,6 +29,9 @@ namespace delaybasedforwarding {
  * @author Mehmet Cakir
  */
 class DBFPacketComparator: public omnetpp::cObject, public inet::queueing::IPacketComparatorFunction {
+/**
+ * Methods
+ */
 public:
     /**
      * @brief Constructor
@@ -55,6 +59,17 @@ public:
       * @return A new DBFPacketComparator
       */
      virtual DBFPacketComparator *dup() const override;
+
+protected:
+private:
+
+/**
+ * Member variables
+ */
+public:
+protected:
+private:
+
 };
 
 } /* namespace delaybasedforwarding */

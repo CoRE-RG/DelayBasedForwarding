@@ -16,6 +16,7 @@
 #ifndef DELAYBASEDFORWARDING_NETWORKLAYER_COMPUTER_DBFFIBENTRY_H_
 #define DELAYBASEDFORWARDING_NETWORKLAYER_COMPUTER_DBFFIBENTRY_H_
 
+//OMNET
 #include <omnetpp.h>
 
 using namespace omnetpp;
@@ -30,7 +31,10 @@ namespace delaybasedforwarding {
  * @author Mehmet Cakir
  */
 class DbfFibEntry {
-public:
+  /**
+   * Methods
+   */
+  public:
     /**
      * @brief Constructor
      *
@@ -81,8 +85,15 @@ public:
      * @return delay from the actual node to the destination node
      */
     const simtime_t& getToDelay() const;
+  protected:
+  private:
 
-private:
+  /**
+   * Member variables
+   */
+  public:
+  protected:
+  private:
     /**
      * @brief The hops between the actual node to another node
      */

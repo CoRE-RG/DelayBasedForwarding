@@ -13,24 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package delaybasedforwarding.queueing.queue;
+import delaybasedforwarding.queueing.scheduler.priority.DBFPriorityScheduleMsg;
+import inet.common.packet.Packet;
 
-import inet.queueing.queue.PriorityQueue;
+namespace delaybasedforwarding;
 
 //
-// This module implements a priority queue for delay based forwarding packets.
+// The delay-based forwarding schedule message to schedule a dbf packet according to the dynamic priority concept
 //
-// @author Mehmet Cakir
+// @author Mehmet Mueller
 //
-module DBFPriorityQueue extends PriorityQueue
-{
-    parameters:
-        // The buffer 
-        buffer.typename = "";
-        // The custom priority classifier module implementation
-        classifier.typename = "DBFPriorityClassifier";
-        // The custom packet queue module implementation
-        queue[*].typename = "DBFPacketQueue";
-        // The custom priority scheduler module implementation
-        scheduler.typename = default("DBFPriorityScheduler");
+packet DBFDynamicPriorityScheduleMsg extends DBFPriorityScheduleMsg { 
+    inet::Packet* packet_;     // the packet 
 }

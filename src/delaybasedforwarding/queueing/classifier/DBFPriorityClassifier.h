@@ -16,8 +16,11 @@
 #ifndef __DELAYBASEDFORWARDING_DBFPRIORITYCLASSIFIER_H_
 #define __DELAYBASEDFORWARDING_DBFPRIORITYCLASSIFIER_H_
 
+//OMNET
 #include <omnetpp.h>
+//INET
 #include <inet/queueing/classifier/PriorityClassifier.h>
+//STD
 #include <map>
 
 using namespace omnetpp;
@@ -34,6 +37,40 @@ namespace delaybasedforwarding {
 
 class DBFPriorityClassifier : public inet::queueing::PriorityClassifier
 {
+ /**
+  * Methods
+  */
+  public:
+    /**
+    * @brief Returns the deltaQueueMap
+    *
+    * @return The deltaQueueMap
+    */
+    std::map<simtime_t, int> *getDeltaQueueMap();
+
+  protected:
+    /**
+    * @brief The initialize method
+    *
+    * @param stage The stage of the initialization process
+    */
+    virtual void initialize(int stage) override;
+
+    /**
+    * @brief The handle message method
+    *
+    * @param msg A scheduled self message or received message
+    */
+    virtual void handleMessage(cMessage *msg) override;
+
+    /**
+    * @brief Classifies packets to determine in which queue the packet is pushed
+    *
+    * @param packet The given packet which is classified
+    *
+    * @return The calculated index of the queue according to the packet classification
+    */
+    virtual int classifyPacket(inet::Packet *packet) override;
 
   private:
     /**
@@ -51,40 +88,13 @@ class DBFPriorityClassifier : public inet::queueing::PriorityClassifier
      * @return The index of the priority queue for the given delta
      */
     int getIndexOfQueueForDelta(simtime_t delta);
+
+  /**
+   * Member variables
+   */
   public:
-    /**
-     * @brief Returns the deltaQueueMap
-     *
-     * @return The deltaQueueMap
-     */
-    std::map<simtime_t, int> *getDeltaQueueMap();
-
   protected:
-    /**
-     * @brief The initialize method
-     *
-     * @param stage The stage of the initialization process
-     */
-    virtual void initialize(int stage) override;
-
-    /**
-     * @brief The handle message method
-     *
-     * @param msg A scheduled self message or received message
-     */
-    virtual void handleMessage(cMessage *msg) override;
-
-    /**
-     * @brief Classifies packets to determine in which queue the packet is pushed
-     *
-     * @param packet The given packet which is classified
-     *
-     * @return The calculated index of the queue according to the packet classification
-     */
-    virtual int classifyPacket(inet::Packet *packet) override;
-
   private:
-
     /**
      * @brief The delta steps to determine if a new queue is needed
      */

@@ -16,8 +16,10 @@
 #ifndef __DELAYBASEDFORWARDING_TCPECHOAPPSTATISTICS_H_
 #define __DELAYBASEDFORWARDING_TCPECHOAPPSTATISTICS_H_
 
-#include <omnetpp.h>
+//INET
 #include <inet/applications/tcpapp/TcpEchoApp.h>
+//OMNET
+#include <omnetpp.h>
 
 using namespace omnetpp;
 

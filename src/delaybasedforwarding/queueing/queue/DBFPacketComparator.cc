@@ -13,7 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-#include <delaybasedforwarding/queueing/queue/DBFPacketComparator.h>
+//DBF
+#include "delaybasedforwarding/queueing/queue/DBFPacketComparator.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 
 namespace delaybasedforwarding {
@@ -38,20 +39,20 @@ int DBFPacketComparator::comparePackets(inet::Packet *packet1, inet::Packet *pac
             result = PACKET1HIGHERPRIORITY;
         } else if (tag1->getTMin() > tag2->getTMin()) {
             result = PACKET2HIGHERPRIORITY;
-        } else if (tag1->getAdmit()) {
+        } else if (tag1->getAdmit() && !tag2->getAdmit()) {
             result = PACKET1HIGHERPRIORITY;
-        } else if (tag2->getAdmit()){
+        } else {
             result = PACKET2HIGHERPRIORITY;
         }
     /*
-     * These conditions can only occur for DBF-Packets, which reach the maximum delta.
-     * These packets are pushed in the low priority queue with possibly existing BE-Packets.
+     * These conditions can occur for DBF-Packets, which reach the maximum delta.
+     * These packets are pushed in the low priority queue with possibly existing BE-Packets see (@DBFPriorityClassifier::classifyPacket).
      * BE-Packets are sent immediately whereas DBF-Packets have to fulfill at least their lqmin.
      */
-    } else if (tag1) {
-        result = PACKET2HIGHERPRIORITY;
-    } else if (tag2 && tag2->getTMin() > omnetpp::simTime()) {
+    } else if (tag1 && tag1->getTMin() < omnetpp::simTime()) {
         result = PACKET1HIGHERPRIORITY;
+    } else if (tag2 && tag2->getTMin() < omnetpp::simTime()) {
+        result = PACKET2HIGHERPRIORITY;
     }
     return result;
 }

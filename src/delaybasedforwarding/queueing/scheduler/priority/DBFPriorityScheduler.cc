@@ -13,13 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include <list>
-#include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
-#include "DBFPriorityScheduler.h"
-#include "inet/networklayer/ipv4/Ipv4Header_m.h"
+//DBF
+#include "delaybasedforwarding/queueing/scheduler/priority/DBFPriorityScheduler.h"
 #include "delaybasedforwarding/utilities/HelperFunctions.h"
-#include "inet/linklayer/ethernet/EtherMacBase.h"
 #include "delaybasedforwarding/queueing/queue/DBFPacketQueue.h"
+//INET
+#include <inet/linklayer/ethernet/EtherMacBase.h>
+//STD
+#include <list>
 
 namespace delaybasedforwarding {
 
@@ -83,44 +84,38 @@ void DBFPriorityScheduler::handleMessage(cMessage *msg)
     delete msg;
 }
 
-void DBFPriorityScheduler::handleCanPopPacket(cGate *gate)
-{
+void DBFPriorityScheduler::handleCanPopPacket(cGate *gate) {
     Enter_Method("DBFPriorityScheduler::handleCanPopPacket");
     lookForExpiredPackets();
     if (txIdleCounter == 1) {
-        checkQueues();
+        schedule();
     }
 }
 
-int DBFPriorityScheduler::schedulePacket() {
+int DBFPriorityScheduler::determineCollection() {
     int collectionIdx = -1;
     auto deltaQueueMap = dbfPriorityClassifier->getDeltaQueueMap();
     for (auto it = deltaQueueMap->begin(); it != deltaQueueMap->end(); ++it) {
         if (providers[it->second]->canPopSomePacket(inputGates[it->second]->getPathStartGate())) {
             collectionIdx = it->second;
             inet::Packet *packet = collections[it->second]->getPacket(FRONTIDX);
-            simtime_t difference = SimTime().ZERO;
-            if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
-                difference = dbfHeaderTag->getTMin() - simTime();
-            }
-            if (difference <= SimTime().ZERO) {
+            if (isPacketReadyToSend(packet)) {
                 break;
-
             }
         }
     }
     return collectionIdx;
 }
 
-void DBFPriorityScheduler::checkQueues() {
-    Enter_Method("DBFPriorityScheduler::checkQueues");
-    int collectionIdx = schedulePacket();
+void DBFPriorityScheduler::schedule() {
+    Enter_Method("DBFPriorityScheduler::schedule");
+    int collectionIdx = determineCollection();
     if (collectionIdx >= 0) {
         inet::Packet *packet = collections[collectionIdx]->getPacket(FRONTIDX);
         if (selfMsg) {
             cancelAndDelete(selfMsg);
         }
-        selfMsg = new DBFScheduleMsg();
+        selfMsg = new DBFPriorityScheduleMsg();
         selfMsg->setCollectionIdx(collectionIdx);
         simtime_t scheduleTime = simTime();
         if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
@@ -159,7 +154,7 @@ void DBFPriorityScheduler::receiveSignal(cComponent *source, simsignal_t signalI
         txIdleCounter++;
         if (txIdleCounter == 1) {
             lookForExpiredPackets();
-            checkQueues();
+            schedule();
         } else {
             throw cRuntimeError("Value of txIdleCounter is higher than zero: %d", txIdleCounter);
         }
@@ -199,6 +194,14 @@ int DBFPriorityScheduler::addDBFQueue(cModule *dbfQueue) {
     providers.push_back(dynamic_cast<IPassivePacketSource*>(dbfQueue));
     collections.push_back(dynamic_cast<IPacketCollection *>(dbfQueue));
     return providerIdx;
+}
+
+bool DBFPriorityScheduler::isPacketReadyToSend(inet::Packet* packet) {
+    simtime_t difference = SimTime().ZERO;
+    if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
+        difference = dbfHeaderTag->getTMin() - simTime();
+    }
+    return difference <= SimTime().ZERO;
 }
 
 } //namespace

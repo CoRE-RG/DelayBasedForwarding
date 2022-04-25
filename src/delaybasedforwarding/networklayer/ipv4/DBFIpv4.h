@@ -16,9 +16,13 @@
 #ifndef __DELAYBASEDFORWARDING_DBFIPV4_H_
 #define __DELAYBASEDFORWARDING_DBFIPV4_H_
 
-#include <omnetpp.h>
-#include "inet/networklayer/ipv4/Ipv4.h"
+//DBF
 #include "delaybasedforwarding/networklayer/computer/DBFComputer.h"
+//OMNET
+#include <omnetpp.h>
+//INET
+#include <inet/networklayer/ipv4/Ipv4.h>
+
 
 using namespace omnetpp;
 
