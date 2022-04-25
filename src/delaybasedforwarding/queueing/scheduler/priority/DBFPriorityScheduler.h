@@ -16,12 +16,15 @@
 #ifndef __DELAYBASEDFORWARDING_QUEUEING_SCHEDULER_PRIORITY_DBFPRIORITYSCHEDULER_H_
 #define __DELAYBASEDFORWARDING_QUEUEING_SCHEDULER_PRIORITY_DBFPRIORITYSCHEDULER_H_
 
-#include <omnetpp.h>
-#include <inet/queueing/scheduler/PriorityScheduler.h>
-#include <inet/linklayer/ethernet/EtherMacFullDuplex.h>
+//DBF
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
 #include "delaybasedforwarding/queueing/classifier/DBFPriorityClassifier.h"
 #include "delaybasedforwarding/queueing/scheduler/priority/DBFPriorityScheduleMsg_m.h"
+//INET
+#include <inet/queueing/scheduler/PriorityScheduler.h>
+#include <inet/linklayer/ethernet/EtherMacFullDuplex.h>
+//OMNET
+#include <omnetpp.h>
 
 using namespace omnetpp;
 
@@ -89,7 +92,7 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
     /**
      * @brief The handle message method
      *
-     * @param msg A scheduled self message or received message
+     * @param msg A scheduled self message or received message from another module
      */
     virtual void handleMessage(cMessage *msg) override;
 
@@ -101,30 +104,46 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
     virtual void handleCanPopPacket(cGate *gate) override;
 
     /**
-     * @brief Looks for the packet at the front of all queues and checks them for their minimal send time.
-     *  The index of the collection where the packet with the lowest minimal send time is contained will be returned.
-     *
-     *  @return index of the collection where the packet with the lowest minimal send time is contained
+     * @brief Schedules a packet to be sent
      */
-    virtual int schedulePacket() override;
+    virtual void schedule();
+
+    /**
+     * @brief Looks for expired packets in all queues and deletes them.
+     */
+    virtual void lookForExpiredPackets();
+
+    /**
+     * @brief Determines if the given packet is ready to send.
+     * Best-Effort(BE) packets are always ready.
+     * DBF packets have must be checked according to their tMin time.
+     * @param packet
+     * @return true if packet is ready to send else false
+     */
+    bool isPacketReadyToSend(inet::Packet* packet);
 
   private:
     /**
-     * @brief Looks for a new higher prioritized packet and schedules it
+     * @brief Determines the highest priority collection in which a packet is ready to be sent.
+     *
+     * @return index of the collection in which a packet is ready to be sent
      */
-    void checkQueues();
-
-    /**
-     * @brief Looks for the first queue containing packets beginning from the highest priority queue.
-     * Expired packets in that queue will be removed and deleted.
-     */
-    void lookForExpiredPackets();
+    int determineCollection();
 
   /**
    * Member variables
    */
   public:
   protected:
+    /**
+     * @brief Indicates the idle state of the mac module
+     */
+    int txIdleCounter;
+
+    /**
+     * @brief The DBF priority classifier
+     */
+    DBFPriorityClassifier *dbfPriorityClassifier;
   private:
 
     /**
@@ -133,19 +152,9 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
     DBFPriorityScheduleMsg *selfMsg;
 
     /**
-     * @brief Indicates the idle state of the mac module
-     */
-    int txIdleCounter;
-
-    /**
      * @brief The MAC module which notifies about the availability of the Ethernet interface
      */
     inet::EtherMacFullDuplex *etherMacFullDuplex;
-
-    /**
-     * @brief The DBF priority classifier
-     */
-    DBFPriorityClassifier *dbfPriorityClassifier;
 
     /**
      * @brief The signal that emits the count of queues in use

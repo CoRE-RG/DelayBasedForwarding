@@ -16,11 +16,13 @@
 #ifndef __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
 #define __DELAYBASEDFORWARDING_DBFCOMPUTER_H_
 
-#include <delaybasedforwarding/networklayer/computer/DbfFibEntry.h>
-#include <delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h>
-#include "inet/networklayer/ipv4/Ipv4Header_m.h"
-#include "inet/common/packet/Packet.h"
+//DBF
+#include "delaybasedforwarding/networklayer/computer/DbfFibEntry.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
+#include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
+//INET
+#include <inet/networklayer/ipv4/Ipv4Header_m.h>
+#include <inet/common/packet/Packet.h>
 
 namespace delaybasedforwarding {
 

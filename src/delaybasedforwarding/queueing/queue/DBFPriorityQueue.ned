@@ -32,5 +32,5 @@ module DBFPriorityQueue extends PriorityQueue
         // The custom packet queue module implementation
         queue[*].typename = "DBFPacketQueue";
         // The custom priority scheduler module implementation
-        scheduler.typename = "DBFPriorityScheduler";
+        scheduler.typename = default("DBFPriorityScheduler");
 }

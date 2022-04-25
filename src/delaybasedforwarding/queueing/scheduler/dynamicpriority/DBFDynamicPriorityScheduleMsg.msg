@@ -13,4 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+import delaybasedforwarding.queueing.scheduler.priority.DBFPriorityScheduleMsg;
+import inet.common.packet.Packet;
+
 namespace delaybasedforwarding;
+
+//
+// The delay-based forwarding schedule message to schedule a dbf packet according to the dynamic priority concept
+//
+// @author Mehmet Mueller
+//
+packet DBFDynamicPriorityScheduleMsg extends DBFPriorityScheduleMsg { 
+    inet::Packet* packet_;     // the packet 
+}

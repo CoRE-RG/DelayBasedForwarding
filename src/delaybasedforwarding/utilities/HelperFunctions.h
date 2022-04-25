@@ -16,11 +16,13 @@
 #ifndef DELAYBASEDFORWARDING_UTILITIES_HELPERFUNCTIONS_H_
 #define DELAYBASEDFORWARDING_UTILITIES_HELPERFUNCTIONS_H_
 
-#include "inet/common/ProtocolTag_m.h"
-#include "inet/common/packet/Packet_m.h"
-#include "inet/networklayer/ipv4/Ipv4Header_m.h"
+//DBF
 #include "delaybasedforwarding/networklayer/ipv4/DBFIpv4HeaderOptions_m.h"
 #include "delaybasedforwarding/linklayer/contract/dbf/DBFHeaderTag_m.h"
+//INET
+#include <inet/common/ProtocolTag_m.h>
+#include <inet/common/packet/Packet_m.h>
+#include <inet/networklayer/ipv4/Ipv4Header_m.h>
 
 namespace delaybasedforwarding {
 
