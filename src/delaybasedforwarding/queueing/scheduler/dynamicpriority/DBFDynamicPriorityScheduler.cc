@@ -83,20 +83,23 @@ void DBFDynamicPriorityScheduler::prepareSelfMsg() {
                     break;
                 }
             }
+            if (collectionIdx >= 0 &&  highestPriorityPacket) {
+                if (selfMsg) {
+                        selfMsg->setPacket_(nullptr);
+                        cancelAndDelete(selfMsg);
+                }
+                selfMsg = new DBFDynamicPriorityScheduleMsg();
+                selfMsg->setCollectionIdx(collectionIdx);
+                selfMsg->setPacket_(highestPriorityPacket);
+                break; // Comment if the highest priority packet should be found across all queues.
+            }
         }
     }
-
-    if (selfMsg) {
-        selfMsg->setPacket_(nullptr);
-        cancelAndDelete(selfMsg);
-    }
-    selfMsg = new DBFDynamicPriorityScheduleMsg();
-    selfMsg->setCollectionIdx(collectionIdx);
-    selfMsg->setPacket_(highestPriorityPacket);
 }
 
 void DBFDynamicPriorityScheduler::schedule() {
     Enter_Method("DBFPriorityScheduler::schedule");
+    prepareSelfMsg();
     if (selfMsg) {
         simtime_t scheduleTime = simTime();
         if (auto dbfHeaderTag = selfMsg->getPacket_()->findTag<DBFHeaderTag>()) {
