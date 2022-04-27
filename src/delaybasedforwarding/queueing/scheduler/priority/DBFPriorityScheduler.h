@@ -144,13 +144,13 @@ class DBFPriorityScheduler : public inet::queueing::PriorityScheduler, public cL
      * @brief The DBF priority classifier
      */
     DBFPriorityClassifier *dbfPriorityClassifier;
-  private:
 
     /**
      * @brief The self message which will be used for scheduling
      */
     DBFPriorityScheduleMsg *selfMsg;
 
+  private:
     /**
      * @brief The MAC module which notifies about the availability of the Ethernet interface
      */

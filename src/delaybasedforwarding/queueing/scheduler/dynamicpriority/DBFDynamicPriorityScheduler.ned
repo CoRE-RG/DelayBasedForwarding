@@ -15,9 +15,15 @@
 
 package delaybasedforwarding.queueing.scheduler.dynamicpriority;
 
+import delaybasedforwarding.queueing.scheduler.priority.DBFPriorityScheduler;
+
 //
-// TODO auto-generated module
+// This module implements a dynamic priority scheduler for delay-based forwarding packets.
 //
-simple DBFDynamicPriorityScheduler
+// @author Mehmet Cakir
+//
+simple DBFDynamicPriorityScheduler extends DBFPriorityScheduler
 {
+    parameters:
+        @class(DBFDynamicPriorityScheduler);
 }
