@@ -18,7 +18,7 @@
 
 //DBF
 #include "delaybasedforwarding/queueing/scheduler/priority/DBFPriorityScheduler.h"
-#include "delaybasedforwarding/queueing/scheduler/dynamicpriority/DBFDynamicPriorityScheduleMsg_m.h"
+#include "delaybasedforwarding/queueing/scheduler/priority/DBFPriorityScheduleMsg_m.h"
 //OMNET
 #include <omnetpp.h>
 
@@ -41,6 +41,13 @@ class DBFDynamicPriorityScheduler : public DBFPriorityScheduler
    */
   public:
   protected:
+    /**
+     * @brief The initialize method
+     *
+     * @param stage The stage of the initialization process
+     */
+    virtual void initialize(int stage) override;
+
     /**
      * @brief The handle message method
      *
@@ -85,9 +92,9 @@ class DBFDynamicPriorityScheduler : public DBFPriorityScheduler
   protected:
   private:
     /**
-     * @brief The self message which will be used for scheduling
+     * @brief The pointer to the packet which is scheduled to be sent
      */
-    DBFDynamicPriorityScheduleMsg *selfMsg;
+    inet::Packet* scheduledPacket;
 };
 
 } //namespace

@@ -22,11 +22,19 @@ namespace delaybasedforwarding {
 
 Define_Module(DBFDynamicPriorityScheduler);
 
+void DBFDynamicPriorityScheduler::initialize(int stage) {
+    DBFPriorityScheduler::initialize(stage);
+    if (stage == inet::INITSTAGE_LOCAL) {
+        scheduledPacket = nullptr;
+    }
+
+}
+
 void DBFDynamicPriorityScheduler::handleMessage(cMessage *msg) {
     if (msg->isSelfMessage() && msg == selfMsg) {
         int collectionsIdx = selfMsg->getCollectionIdx();
-        inet::Packet* scheduledPacket = const_cast<inet::Packet*>(selfMsg->getPacket_());
-        selfMsg->setPacket_(nullptr);
+        inet::Packet* scheduledPacket = this->scheduledPacket;
+        this->scheduledPacket = nullptr;
         selfMsg = nullptr;
         if (DBFPacketQueue* queue = dynamic_cast<DBFPacketQueue*>(collections[collectionsIdx])) {
             collections[collectionsIdx]->removePacket(scheduledPacket);
@@ -68,9 +76,9 @@ void DBFDynamicPriorityScheduler::prepareSelfMsg() {
                     if (highestPriorityPacket) {
                         int newCollectionIdx = it->second;
                         inet::Packet* newPacket = collections[it->second]->getPacket(i);
-                        if (!isDBFPacket(highestPriorityPacket) && isDBFPacket(newPacket) ||
-                             isDBFPacket(highestPriorityPacket) && isDBFPacket(newPacket) &&
-                             calculateDynamicPriority(highestPriorityPacket) < calculateDynamicPriority(newPacket)
+                        if ((!isDBFPacket(highestPriorityPacket) && isDBFPacket(newPacket)) ||
+                             (isDBFPacket(highestPriorityPacket) && isDBFPacket(newPacket) &&
+                             calculateDynamicPriority(highestPriorityPacket) < calculateDynamicPriority(newPacket))
                            ) {
                             collectionIdx = newCollectionIdx;
                             highestPriorityPacket = newPacket;
@@ -83,23 +91,26 @@ void DBFDynamicPriorityScheduler::prepareSelfMsg() {
                     break;
                 }
             }
+            if (collectionIdx >= 0 && highestPriorityPacket) {
+                if (selfMsg) {
+                        scheduledPacket = nullptr;
+                        cancelAndDelete(selfMsg);
+                }
+                selfMsg = new DBFPriorityScheduleMsg();
+                selfMsg->setCollectionIdx(collectionIdx);
+                scheduledPacket = highestPriorityPacket;
+                break; // Comment if the highest priority packet should be found across all queues.
+            }
         }
     }
-
-    if (selfMsg) {
-        selfMsg->setPacket_(nullptr);
-        cancelAndDelete(selfMsg);
-    }
-    selfMsg = new DBFDynamicPriorityScheduleMsg();
-    selfMsg->setCollectionIdx(collectionIdx);
-    selfMsg->setPacket_(highestPriorityPacket);
 }
 
 void DBFDynamicPriorityScheduler::schedule() {
     Enter_Method("DBFPriorityScheduler::schedule");
+    prepareSelfMsg();
     if (selfMsg) {
         simtime_t scheduleTime = simTime();
-        if (auto dbfHeaderTag = selfMsg->getPacket_()->findTag<DBFHeaderTag>()) {
+        if (auto dbfHeaderTag = scheduledPacket->findTag<DBFHeaderTag>()) {
             if (dbfHeaderTag->getTMin() >= simTime()) {
                 scheduleTime = dbfHeaderTag->getTMin();
             }
@@ -117,8 +128,8 @@ void DBFDynamicPriorityScheduler::lookForExpiredPackets() {
             if (auto dbfHeaderTag = packet->findTag<DBFHeaderTag>()) {
                 if (isExpired(dbfHeaderTag)) {
                     expiredPackets.push_back(packet);
-                    if (selfMsg && selfMsg->getPacket_() == packet) {
-                        selfMsg->setPacket_(nullptr);
+                    if (selfMsg && scheduledPacket == packet) {
+                        scheduledPacket = nullptr;
                         cancelAndDelete(selfMsg);
                     }
                 }

@@ -35,24 +35,30 @@ int DBFPacketComparator::comparePackets(inet::Packet *packet1, inet::Packet *pac
     auto tag1 = packet1->findTag<DBFHeaderTag>();
     auto tag2 = packet2->findTag<DBFHeaderTag>();
     if (tag1 && tag2) {
+        /* send time tMin of packet 1 is earlier than that of packet 2 */
         if (tag1->getTMin() < tag2->getTMin()) {
             result = PACKET1HIGHERPRIORITY;
+        /* send time tMin of packet 1 is later than that of packet 2 */
         } else if (tag1->getTMin() > tag2->getTMin()) {
             result = PACKET2HIGHERPRIORITY;
+        /* packet 1 and packet 2 have same tMin, packet 1 has the admit bit set, packet 2 not */
         } else if (tag1->getAdmit() && !tag2->getAdmit()) {
             result = PACKET1HIGHERPRIORITY;
-        } else {
-            result = PACKET2HIGHERPRIORITY;
+        /* otherwise the order remains unchanged */
+        //} else {
+        //    result = PACKET2HIGHERPRIORITY;
         }
     /*
-     * These conditions can occur for DBF-Packets, which reach the maximum delta.
-     * These packets are pushed in the low priority queue with possibly existing BE-Packets see (@DBFPriorityClassifier::classifyPacket).
-     * BE-Packets are sent immediately whereas DBF-Packets have to fulfill at least their lqmin.
+     * These conditions can occur for DBF-Packets, which reach the maximum delta or in other words have an infinite dMax.
+     * These packets are pushed in the low priority queue together with BE-Packets see (@DBFPriorityClassifier::classifyPacket).
+     * BE-Packets are sent immediately whereas DBF-Packets have to fulfill at least their tMin.
      */
+    // packet 1 is a DBF packet and is already ready to send, packet 2 is a BE packet
     } else if (tag1 && tag1->getTMin() < omnetpp::simTime()) {
         result = PACKET1HIGHERPRIORITY;
-    } else if (tag2 && tag2->getTMin() < omnetpp::simTime()) {
-        result = PACKET2HIGHERPRIORITY;
+    // packet 2 is a DBF packet and is not ready to send, packet 1 is a BE packet
+    } else if (tag2 && tag2->getTMin() > omnetpp::simTime()) {
+        result = PACKET1HIGHERPRIORITY;
     }
     return result;
 }
