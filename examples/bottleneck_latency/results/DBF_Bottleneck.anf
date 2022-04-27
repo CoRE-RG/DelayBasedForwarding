@@ -11,6 +11,8 @@
     <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_Bottleneck_Reverse_wo_BE-#0.vec"/>
     <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_DP_Bottleneck_Reverse_wo_BE-#0.sca"/>
     <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_DP_Bottleneck_Reverse_wo_BE-#0.vec"/>
+    <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_DP_Bottleneck_Reverse_wo_BE_multiple_queues-#0.sca"/>
+    <inputs name="/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_DP_Bottleneck_Reverse_wo_BE_multiple_queues-#0.vec"/>
   </inputs>
   <datasets>
     <datasets name="DBF_Bottleneck_Throughput">
@@ -173,8 +175,28 @@
         <properties name="Line.Type" value="Linear"/>
       </items>
     </datasets>
+    <datasets name="DBF_DP_Bottleneck_Reverse_Throughput_wo_BE - Multiple Queues">
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_DP_Bottleneck_Reverse_wo_BE_multiple_queues-#0.vec) AND attr:configname(DBF_DP_Bottleneck_Reverse_wo_BE_multiple_queues) AND attr:runnumber(0) AND module(BottleneckLatency.R1.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_DP_Bottleneck_Reverse_wo_BE_multiple_queues-#0.vec) AND attr:configname(DBF_DP_Bottleneck_Reverse_wo_BE_multiple_queues) AND attr:runnumber(0) AND module(BottleneckLatency.R2.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_DP_Bottleneck_Reverse_wo_BE_multiple_queues-#0.vec) AND attr:configname(DBF_DP_Bottleneck_Reverse_wo_BE_multiple_queues) AND attr:runnumber(0) AND module(BottleneckLatency.R3.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/DelayBasedForwarding/examples/bottleneck_latency/results/DBF_DP_Bottleneck_Reverse_wo_BE_multiple_queues-#0.vec) AND attr:configname(DBF_DP_Bottleneck_Reverse_wo_BE_multiple_queues) AND attr:runnumber(0) AND module(BottleneckLatency.R4.app[0]) AND name(throughput:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="DBF_DP_Bottleneck_Throughput_Reverse_wo_BE - Multiple Queues" lineNameFormat="">
+        <properties name="Graph.Title" value="DBF_DP_Bottleneck_Throughput_Reverse_wo_BE - Multiple Queues"/>
+        <properties name="X.Axis.Title" value="Time [s]"/>
+        <properties name="Y.Axis.Title" value="Throughput [Bit/s]"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Line.Type/BottleneckLatency.R1.app[0]" value="Linear"/>
+        <properties name="Line.Name/BottleneckLatency.R1.app[0]" value="Flow 1 -DBF: max-SLO=pathdelay+4*RTT, Tstart=0sec, Tend=70sec, Send Bytes=175MB"/>
+        <properties name="Line.Type/BottleneckLatency.R2.app[0]" value="Linear"/>
+        <properties name="Line.Name/BottleneckLatency.R2.app[0]" value="Flow 2 -DBF: max-SLO=pathdelay+3*RTT, Tstart=10sec, Tend=60sec, Send Bytes=178MB"/>
+        <properties name="Line.Type/BottleneckLatency.R3.app[0]" value="Linear"/>
+        <properties name="Line.Name/BottleneckLatency.R3.app[0]" value="Flow 3 -DBF: max-SLO=pathdelay+2*RTT, Tstart=20sec, Tend=50sec, Send Bytes=163MB"/>
+        <properties name="Line.Type/BottleneckLatency.R4.app[0]" value="Linear"/>
+        <properties name="Line.Name/BottleneckLatency.R4.app[0]" value="Flow 4 -DBF: max-SLO=pathdelay+1*RTT, Tstart=30sec, Tend=40sec, Send Bytes=82MB"/>
+      </items>
+    </datasets>
   </datasets>
   <chartSheets>
-    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.4 //@datasets/@datasets.1/@items.4 //@datasets/@datasets.2/@items.2 //@datasets/@datasets.3/@items.1 //@datasets/@datasets.4/@items.1 //@datasets/@datasets.5/@items.4 //@datasets/@datasets.6/@items.4 //@datasets/@datasets.7/@items.4 //@datasets/@datasets.8/@items.4 //@datasets/@datasets.9/@items.4"/>
+    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.4 //@datasets/@datasets.1/@items.4 //@datasets/@datasets.2/@items.2 //@datasets/@datasets.3/@items.1 //@datasets/@datasets.4/@items.1 //@datasets/@datasets.5/@items.4 //@datasets/@datasets.6/@items.4 //@datasets/@datasets.7/@items.4 //@datasets/@datasets.8/@items.4 //@datasets/@datasets.9/@items.4 //@datasets/@datasets.10/@items.4"/>
   </chartSheets>
 </scave:Analysis>
