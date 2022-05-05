@@ -30,7 +30,7 @@ network BottleneckLatency
         channel LinkDelay1000us extends EtherLink
         {
             datarate = 100Mbps; // 24us transmission delay
-            length = 195200.0m;  // 976us link delay
+            length = 195200.0m; // 976us link delay
         }
 
     submodules:
